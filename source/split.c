@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 14:10:40 by amalangu          #+#    #+#             */
-/*   Updated: 2025/05/27 14:31:58 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/05/27 15:12:03 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	free_split(char **split)
 		free(split[i++]);
 	free(split);
 }
+
 int	word_count(char const *s, char c)
 {
 	int	i;
