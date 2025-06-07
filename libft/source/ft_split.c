@@ -1,27 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   split.c                                            :+:      :+:    :+:   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/27 14:10:40 by amalangu          #+#    #+#             */
-/*   Updated: 2025/05/27 15:12:03 by amalangu         ###   ########.fr       */
+/*   Created: 2024/11/06 13:02:28 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/07 15:50:45 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "../include/libft.h"
 
 void	free_split(char **split)
 {
 	int	i;
 
-	if (!split)
-		return ;
 	i = 0;
-	while (split[i])
-		free(split[i++]);
-	free(split);
+	while (split)
+	{
+		while (split[i])
+			free(split[i++]);
+		free(split);
+	}
 }
 
 int	word_count(char const *s, char c)
@@ -69,11 +70,11 @@ char	*fill_word(char const *s, char c)
 // Allocates with malloc() and returns an array of strings.
 // Obtained by splitting ’s’ using ’c’ as a delimiter.
 // Array is ended with a NULL pointer.
-char	**split(char const *s, char c)
+char	**ft_split(char const *s, char c)
 {
-	char **split;
-	int j;
-	int i;
+	char	**split;
+	int		j;
+	int		i;
 
 	if (!s)
 		return (NULL);

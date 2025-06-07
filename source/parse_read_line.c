@@ -6,12 +6,12 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/04 19:06:17 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/07 16:01:35 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "minishell.h"
-#include "split.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -43,35 +43,34 @@ void	add_word_to_token(char *start, int i, t_token **tokens)
 	t_token	*new;
 
 	tmp = *tokens;
-	head = *tokens;
+	head = tmp;
 	new = malloc(sizeof(t_token));
-	new->word = start;
-	new->word[i + 1] = 0;
+	new->word = strdup();
 	new->next = NULL;
 	if (!tmp)
 	{
 		*tokens = new;
 		return ;
 	}
-	while (tmp)
+	while (tmp->next)
 		tmp = tmp->next;
-	tmp = new;
+	tmp->next = new;
 	*tokens = head;
 }
 
 int	pick_word(char **read_line, t_token **tokens)
 {
-	char	*end;
 	char	*start;
 	int		i;
 
 	i = 0;
-	end = *read_line;
 	start = *read_line;
-	while (!is_metacharacter(end[i]))
+	while (!is_metacharacter(**read_line))
+	{
 		i++;
+		(*read_line)++;
+	}
 	add_word_to_token(start, i, tokens);
-	*read_line = end + i;
 	return (0);
 }
 
@@ -96,13 +95,16 @@ int	add_output_redirect(char **read_line, t_token **tokens)
 	return (0);
 }
 
-int	add_operator_token(char *read_line, t_token *tokens)
+int	add_operator_token(char **read_line, t_token *tokens)
 {
-	if (*read_line == '<' && add_input_redirect(&read_line, &tokens))
+	char	*tmp;
+
+	tmp = *read_line;
+	if (*tmp == '<' && add_input_redirect(read_line, &tokens))
 		return (1);
-	else if (*read_line == '>' && add_output_redirect(&read_line, &tokens))
+	else if (*tmp == '>' && add_output_redirect(read_line, &tokens))
 		return (1);
-	else if (*read_line == '|' && add_pipe(&read_line, &tokens))
+	else if (*tmp == '|' && add_pipe(read_line, &tokens))
 		return (1);
 	return (0);
 }
@@ -115,6 +117,15 @@ int	is_operator(char read_char)
 		return (0);
 }
 
+void	print_tokens(t_token *tokens)
+{
+	while (tokens)
+	{
+		printf("%s\n", tokens->word);
+		tokens = tokens->next;
+	}
+}
+
 int	get_tokens_list(char *read_line, t_token *tokens)
 {
 	while (*read_line)
@@ -125,14 +136,15 @@ int	get_tokens_list(char *read_line, t_token *tokens)
 		else if (*read_line == '\'' && extract_quoted_string(&read_line, '\'',
 			&tokens))
 			return (1);
-		else if (is_operator(*read_line) && add_operator_token(read_line,
+		else if (is_operator(*read_line) && add_operator_token(&read_line,
 				tokens))
 			return (1);
-		else if (pick_word(&read_line, &tokens))
+		else if (pick_word(&read_line, &tokens) && printf("%s\n", read_line))
 			return (1);
 		else if (*read_line == ' ')
 			read_line++;
 	}
+	// print_tokens(tokens);
 	return (0);
 }
 
@@ -146,5 +158,6 @@ void	parse_read_line(char *read_line, t_minishell *minishell)
 	minishell->parse_error = get_tokens_list(read_line, minishell->tokens);
 	if (minishell->parse_error)
 		return (free(read_line), parse_error());
+	printf("%s\n", read_line);
 	free(read_line);
 }

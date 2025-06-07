@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.h                                       :+:      :+:    :+:   */
+/*   ft_isascii.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: amalangu <amalangu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/27 14:37:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/05/27 14:38:24 by amalangu         ###   ########.fr       */
+/*   Created: 2024/10/11 19:59:15 by amalangu          #+#    #+#             */
+/*   Updated: 2024/11/07 12:17:18 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_STRNCMP_H
-# define FT_STRNCMP_H
-
-# include <stdlib.h>
-
-int	ft_strncmp(const char *s1, const char *s2, size_t n);
-
-#endif
+// Checks whether c fits into the ASCII character set.
+// Returns: 0 if false; 1 if true.
+int	ft_isascii(int c)
+{
+	if (c >= 0 && c < 128)
+		return (1);
+	return (0);
+}

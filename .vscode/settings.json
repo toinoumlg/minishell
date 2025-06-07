@@ -2,6 +2,17 @@
 	"files.associations": {
 		"readline.h": "c",
 		"stdlib.h": "c",
-		"history.h": "c"
+		"history.h": "c",
+		"minishell.h": "c",
+		"ft_strncmp.h": "c",
+		"parse_read_line.h": "c",
+		"array": "c",
+		"deque": "c",
+		"string": "c",
+		"unordered_map": "c",
+		"vector": "c",
+		"string_view": "c",
+		"initializer_list": "c",
+		"split.h": "c"
 	}
 }
