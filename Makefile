@@ -2,7 +2,7 @@ NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 INCLUDE = -I./include -I./libft/include
-LIBS = -lreadline
+LIBS = -lreadline -L./libft -lft
 
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a

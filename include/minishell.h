@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/05 16:38:20 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/07 18:19:22 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,20 @@ typedef struct s_cmd
 
 typedef struct s_token
 {
-	char			*word;
-	int				is_operator;
+	int				pos;
+	char			*string;
+	int				is_word;
+	int				is_pipe;
+	int				is_redirect_input;
+	int				is_redirect_output;
+	int				is_here_doc;
+	int				is_append_file;
 	struct s_token	*next;
 }					t_token;
 
 typedef struct s_minishell
 {
 	t_cmd			*cmds;
-	t_token			*tokens;
 	int				parse_error;
 	int				exit;
 }					t_minishell;
