@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:32:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/07 22:53:44 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/08 06:51:10 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	add_pipe(char **read_line, t_token **tokens)
 		return (1);
 	if (add_string_to_token("|", 1, new))
 		return (1);
-	new->is_pipe = 1;
+	new->token_type = is_pipe;
 	append_new_token(tokens, new);
 	return (0);
 }
@@ -41,13 +41,13 @@ int	add_output_redirect(char **read_line, t_token **tokens)
 		(*read_line)++;
 		if (add_string_to_token(">>", 2, new))
 			return (1);
-		new->is_append_file = 1;
+		new->token_type = append_file;
 		append_new_token(tokens, new);
 		return (0);
 	}
 	else if (add_string_to_token(">", 1, new))
 		return (1);
-	new->is_redirect_output = 1;
+	new->token_type = redirect_output;
 	append_new_token(tokens, new);
 	return (0);
 }
@@ -65,13 +65,13 @@ int	add_input_redirect(char **read_line, t_token **tokens)
 		(*read_line)++;
 		if (add_string_to_token("<<", 2, new))
 			return (1);
-		new->is_here_doc = 1;
+		new->token_type = here_doc;
 		append_new_token(tokens, new);
 		return (0);
 	}
 	else if (add_string_to_token("<", 1, new))
 		return (1);
-	new->is_redirect_input = 1;
+	new->token_type = redirect_input;
 	append_new_token(tokens, new);
 	return (0);
 }

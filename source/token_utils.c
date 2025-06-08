@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:27:41 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/07 22:54:10 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/07 23:12:46 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	is_operator(char read_c)
 
 int	is_quote(char read_c)
 {
-	if ((read_c == '"' || read_c == '\''))
+	if (read_c == '"' || read_c == '\'')
 		return (1);
 	else
 		return (0);

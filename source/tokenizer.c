@@ -6,41 +6,16 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:25:17 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/07 22:53:49 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/07 22:58:50 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "token_list.h"
 #include "token_operator.h"
 #include "token_utils.h"
+#include "token_string.h"
 #include "utils.h"
 
-int	extract_quoted_string(char **read_line, char quote, t_token **tokens)
-{
-	(void)read_line;
-	(void)tokens;
-	(void)quote;
-	return (0);
-}
-
-int	pick_word(char **read_line, t_token **tokens)
-{
-	t_token	*new;
-	char	*start;
-	int		i;
-
-	start = *read_line;
-	if (!**read_line)
-		return (0);
-	i = get_word_size(read_line);
-	new = set_new_token();
-	if (!new || i <= 0 || add_string_to_token(start, i, new))
-		return (1);
-	new->is_word = 1;
-	append_new_token(tokens, new);
-	return (0);
-}
 
 int	get_tokens_list(char *read_line, t_token **tokens)
 {

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/07 22:45:32 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/07 23:27:31 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	parse_read_line(char *read_line, t_minishell *minishell)
 	minishell->parse_error = get_tokens_list(read_line, &tokens);
 	if (minishell->parse_error)
 		return (free(read_line), parse_error());
-	printf("%s\n", read_line);
+	
 	free_tokens(tokens);
 	free(read_line);
 }
