@@ -6,14 +6,14 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:27:41 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/07 23:12:46 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/09 16:24:08 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdlib.h>
 
-void	free_tokens(t_token *tokens)
+void	fret_enum_tokens(t_token *tokens)
 {
 	t_token	*tmp;
 

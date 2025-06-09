@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:36:27 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/07 22:43:45 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/09 16:24:08 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,6 @@ int		get_word_size(char **read_line);
 int		is_metacharacter(char c);
 int		is_quote(char read_c);
 
-void	free_tokens(t_token *tokens);
+void	fret_enum_tokens(t_token *tokens);
 
 #endif

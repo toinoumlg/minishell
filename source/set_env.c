@@ -6,12 +6,12 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:57:54 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/08 19:14:18 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/09 16:22:45 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "free.h"
+#include "libft.h"
 #include <string.h>
 
 char	**get_env(char **envp)
@@ -27,9 +27,9 @@ char	**get_env(char **envp)
 
 char	**set_env(char **envp)
 {
-	char **env;
-	char *tmp;
-	int i;
+	char	**env;
+	char	*tmp;
+	int		i;
 
 	i = -1;
 	env = get_env(envp);

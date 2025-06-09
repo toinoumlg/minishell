@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 12:15:26 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/09 16:11:18 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/09 16:24:08 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ t_file	*set_file(t_token **tokens, int j)
 	new->path = get_file_path(tokens, j);
 	if (!new->path)
 		return (free(new), NULL);
-	delete_token(tokens, j);
-	delete_token(tokens, j);
+	delett_enum_token(tokens, j);
+	delett_enum_token(tokens, j);
 	return (new);
 }
 

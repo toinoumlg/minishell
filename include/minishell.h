@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/08 07:49:20 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/09 16:24:08 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 }					t_cmd;
 
-typedef enum e_token
+typedef enum s_enum_token
 {
 	word,
 	is_pipe,
@@ -45,12 +45,12 @@ typedef enum e_token
 	append_file,
 	double_quote,
 	simple_quote
-}					e_token;
+}					t_enum_token;
 
 typedef struct s_token
 {
 	char			*string;
-	e_token			type;
+	t_enum_token	type;
 	struct s_token	*next;
 }					t_token;
 

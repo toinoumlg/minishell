@@ -6,14 +6,14 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:50:31 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/09 12:34:13 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/09 16:24:08 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdlib.h>
 
-void	delete_token(t_token **tokens, int j)
+void	delett_enum_token(t_token **tokens, int j)
 {
 	t_token	*tmp;
 	t_token	*head;

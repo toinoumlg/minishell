@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/09 16:14:30 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/09 16:24:36 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	free_args(char **args)
 	}
 }
 
-void	free_token(t_token *tokens)
+void	fret_enum_token(t_token *tokens)
 {
 	t_token	*next;
 
@@ -59,8 +59,8 @@ void	parse_read_line(char *read_line, t_minishell *minishell, char **env)
 		return (free(read_line), parse_error());
 	// expand_tokens();
 	if (set_commands(&tokens, minishell))
-		return (free(read_line), free_token(tokens), free_cmds(minishell->cmds),
-			parse_error());
+		return (free(read_line), fret_enum_token(tokens),
+			free_cmds(minishell->cmds), parse_error());
 	try_access(minishell->cmds, env);
-	// free(read_line);
+	free(read_line);
 }

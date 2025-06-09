@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:09 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/09 16:01:47 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/09 16:24:08 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "minishell.h"
 #include <string.h>
 
-void	free_tokens_from_args(t_token **tokens)
+void	fret_enum_tokens_from_args(t_token **tokens)
 {
 	t_token	*tmp;
 	t_token	*next;
@@ -67,7 +67,7 @@ char	**set_args(t_token **tokens)
 		i++;
 		tmp = tmp->next;
 	}
-	free_tokens_from_args(tokens);
+	fret_enum_tokens_from_args(tokens);
 	i = -1;
 	return (args);
 }

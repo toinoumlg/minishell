@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:56:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/08 06:57:40 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/09 16:22:33 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,9 @@ int	extract_quoted_string(char **read_line, char quote, t_token **tokens)
 
 int	pick_word(char **read_line, t_token **tokens)
 {
-	t_token *new;
-	char *start;
-	int i;
+	t_token	*new;
+	char	*start;
+	int		i;
 
 	start = *read_line;
 	if (!**read_line)
