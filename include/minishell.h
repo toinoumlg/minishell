@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/08 06:50:58 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/08 07:49:20 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,23 +35,22 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 }					t_cmd;
 
-typedef enum possible_token
+typedef enum e_token
 {
 	word,
 	is_pipe,
-	redirect_input,
-	redirect_output,
+	input,
+	output,
 	here_doc,
 	append_file,
 	double_quote,
 	simple_quote
-}					possible_token;
+}					e_token;
 
 typedef struct s_token
 {
-	int				pos;
 	char			*string;
-	possible_token	token_type;
+	e_token			type;
 	struct s_token	*next;
 }					t_token;
 

@@ -6,20 +6,19 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:25:17 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/07 22:58:50 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/08 18:41:36 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "token_operator.h"
-#include "token_utils.h"
 #include "token_string.h"
+#include "token_utils.h"
 #include "utils.h"
-
+#include <string.h>
 
 int	get_tokens_list(char *read_line, t_token **tokens)
 {
-	*tokens = 0;
 	while (*read_line)
 	{
 		if (is_quote(*read_line) && extract_quoted_string(&read_line,
@@ -33,6 +32,6 @@ int	get_tokens_list(char *read_line, t_token **tokens)
 		else if (pick_word(&read_line, tokens))
 			return (1);
 	}
-	print_tokens(*tokens);
+	// print_tokens(*tokens);
 	return (0);
 }

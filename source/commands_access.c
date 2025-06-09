@@ -1,21 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.h                                            :+:      :+:    :+:   */
+/*   commands_access.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/07 22:49:53 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/09 12:15:46 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/08 18:51:06 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/08 18:53:42 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
+#include "minishell.h"
 
-# include "minishell.h"
-
-void	print_tokens(t_token *tokens);
-void	print_commands(t_cmd *cmds);
-
-#endif
+void	try_access(t_cmd *cmds, char **env)
+{
+	(void)cmds;
+	(void)env;
+}

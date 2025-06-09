@@ -1,57 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_list.c                                       :+:      :+:    :+:   */
+/*   commands_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/07 22:28:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/08 07:49:30 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/08 18:50:31 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/09 12:34:13 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "minishell.h"
-#include <string.h>
+#include <stdlib.h>
 
-int	add_string_to_token(char *start, int i, t_token *new)
-{
-	new->string = ft_strdup(start);
-	if (!new->string)
-		return (1);
-	new->string[i] = 0;
-	return (0);
-}
-
-t_token	*set_new_token(void)
-{
-	t_token	*new;
-
-	new = malloc(sizeof(t_token));
-	if (!new)
-		return (NULL);
-	memset(new, 0, sizeof(t_token));
-	return (new);
-}
-
-void	append_new_token(t_token **tokens, t_token *new)
+void	delete_token(t_token **tokens, int j)
 {
 	t_token	*tmp;
 	t_token	*head;
+	t_token	*previous;
+	t_token	*next;
 	int		i;
 
-	i = 0;
+	i = -1;
 	tmp = *tokens;
 	head = tmp;
-	if (!tmp)
-	{
-		*tokens = new;
-		return ;
-	}
-	while (tmp->next && ++i)
+	while (++i < j - 1)
 		tmp = tmp->next;
-	++i;
-	tmp->next = new;
+	previous = tmp;
+	tmp = tmp->next;
+	next = tmp->next;
+	free(tmp->string);
+	free(tmp);
+	previous->next = next;
 	*tokens = head;
-	return ;
+}
+
+int	is_end_of_command(t_token *token)
+{
+	if (!token || token->type == is_pipe)
+		return (1);
+	else
+		return (0);
 }

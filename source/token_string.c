@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:56:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/08 06:46:35 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/08 06:57:40 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ int	extract_quoted_string(char **read_line, char quote, t_token **tokens)
 	i = get_quoted_string_size(quote, read_line);
 	if (quote == '\'')
 	{
-		new->token_type = simple_quote;
+		new->type = simple_quote;
 		if (add_string_to_token(start, i + 1, new))
 			return (1);
 	}
 	else
 	{
-		new->token_type = double_quote;
+		new->type = double_quote;
 		if (add_string_to_token(start, 1 + i, new))
 			return (1);
 	}
@@ -67,7 +67,7 @@ int	pick_word(char **read_line, t_token **tokens)
 	new = set_new_token();
 	if (!new || i <= 0 || add_string_to_token(start, i, new))
 		return (1);
-	new->token_type = word;
+	new->type = word;
 	append_new_token(tokens, new);
 	return (0);
 }

@@ -13,6 +13,19 @@
 		"vector": "c",
 		"string_view": "c",
 		"initializer_list": "c",
-		"split.h": "c"
+		"split.h": "c",
+		"tokenizer.h": "c",
+		"token_utils.h": "c",
+		"token_list.h": "c",
+		"token_operator.h": "c",
+		"stdio.h": "c",
+		"token_string.h": "c",
+		"libft.h": "c",
+		"string.h": "c",
+		"free.h": "c",
+		"commands_access.h": "c",
+		"commands_utils.h": "c",
+		"commands_check.h": "c",
+		"commands_list.h": "c"
 	}
 }
