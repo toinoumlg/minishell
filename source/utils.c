@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:27:02 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/08 18:58:31 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/10 16:45:28 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,21 @@ void	print_commands(t_cmd *cmds)
 	int	j;
 
 	j = 0;
-	printf("\n");
 	while (cmds)
 	{
 		i = 0;
 		printf("cmd %d: ", j++);
-		printf("args: ");
-		while (cmds->args[i])
-			printf("[%s] ", cmds->args[i++]);
-		printf("\n");
-		if (cmds->infile)
-			printf("infile path:[%s]\n", cmds->infile->path);
-		if (cmds->outfile)
-			printf("outfile path:[%s]\n", cmds->outfile->path);
-		if (cmds->pipe_to_next)
+		if (cmds->next)
 			printf("pipe to next\n");
 		if (!cmds->next)
 			printf("is last\n");
+		if (cmds->infile)
+			printf("infile path: [%s]\n", cmds->infile->path);
+		if (cmds->outfile)
+			printf("outfile path: [%s]\n", cmds->outfile->path);
+		printf("args: ");
+		while (cmds->args[i])
+			printf("[%s] ", cmds->args[i++]);
 		printf("\n");
 		cmds = cmds->next;
 	}

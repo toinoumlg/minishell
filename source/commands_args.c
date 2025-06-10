@@ -6,31 +6,16 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:09 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/09 16:24:08 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/10 17:12:11 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "commands_utils.h"
 #include "free.h"
 #include "libft.h"
 #include "minishell.h"
+#include "token_free.h"
+#include "token_utils.h"
 #include <string.h>
-
-void	fret_enum_tokens_from_args(t_token **tokens)
-{
-	t_token	*tmp;
-	t_token	*next;
-
-	tmp = *tokens;
-	while (!is_end_of_command(tmp))
-	{
-		next = tmp->next;
-		free(tmp->string);
-		free(tmp);
-		tmp = next;
-	}
-	*tokens = tmp;
-}
 
 int	get_args_size(t_token *tokens)
 {
@@ -67,7 +52,7 @@ char	**set_args(t_token **tokens)
 		i++;
 		tmp = tmp->next;
 	}
-	fret_enum_tokens_from_args(tokens);
 	i = -1;
+	free_tokens_from_args(tokens);
 	return (args);
 }

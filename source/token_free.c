@@ -1,44 +1,71 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   commands_utils.c                                   :+:      :+:    :+:   */
+/*   token_free.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/08 18:50:31 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/09 16:24:08 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/10 16:51:29 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/10 16:59:51 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "token_utils.h"
 #include <stdlib.h>
 
-void	delett_enum_token(t_token **tokens, int j)
+void	free_i_token(t_token **tokens, int i)
 {
 	t_token	*tmp;
 	t_token	*head;
 	t_token	*previous;
 	t_token	*next;
-	int		i;
+	int		j;
 
-	i = -1;
+	j = -1;
 	tmp = *tokens;
 	head = tmp;
-	while (++i < j - 1)
+	while (++j < i - 1)
 		tmp = tmp->next;
 	previous = tmp;
 	tmp = tmp->next;
 	next = tmp->next;
-	free(tmp->string);
+	if (tmp->string)
+		free(tmp->string);
 	free(tmp);
 	previous->next = next;
 	*tokens = head;
 }
 
-int	is_end_of_command(t_token *token)
+void	free_pipe(t_token **tokens)
 {
-	if (!token || token->type == is_pipe)
-		return (1);
-	else
-		return (0);
+	t_token	*next;
+	t_token	*tmp;
+
+	tmp = *tokens;
+	if (tmp && tmp->type == is_pipe)
+	{
+		next = tmp->next;
+		if (tmp->string)
+			free(tmp->string);
+		free(tmp);
+		*tokens = next;
+	}
+}
+
+void	free_tokens_from_args(t_token **tokens)
+{
+	t_token	*tmp;
+	t_token	*next;
+
+	tmp = *tokens;
+	while (!is_end_of_command(tmp))
+	{
+		next = tmp->next;
+		if (tmp->string)
+			free(tmp->string);
+		free(tmp);
+		tmp = next;
+	}
+	*tokens = tmp;
 }

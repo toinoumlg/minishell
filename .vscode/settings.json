@@ -26,6 +26,10 @@
 		"commands_access.h": "c",
 		"commands_utils.h": "c",
 		"commands_check.h": "c",
-		"commands_list.h": "c"
+		"commands_list.h": "c",
+		"token_check.h": "c",
+		"commands_redirect.h": "c",
+		"token_free.h": "c",
+		"commands_args.h": "c"
 	}
 }

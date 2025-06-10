@@ -10,10 +10,12 @@ LIBFT = $(LIBFT_DIR)/libft.a
 SRC_DIR = source
 OBJ_DIR = build
 
-SRC_FILES = main parse_read_line utils \
-	token_list tokenizer token_utils token_operator token_string \
-	commands_access commands_args commands_check commands_redirect commands_list \
-	commands_utils free set_env
+SRC_FILES = main set_env parse_read_line utils \
+	token token_list token_utils token_operator token_string token_check token_free \
+	commands commands_args commands_redirect commands_list \
+	access \
+	free 
+
 SRC = $(addprefix $(SRC_DIR)/, $(addsuffix .c, $(SRC_FILES)))
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 DEP = $(OBJ:.o=.d)

@@ -1,19 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   commands_access.c                                  :+:      :+:    :+:   */
+/*   token_free.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/08 18:51:06 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/09 16:22:41 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/10 16:54:29 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/10 17:00:33 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef TOKEN_FREE_H
+# define TOKEN_FREE_H
 
-void	try_access(t_cmd *cmds, char **env)
-{
-	(void)cmds;
-	(void)env;
-}
+# include "minishell.h"
+
+void	free_pipe(t_token **tokens);
+void	free_i_token(t_token **tokens, int i);
+void	free_tokens_from_args(t_token **tokens);
+
+#endif

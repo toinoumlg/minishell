@@ -6,14 +6,14 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/09 16:24:36 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/10 17:14:50 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "commands_access.h"
-#include "commands_list.h"
+#include "access.h"
+#include "commands.h"
 #include "free.h"
-#include "tokenizer.h"
+#include "token.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -36,14 +36,15 @@ void	free_args(char **args)
 	}
 }
 
-void	fret_enum_token(t_token *tokens)
+void	free_token(t_token *tokens)
 {
 	t_token	*next;
 
 	while (tokens)
 	{
 		next = tokens->next;
-		free(tokens->string);
+		if (tokens->string)
+			free(tokens->string);
 		free(tokens);
 		tokens = next;
 	}
@@ -53,14 +54,13 @@ void	parse_read_line(char *read_line, t_minishell *minishell, char **env)
 {
 	t_token	*tokens;
 
-	memset(&tokens, 0, sizeof(t_token *));
 	minishell->parse_error = get_tokens_list(read_line, &tokens);
 	if (minishell->parse_error)
-		return (free(read_line), parse_error());
+		return (free(read_line), free_token(tokens), parse_error());
 	// expand_tokens();
 	if (set_commands(&tokens, minishell))
-		return (free(read_line), fret_enum_token(tokens),
-			free_cmds(minishell->cmds), parse_error());
+		return (free(read_line), free_token(tokens), free_cmds(minishell->cmds),
+			parse_error());
 	try_access(minishell->cmds, env);
 	free(read_line);
 }

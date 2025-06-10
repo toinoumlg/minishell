@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/09 16:24:08 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/10 16:21:37 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ typedef struct s_cmd
 	t_file			*outfile;
 	int				here_doc;
 	int				append_file;
-	int				pipe_to_next;
 	struct s_cmd	*next;
 }					t_cmd;
 

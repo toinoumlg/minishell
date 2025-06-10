@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/09 16:10:29 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/10 16:41:34 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 void	exec(t_minishell *minishell)
 {
 	print_commands(minishell->cmds);
+	free_cmds(minishell->cmds);
 }
 
 int	is_exit(t_cmd *cmds)
@@ -49,7 +50,6 @@ int	main(int argc, char **argv, char **envp)
 		if (is_exit(minishell.cmds))
 			return (0);
 		exec(&minishell);
-		free_cmds(minishell.cmds);
 		memset(&minishell, 0, sizeof(t_minishell));
 	}
 	return (0);

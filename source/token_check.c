@@ -1,48 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   commands_check.c                                   :+:      :+:    :+:   */
+/*   token_check.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/08 18:47:51 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/09 12:32:45 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/10 16:46:48 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/10 16:58:03 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "commands_utils.h"
 #include "minishell.h"
-#include <stdlib.h>
+#include "token_utils.h"
 
-void	delete_pipe(t_token **tokens)
+int	check_pipes(t_token *tokens)
 {
-	t_token	*next;
-	t_token	*tmp;
-
-	tmp = *tokens;
-	next = tmp->next;
-	free(tmp->string);
-	free(tmp);
-	*tokens = next;
-}
-
-int	check_for_pipe(t_token **tokens)
-{
-	t_token	*tmp;
-
-	tmp = *tokens;
-	if (tmp && tmp->type == is_pipe)
+	while (tokens)
 	{
-		delete_pipe(tokens);
-		return (1);
+		if (!tokens->next && tokens->type == is_pipe)
+			return (1);
+		if (tokens->next && tokens->type == is_pipe
+			&& tokens->next->type == is_pipe)
+			return (1);
+		tokens = tokens->next;
 	}
 	return (0);
 }
 
-int	check_for_duplicate(t_token *tokens)
+int	check_for_redirect_duplicate(t_token *tokens)
 {
-	int		input_dup;
-	int		output_dup;
+	int input_dup;
+	int output_dup;
 
 	input_dup = 0;
 	output_dup = 0;

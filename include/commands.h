@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   commands_access.h                                  :+:      :+:    :+:   */
+/*   commands.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/08 18:46:33 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/08 19:13:25 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/10 17:04:56 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/10 17:06:13 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef COMMANDS_ACCESS_H
-# define COMMANDS_ACCESS_H
+#ifndef COMMANDS_H
+# define COMMANDS_H
 
 # include "minishell.h"
 
-void	try_access(t_cmd *cmds, char **env);
+int	set_commands(t_token **tokens, t_minishell *minishell);
 
 #endif
