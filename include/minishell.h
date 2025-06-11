@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/10 16:21:37 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/11 15:17:28 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ typedef struct s_file
 
 typedef struct s_cmd
 {
-	char			*path;
+	t_file			*program;
 	char			**args;
 	t_file			*infile;
 	t_file			*outfile;
@@ -56,8 +56,6 @@ typedef struct s_token
 typedef struct s_minishell
 {
 	t_cmd			*cmds;
-	int				parse_error;
-	int				exit;
 }					t_minishell;
 
 #endif

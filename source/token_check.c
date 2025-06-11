@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:46:48 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/10 16:58:03 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/10 18:18:33 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,13 @@ int	check_for_redirect_duplicate(t_token *tokens)
 
 	input_dup = 0;
 	output_dup = 0;
-	while (!is_end_of_command(tokens))
+	while (!tokens)
 	{
+		if (tokens->type == is_pipe)
+		{
+			input_dup = 0;
+			output_dup = 0;
+		}
 		if (tokens->type == input || tokens->type == here_doc)
 			input_dup++;
 		if (tokens->type == output || tokens->type == append_file)
