@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/12 19:02:38 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/12 20:51:40 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ typedef struct s_token
 typedef struct s_minishell
 {
 	t_cmd			*cmds;
-	int				*(pipe_fds[2]);
+	int (*pipe_fds)[2];
+	int				*pids;
 }					t_minishell;
 
 #endif

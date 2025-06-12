@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/12 19:00:55 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/12 21:19:16 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,42 @@
 #include <stdlib.h>
 #include <string.h>
 
-void	exec_one(t_cmd *cmd)
+
+void set_fds(t_cmd *cmd, int ** pi)
+{
+	
+}
+
+void forked_cmds(cmd)
+{
+	
+	set_fds();
+}
+
+void	exec_one(t_cmd *cmd, int (*pipe_fds)[2], int *pids, int i)
 {
 	if (cmd->next)
-		return ;
+		if (pipe(pipe_fds[i]) == -1)
+			exit(printf("pipe creation error\n"));
+	pids[i] = fork();
+	if (pids[i] == -1)
+		exit(printf("fork error\n"));
+	if(pids[i] == 0)
+		forked_cmd();
+	else
+	{
+		
+	}
 }
 
 void	exec(t_minishell *minishell)
 {
+	int	i;
+
+	i = 0;
 	while (minishell->cmds)
 	{
-		exec_one(minishell->cmds);
+		exec_one(minishell->cmds, minishell->pipe_fds, i++);
 		print_commands(minishell->cmds);
 		free_and_set_to_next_commands(&minishell->cmds);
 	}
