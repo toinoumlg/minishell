@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:09 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/10 17:12:11 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/12 16:37:39 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "token_utils.h"
 #include <string.h>
 
-int	get_args_size(t_token *tokens)
+static int	get_args_size(t_token *tokens)
 {
 	int	size;
 
@@ -30,19 +30,25 @@ int	get_args_size(t_token *tokens)
 	return (size);
 }
 
+static char	**set_array(int size)
+{
+	char	**array;
+
+	array = malloc(sizeof(char *) * (size + 1));
+	if (!array)
+		return (NULL);
+	memset(array, 0, sizeof(char *) * (size + 1));
+	return (array);
+}
+
 char	**set_args(t_token **tokens)
 {
 	t_token	*tmp;
-	int		size;
 	char	**args;
 	int		i;
 
-	size = get_args_size(*tokens);
 	tmp = *tokens;
-	args = malloc(sizeof(char *) * (size + 1));
-	if (!args)
-		return (NULL);
-	memset(args, 0, sizeof(char *) * (size + 1));
+	args = set_array(get_args_size(*tokens));
 	i = 0;
 	while (!is_end_of_command(tmp))
 	{
@@ -52,7 +58,6 @@ char	**set_args(t_token **tokens)
 		i++;
 		tmp = tmp->next;
 	}
-	i = -1;
 	free_tokens_from_args(tokens);
 	return (args);
 }

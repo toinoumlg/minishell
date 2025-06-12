@@ -6,12 +6,25 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:27:02 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/10 16:45:28 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/12 18:40:02 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdio.h>
+
+void	print_file(t_file *file)
+{
+	if (file->type == output || file->type == append_file)
+		printf("output path: %s\n", file->path);
+	else
+		printf("input path: %s\n", file->path);
+	if (!file->is_dir)
+		printf("F: [%d] R: [%d] W: [%d] E: [%d]\n", file->exist, file->read,
+			file->write, file->exec);
+	else
+		printf("is a directory\n");
+}
 
 void	print_commands(t_cmd *cmds)
 {
@@ -19,7 +32,7 @@ void	print_commands(t_cmd *cmds)
 	int	j;
 
 	j = 0;
-	while (cmds)
+	if (cmds)
 	{
 		i = 0;
 		printf("cmd %d: ", j++);
@@ -28,14 +41,13 @@ void	print_commands(t_cmd *cmds)
 		if (!cmds->next)
 			printf("is last\n");
 		if (cmds->infile)
-			printf("infile path: [%s]\n", cmds->infile->path);
+			print_file(cmds->infile);
 		if (cmds->outfile)
-			printf("outfile path: [%s]\n", cmds->outfile->path);
+			print_file(cmds->outfile);
 		printf("args: ");
 		while (cmds->args[i])
 			printf("[%s] ", cmds->args[i++]);
 		printf("\n");
-		cmds = cmds->next;
 	}
 }
 

@@ -6,18 +6,17 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 12:15:26 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/10 17:02:54 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/12 17:25:13 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "token_utils.h"
-#include "token_free.h"
 #include "libft.h"
-#include "minishell.h"
+#include "token_free.h"
+#include "token_utils.h"
 #include <stdlib.h>
 #include <string.h>
 
-char	*get_file_path(t_token **tokens, int j)
+static char	*get_file_path(t_token **tokens, int j)
 {
 	t_token	*tmp;
 	int		i;
@@ -31,7 +30,7 @@ char	*get_file_path(t_token **tokens, int j)
 	return (ft_strdup(tmp->string));
 }
 
-t_file	*new_file(void)
+static t_file	*new_file(void)
 {
 	t_file	*new;
 
@@ -42,16 +41,19 @@ t_file	*new_file(void)
 	return (new);
 }
 
-t_file	*set_file(t_token **tokens, int j)
+static t_file	*set_file(t_token **tokens, int j)
 {
 	t_file	*new;
+	t_token	*tmp;
 
+	tmp = *tokens;
 	new = new_file();
 	if (!new)
 		return (NULL);
 	new->path = get_file_path(tokens, j);
 	if (!new->path)
 		return (free(new), NULL);
+	new->type = tmp->type;
 	free_i_token(tokens, j);
 	free_i_token(tokens, j);
 	return (new);

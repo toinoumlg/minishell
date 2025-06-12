@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 17:04:56 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/11 15:34:41 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/12 16:40:59 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,6 @@
 
 # include "minishell.h"
 
-int	set_commands(t_token **tokens, t_minishell *minishell);
+int		set_commands(t_token **tokens, t_cmd **cmds);
 
 #endif

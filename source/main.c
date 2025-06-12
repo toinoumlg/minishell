@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/10 16:41:34 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/12 19:00:55 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,20 @@
 #include <stdlib.h>
 #include <string.h>
 
+void	exec_one(t_cmd *cmd)
+{
+	if (cmd->next)
+		return ;
+}
+
 void	exec(t_minishell *minishell)
 {
-	print_commands(minishell->cmds);
-	free_cmds(minishell->cmds);
+	while (minishell->cmds)
+	{
+		exec_one(minishell->cmds);
+		print_commands(minishell->cmds);
+		free_and_set_to_next_commands(&minishell->cmds);
+	}
 }
 
 int	is_exit(t_cmd *cmds)
