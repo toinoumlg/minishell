@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/13 16:52:27 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/13 17:42:36 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ void	parse_read_line(char *read_line, t_minishell *minishell, char **env)
 
 	if (get_tokens_list(read_line, &tokens))
 		return (free_get_token_list(read_line, tokens));
+	if (!tokens)
+		return ;
 	// expand_tokens();
 	if (set_commands(&tokens, &minishell->cmds))
 		return (free_set_commands(read_line, tokens, minishell->cmds));

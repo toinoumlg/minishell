@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/13 17:07:22 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/13 18:48:09 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,23 +31,19 @@ void	dup2_infile(t_cmd *cmd)
 		close(cmd->infile->fd);
 	}
 }
-
-void	set_file_fds(t_minishell *minishell)
+void	dup2_write_pipe(t_minishell *minishell)
 {
-	if (minishell->cmds->infile && !minishell->cmds->infile->read)
-		dup2_infile(minishell->cmds);
-	else if (!minishell->cmds->infile && minishell->i > 0
-		&& minishell->pipe_fds)
-	{
-		if (dup2(minishell->pipe_fds[minishell->i - 1][0], STDIN_FILENO) == -1)
-			perror("dup2 error:");
-		close(minishell->pipe_fds[minishell->i - 1][0]);
-	}
-	if (minishell->cmds->outfile && (minishell->cmds->outfile->exist
-			|| !minishell->cmds->outfile->write))
+	if (dup2(minishell->pipe_fds[minishell->i - 1][0], STDIN_FILENO) == -1)
+		perror("dup2 error:");
+	close(minishell->pipe_fds[minishell->i - 1][0]);
+}
+
+void	dup2_outfile(t_minishell *minishell)
+{
+	if (minishell->cmds->outfile->type == output)
 	{
 		minishell->cmds->outfile->fd = open(minishell->cmds->outfile->path,
-				O_CREAT | O_WRONLY);
+				O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (minishell->cmds->outfile->fd > 0)
 		{
 			if (dup2(minishell->cmds->outfile->fd, STDOUT_FILENO) == -1)
@@ -55,28 +51,50 @@ void	set_file_fds(t_minishell *minishell)
 			close(minishell->cmds->outfile->fd);
 		}
 	}
-	else if (!minishell->cmds->outfile && minishell->i < minishell->size - 1
-		&& minishell->pipe_fds)
+	else
 	{
-		if (dup2(minishell->pipe_fds[minishell->i][1], STDOUT_FILENO) == -1)
-			perror("dup2 error:");
-		close(minishell->pipe_fds[minishell->i][1]);
+		minishell->cmds->outfile->fd = open(minishell->cmds->outfile->path,
+				O_CREAT | O_WRONLY | O_APPEND, 0644);
+		if (minishell->cmds->outfile->fd > 0)
+		{
+			if (dup2(minishell->cmds->outfile->fd, STDOUT_FILENO) == -1)
+				perror("dup2 error:");
+			close(minishell->cmds->outfile->fd);
+		}
 	}
 }
 
-void	set_pipes(t_minishell *minishell)
+void	dup2_read_pipe(t_minishell *minishell)
 {
-	(void)minishell;
+	if (dup2(minishell->pipe_fds[minishell->i][1], STDOUT_FILENO) == -1)
+		perror("dup2 error:");
+	close(minishell->pipe_fds[minishell->i][1]);
 }
 
+void	set_file_fds(t_minishell *minishell)
+{
+	if (minishell->cmds->infile && !minishell->cmds->infile->read)
+		dup2_infile(minishell->cmds);
+	else if (!minishell->cmds->infile && minishell->i > 0
+		&& minishell->pipe_fds)
+		dup2_write_pipe(minishell);
+	if (minishell->cmds->outfile && (minishell->cmds->outfile->exist
+			|| !minishell->cmds->outfile->write))
+		dup2_outfile(minishell);
+	else if (!minishell->cmds->outfile && minishell->i < minishell->size - 1
+		&& minishell->pipe_fds)
+		dup2_read_pipe(minishell);
+}
 void	child_process(t_minishell *minishell, char **envp)
 {
 	t_cmd	*cmd;
 
 	cmd = minishell->cmds;
 	set_file_fds(minishell);
-	set_pipes(minishell);
 	execve(cmd->program_path, cmd->args, envp);
+	free_cmds(minishell->cmds);
+	free(minishell->pids);
+	free(minishell->pipe_fds);
 	exit(1);
 }
 
@@ -119,14 +137,25 @@ void	exec(t_minishell *minishell, char **envp)
 		// print_commands(minishell->cmds);
 		free_and_set_to_next_commands(&minishell->cmds);
 	}
+	free(minishell->pipe_fds);
 }
 
-int	is_exit(t_cmd *cmds)
+void	is_exit(t_minishell *minishell, char **env)
 {
-	if (cmds && cmds->args && !ft_strncmp(cmds->args[0], "exit", 4))
-		return (printf("exit\n"), free_cmds(cmds), 1);
+	if (minishell->cmds && minishell->cmds->args
+		&& !ft_strncmp(minishell->cmds->args[0], "exit", 4))
+	{
+		printf("exit\n");
+		free_cmds(minishell->cmds);
+		free_array(env);
+		if (minishell->pipe_fds)
+			free(minishell->pipe_fds);
+		if (minishell->pids)
+			free(minishell->pids);
+		exit(0);
+	}
 	else
-		return (0);
+		return ;
 }
 
 void	wait_for_childrens(int *pids, int size)
@@ -137,6 +166,7 @@ void	wait_for_childrens(int *pids, int size)
 	i = 0;
 	while (i < size)
 		waitpid(pids[i++], &status, 0);
+	free(pids);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -153,11 +183,11 @@ int	main(int argc, char **argv, char **envp)
 	{
 		read_line = readline("minishell >> ");
 		parse_read_line(read_line, &minishell, env);
-		if (is_exit(minishell.cmds))
-			return (0);
+		is_exit(&minishell, env);
 		exec(&minishell, envp);
 		wait_for_childrens(minishell.pids, minishell.size);
 		memset(&minishell, 0, sizeof(t_minishell));
 	}
+	free_array(env);
 	return (0);
 }

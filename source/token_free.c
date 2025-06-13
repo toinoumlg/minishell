@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:51:29 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/10 16:59:51 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/13 18:07:36 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,18 @@
 #include "token_utils.h"
 #include <stdlib.h>
 
+void	free_first_token(t_token **tokens)
+{
+	t_token	*tmp;
+	t_token	*next;
+
+	tmp = *tokens;
+	next = tmp->next;
+	if (tmp->string)
+		free(tmp->string);
+	free(tmp);
+	*tokens = next;
+}
 void	free_i_token(t_token **tokens, int i)
 {
 	t_token	*tmp;
@@ -22,8 +34,12 @@ void	free_i_token(t_token **tokens, int i)
 	t_token	*next;
 	int		j;
 
-	j = -1;
 	tmp = *tokens;
+	if (!tmp)
+		return ;
+	if (i == 0)
+		return (free_first_token(tokens));
+	j = -1;
 	head = tmp;
 	while (++j < i - 1)
 		tmp = tmp->next;
