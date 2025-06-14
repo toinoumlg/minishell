@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:51:29 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/13 18:07:36 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/13 20:13:52 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	free_first_token(t_token **tokens)
 	free(tmp);
 	*tokens = next;
 }
+
 void	free_i_token(t_token **tokens, int i)
 {
 	t_token	*tmp;

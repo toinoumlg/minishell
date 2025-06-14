@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 17:03:22 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/13 18:50:09 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/13 20:07:44 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,21 @@
 #include "commands_redirect.h"
 #include "libft.h"
 #include "token_free.h"
+#include <string.h>
+
+t_file	*set_program(char *path)
+{
+	t_file	*new;
+
+	if (!path)
+		return (NULL);
+	new = malloc(sizeof(t_file));
+	if (!new)
+		return (NULL);
+	memset(new, 0, sizeof(t_file));
+	new->path = path;
+	return (new);
+}
 
 static int	add_new_command(t_token **tokens, t_cmd **cmds)
 {
@@ -28,8 +43,8 @@ static int	add_new_command(t_token **tokens, t_cmd **cmds)
 	new->args = set_args(tokens);
 	if (!new->args)
 		return (1);
-	new->program_path = ft_strdup(new->args[0]);
-	if (!new->program_path)
+	new->program = set_program(ft_strdup(new->args[0]));
+	if (!new)
 		return (1);
 	free_pipe(tokens);
 	append_new_command(cmds, new);

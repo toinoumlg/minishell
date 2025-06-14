@@ -14,6 +14,7 @@ SRC_FILES = main set_env parse_read_line utils \
 	token token_list token_utils token_operator token_string token_check token_free \
 	commands commands_args commands_redirect commands_list \
 	access \
+	exec set_files_fds \
 	free 
 
 SRC = $(addprefix $(SRC_DIR)/, $(addsuffix .c, $(SRC_FILES)))

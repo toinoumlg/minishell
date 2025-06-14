@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/13 17:42:36 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/13 20:11:50 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	*set_pipe_fds(t_cmd *cmds)
 		i++;
 		cmds = cmds->next;
 	}
-	return (malloc(sizeof(int[2]) * i));
+	return (malloc(sizeof(int [2]) * i));
 }
 
 void	*set_pids(t_cmd *cmds)

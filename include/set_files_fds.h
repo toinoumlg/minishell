@@ -1,26 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.h                                             :+:      :+:    :+:   */
+/*   set_files_fds.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/08 19:00:38 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/13 19:03:10 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/13 19:52:37 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/13 19:53:47 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FREE_H
-# define FREE_H
+#ifndef SET_FILES_FDS_H
+# define SET_FILES_FDS_H
 
 # include "minishell.h"
 
-void	free_cmds(t_cmd *cmds);
-void	free_array(char **args);
-void	free_tokens(t_token *tokens);
-void	free_get_token_list(char *read_line, t_token *tokens);
-void	free_set_commands(char *read_line, t_token *tokens, t_cmd *cmds);
-void	free_and_set_to_next_commands(t_cmd **cmds);
-void	free_failed_execve(t_minishell *minishell);
+void	set_file_fds(t_minishell *minishell);
 
 #endif

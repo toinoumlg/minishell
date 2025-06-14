@@ -6,139 +6,18 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/13 18:48:09 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/13 20:00:06 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "exec.h"
 #include "free.h"
 #include "libft.h"
 #include "parse_read_line.h"
 #include "set_env.h"
 #include "utils.h"
-#include <fcntl.h>
 #include <readline/readline.h>
-#include <stdlib.h>
-#include <string.h>
-#include <wait.h>
-
-void	dup2_infile(t_cmd *cmd)
-{
-	cmd->infile->fd = open(cmd->infile->path, O_RDONLY);
-	if (cmd->infile->fd > 0)
-	{
-		if (dup2(cmd->infile->fd, STDIN_FILENO))
-			perror("dup2 error:");
-		close(cmd->infile->fd);
-	}
-}
-void	dup2_write_pipe(t_minishell *minishell)
-{
-	if (dup2(minishell->pipe_fds[minishell->i - 1][0], STDIN_FILENO) == -1)
-		perror("dup2 error:");
-	close(minishell->pipe_fds[minishell->i - 1][0]);
-}
-
-void	dup2_outfile(t_minishell *minishell)
-{
-	if (minishell->cmds->outfile->type == output)
-	{
-		minishell->cmds->outfile->fd = open(minishell->cmds->outfile->path,
-				O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		if (minishell->cmds->outfile->fd > 0)
-		{
-			if (dup2(minishell->cmds->outfile->fd, STDOUT_FILENO) == -1)
-				perror("dup2 error:");
-			close(minishell->cmds->outfile->fd);
-		}
-	}
-	else
-	{
-		minishell->cmds->outfile->fd = open(minishell->cmds->outfile->path,
-				O_CREAT | O_WRONLY | O_APPEND, 0644);
-		if (minishell->cmds->outfile->fd > 0)
-		{
-			if (dup2(minishell->cmds->outfile->fd, STDOUT_FILENO) == -1)
-				perror("dup2 error:");
-			close(minishell->cmds->outfile->fd);
-		}
-	}
-}
-
-void	dup2_read_pipe(t_minishell *minishell)
-{
-	if (dup2(minishell->pipe_fds[minishell->i][1], STDOUT_FILENO) == -1)
-		perror("dup2 error:");
-	close(minishell->pipe_fds[minishell->i][1]);
-}
-
-void	set_file_fds(t_minishell *minishell)
-{
-	if (minishell->cmds->infile && !minishell->cmds->infile->read)
-		dup2_infile(minishell->cmds);
-	else if (!minishell->cmds->infile && minishell->i > 0
-		&& minishell->pipe_fds)
-		dup2_write_pipe(minishell);
-	if (minishell->cmds->outfile && (minishell->cmds->outfile->exist
-			|| !minishell->cmds->outfile->write))
-		dup2_outfile(minishell);
-	else if (!minishell->cmds->outfile && minishell->i < minishell->size - 1
-		&& minishell->pipe_fds)
-		dup2_read_pipe(minishell);
-}
-void	child_process(t_minishell *minishell, char **envp)
-{
-	t_cmd	*cmd;
-
-	cmd = minishell->cmds;
-	set_file_fds(minishell);
-	execve(cmd->program_path, cmd->args, envp);
-	free_cmds(minishell->cmds);
-	free(minishell->pids);
-	free(minishell->pipe_fds);
-	exit(1);
-}
-
-void	parent_process(t_minishell *minishell)
-{
-	if (minishell->i == 0 && minishell->pipe_fds)
-		close(minishell->pipe_fds[minishell->i][1]);
-	else if (minishell->i > 0 && minishell->i < minishell->size - 1)
-	{
-		close(minishell->pipe_fds[minishell->i][1]);
-		close(minishell->pipe_fds[minishell->i - 1][0]);
-	}
-	else if (minishell->i == minishell->size)
-		close(minishell->pipe_fds[minishell->i - 1][0]);
-}
-
-void	exec_one(t_minishell *minishell, char **envp)
-{
-	int	i;
-
-	i = minishell->i;
-	if (minishell->cmds->next)
-		if (pipe(minishell->pipe_fds[i]) == -1)
-			exit(printf("pipe creation error\n"));
-	minishell->pids[i] = fork();
-	if (minishell->pids[i] == -1)
-		exit(printf("fork error\n"));
-	else if (minishell->pids[i] == 0)
-		child_process(minishell, envp);
-	else
-		parent_process(minishell);
-}
-
-void	exec(t_minishell *minishell, char **envp)
-{
-	while (minishell->cmds)
-	{
-		exec_one(minishell, envp);
-		minishell->i++;
-		// print_commands(minishell->cmds);
-		free_and_set_to_next_commands(&minishell->cmds);
-	}
-	free(minishell->pipe_fds);
-}
+#include <sys/wait.h>
 
 void	is_exit(t_minishell *minishell, char **env)
 {

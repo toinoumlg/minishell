@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:46:48 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/13 17:54:51 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/13 20:13:11 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ int	check_pipes(t_token *tokens)
 
 int	check_for_redirect_duplicate(t_token *tokens)
 {
-	int input_dup;
-	int output_dup;
+	int	input_dup;
+	int	output_dup;
 
 	input_dup = 0;
 	output_dup = 0;

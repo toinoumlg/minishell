@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:06 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/13 18:52:50 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/13 20:18:03 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,36 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-char	*parse_env(char **env, char *path)
+void	set_all_access_to_n(t_file *program)
+{
+	program->exist = -1;
+	program->exec = -1;
+	program->read = -1;
+	program->write = -1;
+}
+
+char	*parse_env(char **env, t_file *program)
 {
 	char	*tmp;
 
+	set_all_access_to_n(program);
 	while (*env)
 	{
-		tmp = ft_strjoin(*env, path);
+		tmp = ft_strjoin(*env, program->path);
 		if (!tmp)
-			return (free(path), NULL);
-		if (!access(tmp, X_OK))
-			return (free(path), tmp);
+			return (free(program->path), NULL);
+		if (!access(tmp, F_OK))
+		{
+			program->exist = access(tmp, F_OK);
+			program->exec = access(tmp, X_OK);
+			program->read = access(tmp, R_OK);
+			program->write = access(tmp, W_OK);
+			return (free(program->path), tmp);
+		}
 		free(tmp);
 		env++;
 	}
-	return (path);
-}
-
-char	*access_program(char *program_path, char **env)
-{
-	if (ft_strncmp("/", program_path, 1))
-		return (parse_env(env, program_path));
-	else
-		return (program_path);
+	return (program->path);
 }
 
 int	check_for_directory(t_file *file)
@@ -72,13 +79,19 @@ void	access_file(t_file *file)
 	set_access(file);
 }
 
+char	*access_program(t_file *program, char **env)
+{
+	if (ft_strncmp("/", program->path, 1))
+		return (parse_env(env, program));
+	else
+		return (set_access(program), program->path);
+}
+
 void	try_access(t_cmd *cmds, char **env)
 {
 	while (cmds)
 	{
-		cmds->program_path = access_program(cmds->program_path, env);
-		if (!cmds->program_path)
-			return ;
+		cmds->program->path = access_program(cmds->program, env);
 		access_file(cmds->infile);
 		access_file(cmds->outfile);
 		cmds = cmds->next;

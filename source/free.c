@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:58:46 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/13 18:51:03 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/13 20:04:58 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,13 @@ void	free_tokens(t_token *tokens)
 	}
 }
 
+void	free_file(t_file *file)
+{
+	if (file->path)
+		free(file->path);
+	free(file);
+}
+
 void	free_cmds(t_cmd *cmds)
 {
 	t_cmd	*next;
@@ -54,18 +61,12 @@ void	free_cmds(t_cmd *cmds)
 		next = cmds->next;
 		if (cmds->args)
 			free_array(cmds->args);
-		if (cmds->program_path)
-			free(cmds->program_path);
+		if (cmds->program)
+			free_file(cmds->program);
 		if (cmds->infile)
-		{
-			free(cmds->infile->path);
-			free(cmds->infile);
-		}
+			free_file(cmds->infile);
 		if (cmds->outfile)
-		{
-			free(cmds->outfile->path);
-			free(cmds->outfile);
-		}
+			free_file(cmds->outfile);
 		free(cmds);
 		cmds = next;
 	}
@@ -91,18 +92,12 @@ void	free_cmd(t_cmd *cmd)
 	if (!cmd)
 		return ;
 	free_array(cmd->args);
-	if (cmd->program_path)
-		free(cmd->program_path);
+	if (cmd->program)
+		free_file(cmd->program);
 	if (cmd->infile)
-	{
-		free(cmd->infile->path);
-		free(cmd->infile);
-	}
+		free_file(cmd->infile);
 	if (cmd->outfile)
-	{
-		free(cmd->outfile->path);
-		free(cmd->outfile);
-	}
+		free_file(cmd->outfile);
 	free(cmd);
 }
 
@@ -115,4 +110,13 @@ void	free_and_set_to_next_commands(t_cmd **cmds)
 	next = tmp->next;
 	free_cmd(tmp);
 	*cmds = next;
+}
+
+void	free_failed_execve(t_minishell *minishell)
+{
+	free_cmds(minishell->cmds);
+	if (minishell->pids)
+		free(minishell->pids);
+	if (minishell->pipe_fds)
+		free(minishell->pipe_fds);
 }

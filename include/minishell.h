@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/13 16:16:06 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/13 19:08:30 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct s_file
 
 typedef struct s_cmd
 {
-	char			*program_path;
+	t_file			*program;
 	char			**args;
 	t_file			*infile;
 	t_file			*outfile;

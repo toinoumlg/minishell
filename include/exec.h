@@ -1,26 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.h                                             :+:      :+:    :+:   */
+/*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/08 19:00:38 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/13 19:03:10 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/13 19:33:35 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/13 19:38:31 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FREE_H
-# define FREE_H
+#ifndef EXEC_H
+# define EXEC_H
 
 # include "minishell.h"
 
-void	free_cmds(t_cmd *cmds);
-void	free_array(char **args);
-void	free_tokens(t_token *tokens);
-void	free_get_token_list(char *read_line, t_token *tokens);
-void	free_set_commands(char *read_line, t_token *tokens, t_cmd *cmds);
-void	free_and_set_to_next_commands(t_cmd **cmds);
-void	free_failed_execve(t_minishell *minishell);
+void	exec(t_minishell *minishell, char **envp);
 
 #endif
