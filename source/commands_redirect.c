@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 12:15:26 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/12 17:25:13 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/14 16:46:56 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-static char	*get_file_path(t_token **tokens, int j)
+static t_token	*get_operator_token(t_token **tokens, int j)
 {
 	t_token	*tmp;
 	int		i;
 
 	i = 0;
 	tmp = *tokens;
-	while (i++ < j + 1)
+	while (i++ < j)
 		tmp = tmp->next;
-	if (!tmp)
-		return (NULL);
-	return (ft_strdup(tmp->string));
+	return (tmp);
 }
 
 static t_file	*new_file(void)
@@ -50,7 +48,8 @@ static t_file	*set_file(t_token **tokens, int j)
 	new = new_file();
 	if (!new)
 		return (NULL);
-	new->path = get_file_path(tokens, j);
+	tmp = get_operator_token(tokens, j);
+	new->path = ft_strdup(tmp->next->string);
 	if (!new->path)
 		return (free(new), NULL);
 	new->type = tmp->type;

@@ -6,10 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:50:43 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/13 20:11:23 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/14 16:50:08 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "access.h"
 #include "minishell.h"
 #include <fcntl.h>
 #include <stdio.h>
@@ -44,15 +45,16 @@ void	dup2_outfile(t_minishell *minishell)
 	if (minishell->cmds->outfile->type == output)
 	{
 		minishell->cmds->outfile->fd = open(minishell->cmds->outfile->path,
-				O_CREAT | O_WRONLY | O_TRUNC, 0644);
+				O_CREAT | O_WRONLY, 0644);
 		if (minishell->cmds->outfile->fd > 0)
 		{
 			if (dup2(minishell->cmds->outfile->fd, STDOUT_FILENO) == -1)
 				perror("dup2 error:");
 			close(minishell->cmds->outfile->fd);
+			set_access(minishell->cmds->outfile);
 		}
 	}
-	else
+	else if (minishell->cmds->outfile->type == append_file)
 	{
 		minishell->cmds->outfile->fd = open(minishell->cmds->outfile->path,
 				O_CREAT | O_WRONLY | O_APPEND, 0644);
@@ -61,6 +63,7 @@ void	dup2_outfile(t_minishell *minishell)
 			if (dup2(minishell->cmds->outfile->fd, STDOUT_FILENO) == -1)
 				perror("dup2 error:");
 			close(minishell->cmds->outfile->fd);
+			set_access(minishell->cmds->outfile);
 		}
 	}
 }
