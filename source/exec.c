@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/14 16:29:51 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/15 10:23:18 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,13 @@ void	print_file_error(t_file *input, t_file *output)
 		if (output->write)
 		{
 			ft_putstr_fd("minishell >> permission denied: ", 2);
-			ft_putstr_fd(input->path, 2);
+			ft_putstr_fd(output->path, 2);
 			ft_putstr_fd("\n", 2);
 		}
 		if (output->is_dir)
 		{
 			ft_putstr_fd("minishell >> is a directory: ", 2);
-			ft_putstr_fd(input->path, 2);
+			ft_putstr_fd(output->path, 2);
 			ft_putstr_fd("\n", 2);
 		}
 	}
@@ -76,6 +76,7 @@ void	exit_child_no_execve(t_minishell *minishell)
 
 	cmd = minishell->cmds;
 	exit_value = print_command_error(cmd->program, cmd->infile, cmd->outfile);
+	print_file_error(minishell->cmds->infile, minishell->cmds->outfile);
 	free_failed_execve(minishell);
 	exit(exit_value);
 }
@@ -130,7 +131,6 @@ void	exec(t_minishell *minishell, char **envp)
 	{
 		exec_one(minishell, envp);
 		minishell->i++;
-		print_file_error(minishell->cmds->infile, minishell->cmds->outfile);
 		free_and_set_to_next_commands(&minishell->cmds);
 	}
 	free(minishell->pipe_fds);

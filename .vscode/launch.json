@@ -12,24 +12,87 @@
       "program": "${workspaceFolder}/minishell",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "Debug childs",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": true,
+      "cwd": "${workspaceFolder}",
+      "program": "${workspaceFolder}/minishell",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
       "preLaunchTask": "build",
-      // "setupCommands": [
-      //   {
-      //     "description": "Enable pretty-printing for gdb",
-      //     "text": "-enable-pretty-printing",
-      //     "ignoreFailures": true
-      //   },
-      //   {
-      //     "description": "Follow child processes after fork",
-      //     "text": "set follow-fork-mode child",
-      //     "ignoreFailures": false
-      //   },
-      //   {
-      //     "description": "Keep both parent and child under debugger control",
-      //     "text": "set detach-on-fork off",
-      //     "ignoreFailures": false
-      //   }
-      // ]
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Follow child processes after fork",
+          "text": "set follow-fork-mode child",
+          "ignoreFailures": false
+        },
+        {
+          "description": "Keep both parent and child under debugger control",
+          "text": "set detach-on-fork off",
+          "ignoreFailures": false
+        }
+      ]
+    },
+    {
+      "name": "Debug memory",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": true,
+      "cwd": "${workspaceFolder}",
+      "program": "${workspaceFolder}/minishell",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "preLaunchTask": "build",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Stop on SIGSEGV",
+          "text": "handle SIGSEGV stop print nopass",
+          "ignoreFailures": false
+        },
+        {
+          "description": "Stop on SIGBUS", 
+          "text": "handle SIGBUS stop print nopass",
+          "ignoreFailures": false
+        },
+        {
+          "description": "Stop on SIGABRT",
+          "text": "handle SIGABRT stop print nopass",
+          "ignoreFailures": false
+        },
+        {
+          "description": "Enable AddressSanitizer",
+          "text": "set environment ASAN_OPTIONS=abort_on_error=1:halt_on_error=1:detect_use_after_free=1",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Set breakpoint on malloc_error_break",
+          "text": "break malloc_error_break",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Set breakpoint on abort",
+          "text": "break abort",
+          "ignoreFailures": true
+        }
+      ]
     }
   ]
 }

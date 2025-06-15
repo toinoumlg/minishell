@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:50:43 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/14 16:50:08 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/15 10:27:54 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	dup2_infile(t_cmd *cmd)
 			close(cmd->infile->fd);
 		}
 	}
-	else
+	else if (cmd->infile->type == here_doc)
 		return ;
 }
 

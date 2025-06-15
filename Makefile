@@ -1,7 +1,9 @@
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
+#CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g
 INCLUDE = -I./include -I./libft/include
+#INCLUDE = -I./include -I./libft/include -lft -fsanitize=address
 LIBS = -lreadline -L./libft -lft
 
 LIBFT_DIR = libft
@@ -39,7 +41,7 @@ $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
 valgrind: all
-	valgrind ./minishell
+	valgrind --leak-check=full --trace-children=yes --track-fds=yes ./minishell
 
 clean:
 	@echo "Deleting $(OBJ_DIR) directory"

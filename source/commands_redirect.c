@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 12:15:26 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/14 16:46:56 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/15 11:01:44 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static t_token	*get_operator_token(t_token **tokens, int j)
 
 	i = 0;
 	tmp = *tokens;
-	while (i++ < j)
+	while (i++ < j && tmp)
 		tmp = tmp->next;
 	return (tmp);
 }
@@ -72,14 +72,16 @@ int	pick_redirects(t_cmd *new, t_token **tokens)
 			new->outfile = set_file(tokens, j);
 			if (!new->outfile)
 				return (1);
-			pick_redirects(new, tokens);
+			tmp = *tokens;
+			j = 0;
 		}
 		if (tmp->type == input || tmp->type == here_doc)
 		{
 			new->infile = set_file(tokens, j);
 			if (!new->infile)
 				return (1);
-			pick_redirects(new, tokens);
+			tmp = *tokens;
+			j = 0;
 		}
 		j++;
 		tmp = tmp->next;
