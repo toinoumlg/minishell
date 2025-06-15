@@ -16,8 +16,8 @@ SRC_FILES = main set_env parse_read_line utils \
 	token token_list token_utils token_operator token_string token_check token_free \
 	commands commands_args commands_redirect commands_list \
 	access \
-	exec set_files_fds \
-	free 
+	exec exec_builtsin set_files_fds \
+	free print_error
 
 SRC = $(addprefix $(SRC_DIR)/, $(addsuffix .c, $(SRC_FILES)))
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

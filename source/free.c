@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:58:46 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/15 10:17:59 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/15 18:28:21 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,11 +112,11 @@ void	free_and_set_to_next_commands(t_cmd **cmds)
 	*cmds = next;
 }
 
-void	free_failed_execve(t_minishell *minishell)
+void	free_child(t_pipex *pipex)
 {
-	free_cmds(minishell->cmds);
-	if (minishell->pids)
-		free(minishell->pids);
-	if (minishell->pipe_fds)
-		free(minishell->pipe_fds);
+	free_cmds(pipex->cmds);
+	if (pipex->pids)
+		free(pipex->pids);
+	if (pipex->pipe_fds)
+		free(pipex->pipe_fds);
 }

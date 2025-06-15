@@ -31,6 +31,9 @@
 		"commands_redirect.h": "c",
 		"token_free.h": "c",
 		"commands_args.h": "c",
-		"fcntl.h": "c"
+		"fcntl.h": "c",
+		"set_files_fds.h": "c",
+		"print_error.h": "c",
+		"unistd.h": "c"
 	}
 }

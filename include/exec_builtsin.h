@@ -1,20 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_read_line.h                                  :+:      :+:    :+:   */
+/*   exec_builtsin.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/27 15:10:45 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/15 18:25:25 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/15 17:09:26 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/15 18:54:55 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSE_READ_LINE_H
-# define PARSE_READ_LINE_H
+#ifndef EXEC_BUILTSIN_H
+# define EXEC_BUILTSIN_H
 
 # include "minishell.h"
 
-void	parse_read_line(char *read_line, t_pipex *pipex, char **env);
+void	exec_child_builtins(t_pipex *pipex);
+void	cd(char *path);
 
 #endif

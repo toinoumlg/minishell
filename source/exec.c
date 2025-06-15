@@ -6,132 +6,133 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/15 10:23:18 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/15 18:54:46 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "exec_builtsin.h"
 #include "free.h"
 #include "libft.h"
 #include "minishell.h"
+#include "print_error.h"
 #include "set_files_fds.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-void	print_file_error(t_file *input, t_file *output)
-{
-	if (input)
-	{
-		if (input->exist)
-		{
-			ft_putstr_fd("minishell >> no such file or directory: ", 2);
-			ft_putstr_fd(input->path, 2);
-			ft_putstr_fd("\n", 2);
-		}
-		if (!input->exist && input->read)
-		{
-			ft_putstr_fd("minishell >> permission denied: ", 2);
-			ft_putstr_fd(input->path, 2);
-			ft_putstr_fd("\n", 2);
-		}
-		if (input->is_dir)
-		{
-			ft_putstr_fd("minishell >> is a directory: ", 2);
-			ft_putstr_fd(input->path, 2);
-			ft_putstr_fd("\n", 2);
-		}
-	}
-	if (output)
-	{
-		if (output->write)
-		{
-			ft_putstr_fd("minishell >> permission denied: ", 2);
-			ft_putstr_fd(output->path, 2);
-			ft_putstr_fd("\n", 2);
-		}
-		if (output->is_dir)
-		{
-			ft_putstr_fd("minishell >> is a directory: ", 2);
-			ft_putstr_fd(output->path, 2);
-			ft_putstr_fd("\n", 2);
-		}
-	}
-}
-int	print_command_error(t_file *program, t_file *infile, t_file *outfile)
-{
-	if ((infile && infile->read) || (outfile && outfile->write))
-		return (1);
-	if (program->exist)
-		return (ft_putstr_fd("minishell >> cmd not found: ", 2),
-			ft_putstr_fd(program->path, 2), ft_putstr_fd("\n", 2), 127);
-	else
-		return (ft_putstr_fd("minishell >> no rights: ", 2),
-			ft_putstr_fd(program->path, 2), ft_putstr_fd("\n", 2), 126);
-}
-
-void	exit_child_no_execve(t_minishell *minishell)
+void	exit_child_no_execve(t_pipex *pipex)
 {
 	int		exit_value;
 	t_cmd	*cmd;
 
-	cmd = minishell->cmds;
+	cmd = pipex->cmds;
 	exit_value = print_command_error(cmd->program, cmd->infile, cmd->outfile);
-	print_file_error(minishell->cmds->infile, minishell->cmds->outfile);
-	free_failed_execve(minishell);
+	print_error_file(cmd->infile, cmd->outfile);
+	free_child(pipex);
 	exit(exit_value);
 }
-void	child_process(t_minishell *minishell, char **envp)
+
+void	child_process(t_pipex *pipex, char **envp)
 {
 	t_cmd	*cmd;
 
-	cmd = minishell->cmds;
-	set_file_fds(minishell);
+	cmd = pipex->cmds;
+	set_file_fds(pipex);
 	if ((!cmd->infile || (cmd->infile && !cmd->infile->read)) && (!cmd->outfile
 			|| (cmd->outfile && !cmd->outfile->write)))
-		execve(cmd->program->path, cmd->args, envp);
-	exit_child_no_execve(minishell);
-}
-
-void	parent_process(t_minishell *minishell)
-{
-	if (minishell->pipe_fds)
 	{
-		if (minishell->i == 0)
-			close(minishell->pipe_fds[minishell->i][1]);
-		else if (minishell->i > 0 && minishell->i < minishell->size - 1)
-		{
-			close(minishell->pipe_fds[minishell->i][1]);
-			close(minishell->pipe_fds[minishell->i - 1][0]);
-		}
-		else if (minishell->i == minishell->size)
-			close(minishell->pipe_fds[minishell->i - 1][0]);
+		exec_child_builtins(pipex);
+		execve(cmd->program->path, cmd->args, envp);
 	}
+	exit_child_no_execve(pipex);
 }
 
-void	exec_one(t_minishell *minishell, char **envp)
+void	close_parent_pipes(int (*pipe_fds)[2], int size, int i)
+{
+	if (i == 0)
+		close(pipe_fds[i][1]);
+	else if (i > 0 && i < size - 1)
+	{
+		close(pipe_fds[i][1]);
+		close(pipe_fds[i - 1][0]);
+	}
+	else if (i == size)
+		close(pipe_fds[i - 1][0]);
+}
+
+void	parent_process(t_pipex *pipex)
+{
+	if (pipex->pipe_fds)
+		close_parent_pipes(pipex->pipe_fds, pipex->size, pipex->i);
+}
+
+void	exec_one(t_pipex *pipex, char **envp)
 {
 	int	i;
 
-	i = minishell->i;
-	if (minishell->cmds->next)
-		if (pipe(minishell->pipe_fds[i]) == -1)
+	i = pipex->i;
+	if (pipex->cmds->next)
+		if (pipe(pipex->pipe_fds[i]) == -1)
 			exit(printf("pipe creation error\n"));
-	minishell->pids[i] = fork();
-	if (minishell->pids[i] == -1)
+	pipex->pids[i] = fork();
+	if (pipex->pids[i] == -1)
 		exit(printf("fork error\n"));
-	else if (minishell->pids[i] == 0)
-		child_process(minishell, envp);
+	else if (pipex->pids[i] == 0)
+		child_process(pipex, envp);
 	else
-		parent_process(minishell);
+		parent_process(pipex);
 }
 
-void	exec(t_minishell *minishell, char **envp)
+int	is_builtin_to_exec_in_parent(char *cmd)
 {
-	while (minishell->cmds)
+	return (!ft_strncmp(cmd, "cd", 3) || !ft_strncmp(cmd, "export", 7)
+		|| !ft_strncmp(cmd, "unset", 6) || !ft_strncmp(cmd, "exit", 5));
+}
+
+void	my_exit(t_pipex *pipex, char **env)
+{
+	if (pipex->cmds && pipex->cmds->args && !ft_strncmp(pipex->cmds->args[0],
+			"exit", 5))
 	{
-		exec_one(minishell, envp);
-		minishell->i++;
-		free_and_set_to_next_commands(&minishell->cmds);
+		printf("exit\n");
+		free_cmds(pipex->cmds);
+		free_array(env);
+		if (pipex->pipe_fds)
+			free(pipex->pipe_fds);
+		if (pipex->pids)
+			free(pipex->pids);
+		exit(0);
 	}
-	free(minishell->pipe_fds);
+}
+
+void	exec_parent_builtin(t_pipex *pipex, char **env)
+{
+	int	i;
+
+	i = pipex->i;
+	if (pipex->cmds->next)
+		if (pipe(pipex->pipe_fds[i]) == -1)
+			exit(printf("pipe creation error\n"));
+	pipex->pids[i] = -1;
+	if (!ft_strncmp(pipex->cmds->args[0], "cd", 3))
+		return (cd(pipex->cmds->args[1]));
+	if (!ft_strncmp(pipex->cmds->args[0], "exit", 5))
+		my_exit(pipex, env);
+	if (pipex->pipe_fds)
+		close_parent_pipes(pipex->pipe_fds, pipex->size, i);
+}
+
+void	exec(t_pipex *pipex, char **envp, char **env)
+{
+	while (pipex->cmds)
+	{
+		if (pipex->cmds->args
+			&& is_builtin_to_exec_in_parent(pipex->cmds->args[0]))
+			exec_parent_builtin(pipex, env);
+		else
+			exec_one(pipex, envp);
+		pipex->i++;
+		free_and_set_to_next_commands(&pipex->cmds);
+	}
+	free(pipex->pipe_fds);
 }

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:50:43 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/15 10:27:54 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/15 18:32:07 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,59 +33,58 @@ void	dup2_infile(t_cmd *cmd)
 		return ;
 }
 
-void	dup2_write_pipe(t_minishell *minishell)
+void	dup2_write_pipe(t_pipex *pipex)
 {
-	if (dup2(minishell->pipe_fds[minishell->i - 1][0], STDIN_FILENO) == -1)
+	if (dup2(pipex->pipe_fds[pipex->i - 1][0], STDIN_FILENO) == -1)
 		perror("dup2 error:");
-	close(minishell->pipe_fds[minishell->i - 1][0]);
+	close(pipex->pipe_fds[pipex->i - 1][0]);
 }
 
-void	dup2_outfile(t_minishell *minishell)
+void	dup2_outfile(t_pipex *pipex)
 {
-	if (minishell->cmds->outfile->type == output)
+	if (pipex->cmds->outfile->type == output)
 	{
-		minishell->cmds->outfile->fd = open(minishell->cmds->outfile->path,
+		pipex->cmds->outfile->fd = open(pipex->cmds->outfile->path,
 				O_CREAT | O_WRONLY, 0644);
-		if (minishell->cmds->outfile->fd > 0)
+		if (pipex->cmds->outfile->fd > 0)
 		{
-			if (dup2(minishell->cmds->outfile->fd, STDOUT_FILENO) == -1)
+			if (dup2(pipex->cmds->outfile->fd, STDOUT_FILENO) == -1)
 				perror("dup2 error:");
-			close(minishell->cmds->outfile->fd);
-			set_access(minishell->cmds->outfile);
+			close(pipex->cmds->outfile->fd);
+			set_access(pipex->cmds->outfile);
 		}
 	}
-	else if (minishell->cmds->outfile->type == append_file)
+	else if (pipex->cmds->outfile->type == append_file)
 	{
-		minishell->cmds->outfile->fd = open(minishell->cmds->outfile->path,
+		pipex->cmds->outfile->fd = open(pipex->cmds->outfile->path,
 				O_CREAT | O_WRONLY | O_APPEND, 0644);
-		if (minishell->cmds->outfile->fd > 0)
+		if (pipex->cmds->outfile->fd > 0)
 		{
-			if (dup2(minishell->cmds->outfile->fd, STDOUT_FILENO) == -1)
+			if (dup2(pipex->cmds->outfile->fd, STDOUT_FILENO) == -1)
 				perror("dup2 error:");
-			close(minishell->cmds->outfile->fd);
-			set_access(minishell->cmds->outfile);
+			close(pipex->cmds->outfile->fd);
+			set_access(pipex->cmds->outfile);
 		}
 	}
 }
 
-void	dup2_read_pipe(t_minishell *minishell)
+void	dup2_read_pipe(t_pipex *pipex)
 {
-	if (dup2(minishell->pipe_fds[minishell->i][1], STDOUT_FILENO) == -1)
+	if (dup2(pipex->pipe_fds[pipex->i][1], STDOUT_FILENO) == -1)
 		perror("dup2 error:");
-	close(minishell->pipe_fds[minishell->i][1]);
+	close(pipex->pipe_fds[pipex->i][1]);
 }
 
-void	set_file_fds(t_minishell *minishell)
+void	set_file_fds(t_pipex *pipex)
 {
-	if (minishell->cmds->infile && !minishell->cmds->infile->read)
-		dup2_infile(minishell->cmds);
-	else if (!minishell->cmds->infile && minishell->i > 0
-		&& minishell->pipe_fds)
-		dup2_write_pipe(minishell);
-	if (minishell->cmds->outfile && (minishell->cmds->outfile->exist
-			|| !minishell->cmds->outfile->write))
-		dup2_outfile(minishell);
-	else if (!minishell->cmds->outfile && minishell->i < minishell->size - 1
-		&& minishell->pipe_fds)
-		dup2_read_pipe(minishell);
+	if (pipex->cmds->infile && !pipex->cmds->infile->read)
+		dup2_infile(pipex->cmds);
+	else if (!pipex->cmds->infile && pipex->i > 0 && pipex->pipe_fds)
+		dup2_write_pipe(pipex);
+	if (pipex->cmds->outfile && (pipex->cmds->outfile->exist
+			|| !pipex->cmds->outfile->write))
+		dup2_outfile(pipex);
+	else if (!pipex->cmds->outfile && pipex->i < pipex->size - 1
+		&& pipex->pipe_fds)
+		dup2_read_pipe(pipex);
 }
