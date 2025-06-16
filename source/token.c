@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:25:17 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/10 17:14:46 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/15 19:58:26 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 
 int	get_tokens_list(char *read_line, t_token **tokens)
 {
-	memset(tokens, 0, sizeof(t_token *));
 	while (*read_line)
 	{
 		if (is_quote(*read_line) && extract_quoted_string(&read_line,

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/15 18:29:37 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/15 19:59:40 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,12 @@ void	parse_read_line(char *read_line, t_pipex *pipex, char **env)
 {
 	t_token	*tokens;
 
-	memset(pipex, 0, sizeof(t_minishell));
+	memset(pipex, 0, sizeof(t_pipex));
+	memset(&tokens, 0, sizeof(t_token *));
 	if (get_tokens_list(read_line, &tokens))
 		return (free_get_token_list(read_line, tokens));
 	if (!tokens)
-		return ;
+		return (free(read_line));
 	// expand_tokens();
 	if (set_commands(&tokens, &pipex->cmds))
 		return (free_set_commands(read_line, tokens, pipex->cmds));

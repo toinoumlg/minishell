@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/15 18:44:14 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/15 19:54:09 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,7 @@ void	wait_for_childrens(int *pids, int size)
 	while (i < size)
 	{
 		if (pids[i] > 0)
-		{
 			waitpid(pids[i++], &status, 0);
-		}
 		else
 			i++;
 	}

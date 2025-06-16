@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/15 18:54:46 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/15 19:51:28 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void	exec_parent_builtin(t_pipex *pipex, char **env)
 			exit(printf("pipe creation error\n"));
 	pipex->pids[i] = -1;
 	if (!ft_strncmp(pipex->cmds->args[0], "cd", 3))
-		return (cd(pipex->cmds->args[1]));
+		cd(pipex->cmds->args[1]);
 	if (!ft_strncmp(pipex->cmds->args[0], "exit", 5))
 		my_exit(pipex, env);
 	if (pipex->pipe_fds)

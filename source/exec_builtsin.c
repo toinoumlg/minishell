@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 17:10:29 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/15 18:54:24 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/15 19:35:54 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,21 @@ void	cd(char *path)
 
 void	echo(t_pipex *pipex)
 {
-	if()
+	int	i;
+
+	i = 1;
+	if (!ft_strncmp(pipex->cmds->args[i], "-n", 3))
+		i++;
+	while (pipex->cmds->args[i])
+	{
+		printf("%s", pipex->cmds->args[i++]);
+		if (pipex->cmds->args[i])
+			printf(" ");
+	}
+	if (ft_strncmp(pipex->cmds->args[1], "-n", 3))
+		printf("\n");
+	free_child(pipex);
+	exit(0);
 }
 
 void	exec_child_builtins(t_pipex *pipex)
@@ -67,8 +81,8 @@ void	exec_child_builtins(t_pipex *pipex)
 	t_cmd *cmd;
 
 	cmd = pipex->cmds;
-	if (!ft_strncmp(cmd->args[0], "pwd", 3))
+	if (!ft_strncmp(cmd->args[0], "pwd", 4))
 		pwd(pipex);
-	if (!ft_strncmp(cmd->args[0], "echo", 4))
+	if (!ft_strncmp(cmd->args[0], "echo", 5))
 		echo(pipex);
 }
