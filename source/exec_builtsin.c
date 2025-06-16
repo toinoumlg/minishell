@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 17:10:29 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/15 19:35:54 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/16 17:51:02 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,26 +18,26 @@
 
 void	pwd(t_pipex *pipex)
 {
-	char	**args;
-	char	path[256];
+char	**args;
+char	path[256];
 
-	args = pipex->cmds->args;
-	if (args[1])
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(args[0], 2);
-		ft_putstr_fd(": ", 2);
-		ft_putstr_fd(args[1], 2);
-		ft_putstr_fd(": invalid option\n", 2);
-		ft_putstr_fd(args[0], 2);
-		ft_putstr_fd(": usage: pwd\n", 2);
-		free_child(pipex);
-		exit(1);
-	}
-	getcwd(path, 256);
-	printf("%s\n", path);
+args = pipex->cmds->args;
+if (args[1])
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(args[0], 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(args[1], 2);
+	ft_putstr_fd(": invalid option\n", 2);
+	ft_putstr_fd(args[0], 2);
+	ft_putstr_fd(": usage: pwd\n", 2);
 	free_child(pipex);
-	exit(0);
+	exit(1);
+}
+getcwd(path, 256);
+printf("%s\n", path);
+free_child(pipex);
+exit(0);
 }
 
 void	cd(char *path)
@@ -59,21 +59,21 @@ void	cd(char *path)
 
 void	echo(t_pipex *pipex)
 {
-	int	i;
+int	i;
 
-	i = 1;
-	if (!ft_strncmp(pipex->cmds->args[i], "-n", 3))
-		i++;
-	while (pipex->cmds->args[i])
-	{
-		printf("%s", pipex->cmds->args[i++]);
-		if (pipex->cmds->args[i])
-			printf(" ");
-	}
-	if (ft_strncmp(pipex->cmds->args[1], "-n", 3))
-		printf("\n");
-	free_child(pipex);
-	exit(0);
+i = 1;
+if (!ft_strncmp(pipex->cmds->args[i], "-n", 3))
+	i++;
+while (pipex->cmds->args[i])
+{
+	printf("%s", pipex->cmds->args[i++]);
+	if (pipex->cmds->args[i])
+		printf(" ");
+}
+if (ft_strncmp(pipex->cmds->args[1], "-n", 3))
+	printf("\n");
+free_child(pipex);
+exit(0);
 }
 
 void	exec_child_builtins(t_pipex *pipex)
@@ -81,8 +81,8 @@ void	exec_child_builtins(t_pipex *pipex)
 	t_cmd *cmd;
 
 	cmd = pipex->cmds;
-	if (!ft_strncmp(cmd->args[0], "pwd", 4))
-		pwd(pipex);
-	if (!ft_strncmp(cmd->args[0], "echo", 5))
-		echo(pipex);
+if (!ft_strncmp(cmd->args[0], "pwd", 4))
+	pwd(pipex);
+if (!ft_strncmp(cmd->args[0], "echo", 5))
+	echo(pipex);
 }

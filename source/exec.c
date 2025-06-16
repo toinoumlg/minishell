@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/15 19:51:28 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/16 17:35:02 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,19 @@ void	exit_child_no_execve(t_pipex *pipex)
 	exit(exit_value);
 }
 
+int	is_child_executable(t_cmd *cmd)
+{
+	return (!cmd->infile || (cmd->infile && !cmd->infile->read))
+		&& (!cmd->outfile || (cmd->outfile && !cmd->outfile->write));
+}
+
 void	child_process(t_pipex *pipex, char **envp)
 {
 	t_cmd	*cmd;
 
 	cmd = pipex->cmds;
 	set_file_fds(pipex);
-	if ((!cmd->infile || (cmd->infile && !cmd->infile->read)) && (!cmd->outfile
-			|| (cmd->outfile && !cmd->outfile->write)))
+	if (is_child_executable(cmd))
 	{
 		exec_child_builtins(pipex);
 		execve(cmd->program->path, cmd->args, envp);
@@ -91,18 +96,14 @@ int	is_builtin_to_exec_in_parent(char *cmd)
 
 void	my_exit(t_pipex *pipex, char **env)
 {
-	if (pipex->cmds && pipex->cmds->args && !ft_strncmp(pipex->cmds->args[0],
-			"exit", 5))
-	{
-		printf("exit\n");
-		free_cmds(pipex->cmds);
-		free_array(env);
-		if (pipex->pipe_fds)
-			free(pipex->pipe_fds);
-		if (pipex->pids)
-			free(pipex->pids);
-		exit(0);
-	}
+	printf("exit\n");
+	free_cmds(pipex->cmds);
+	free_array(env);
+	if (pipex->pipe_fds)
+		free(pipex->pipe_fds);
+	if (pipex->pids)
+		free(pipex->pids);
+	exit(0);
 }
 
 void	exec_parent_builtin(t_pipex *pipex, char **env)

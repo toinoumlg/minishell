@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:06 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/15 18:20:57 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/16 15:17:23 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,19 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-void	set_all_access_to_n(t_file *program)
+void	set_all_access_to_n(t_file *program, int n)
 {
-	program->exist = -1;
-	program->exec = -1;
-	program->read = -1;
-	program->write = -1;
+	program->exist = n;
+	program->exec = n;
+	program->read = n;
+	program->write = n;
 }
 
 char	*parse_env(char **env, t_file *program)
 {
 	char	*tmp;
 
-	set_all_access_to_n(program);
+	set_all_access_to_n(program, -1);
 	while (*env)
 	{
 		tmp = ft_strjoin(*env, program->path);
