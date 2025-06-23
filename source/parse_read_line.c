@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/15 19:59:40 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/23 17:24:51 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void	*set_pipe_fds(t_cmd *cmds)
+void	*alloc_pipe_fds(t_cmd *cmds)
 {
 	int	i;
 
@@ -32,7 +32,7 @@ void	*set_pipe_fds(t_cmd *cmds)
 	return (malloc(sizeof(int[2]) * i));
 }
 
-void	*set_pids(t_cmd *cmds)
+void	*alloc_pids(t_cmd *cmds)
 {
 	int	i;
 
@@ -72,8 +72,8 @@ void	parse_read_line(char *read_line, t_pipex *pipex, char **env)
 	if (set_commands(&tokens, &pipex->cmds))
 		return (free_set_commands(read_line, tokens, pipex->cmds));
 	try_access(pipex->cmds, env);
-	pipex->pipe_fds = set_pipe_fds(pipex->cmds);
-	pipex->pids = set_pids(pipex->cmds);
+	pipex->pipe_fds = alloc_pipe_fds(pipex->cmds);
+	pipex->pids = alloc_pids(pipex->cmds);
 	pipex->size = set_size(pipex->cmds);
 	free(read_line);
 }

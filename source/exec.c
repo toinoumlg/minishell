@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/16 17:35:02 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/23 19:06:04 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "free.h"
 #include "libft.h"
 #include "minishell.h"
+#include "pipes.h"
 #include "print_error.h"
 #include "set_files_fds.h"
 #include <stdio.h>
@@ -52,40 +53,16 @@ void	child_process(t_pipex *pipex, char **envp)
 	exit_child_no_execve(pipex);
 }
 
-void	close_parent_pipes(int (*pipe_fds)[2], int size, int i)
-{
-	if (i == 0)
-		close(pipe_fds[i][1]);
-	else if (i > 0 && i < size - 1)
-	{
-		close(pipe_fds[i][1]);
-		close(pipe_fds[i - 1][0]);
-	}
-	else if (i == size)
-		close(pipe_fds[i - 1][0]);
-}
-
-void	parent_process(t_pipex *pipex)
-{
-	if (pipex->pipe_fds)
-		close_parent_pipes(pipex->pipe_fds, pipex->size, pipex->i);
-}
-
 void	exec_one(t_pipex *pipex, char **envp)
 {
 	int	i;
 
 	i = pipex->i;
-	if (pipex->cmds->next)
-		if (pipe(pipex->pipe_fds[i]) == -1)
-			exit(printf("pipe creation error\n"));
 	pipex->pids[i] = fork();
 	if (pipex->pids[i] == -1)
 		exit(printf("fork error\n"));
 	else if (pipex->pids[i] == 0)
 		child_process(pipex, envp);
-	else
-		parent_process(pipex);
 }
 
 int	is_builtin_to_exec_in_parent(char *cmd)
@@ -96,7 +73,10 @@ int	is_builtin_to_exec_in_parent(char *cmd)
 
 void	my_exit(t_pipex *pipex, char **env)
 {
+	if (pipex->i != 0)
+		return ;
 	printf("exit\n");
+	close_all_pipes(pipex->pipe_fds, pipex->size, pipex->i);
 	free_cmds(pipex->cmds);
 	free_array(env);
 	if (pipex->pipe_fds)
@@ -111,22 +91,20 @@ void	exec_parent_builtin(t_pipex *pipex, char **env)
 	int	i;
 
 	i = pipex->i;
-	if (pipex->cmds->next)
-		if (pipe(pipex->pipe_fds[i]) == -1)
-			exit(printf("pipe creation error\n"));
 	pipex->pids[i] = -1;
 	if (!ft_strncmp(pipex->cmds->args[0], "cd", 3))
 		cd(pipex->cmds->args[1]);
 	if (!ft_strncmp(pipex->cmds->args[0], "exit", 5))
 		my_exit(pipex, env);
-	if (pipex->pipe_fds)
-		close_parent_pipes(pipex->pipe_fds, pipex->size, i);
 }
 
 void	exec(t_pipex *pipex, char **envp, char **env)
 {
 	while (pipex->cmds)
 	{
+		if (pipex->size > 1 && pipex->i < pipex->size - 1)
+			if (pipe(pipex->pipe_fds[pipex->i]) == -1)
+				exit(printf("pipe creation error\n"));
 		if (pipex->cmds->args
 			&& is_builtin_to_exec_in_parent(pipex->cmds->args[0]))
 			exec_parent_builtin(pipex, env);
@@ -135,5 +113,6 @@ void	exec(t_pipex *pipex, char **envp, char **env)
 		pipex->i++;
 		free_and_set_to_next_commands(&pipex->cmds);
 	}
+	close_all_pipes(pipex->pipe_fds, pipex->size, pipex->i);
 	free(pipex->pipe_fds);
 }
