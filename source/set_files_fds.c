@@ -6,11 +6,12 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:50:43 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/25 19:00:30 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/25 21:30:15 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "access.h"
+#include "here_doc.h"
 #include "minishell.h"
 #include "pipes.h"
 #include <fcntl.h>
@@ -31,7 +32,7 @@ void	dup2_infile(t_cmd *cmd)
 		}
 	}
 	else if (cmd->infile->type == here_doc)
-		return ;
+		set_here_doc(cmd);
 }
 
 void	dup2_outfile(t_pipex *pipex)
@@ -66,7 +67,8 @@ void	set_file_fds(t_pipex *pipex)
 {
 	if (pipex->pipe_fds)
 		dup2_pipes(pipex->pipe_fds, pipex->size, pipex->i);
-	if (pipex->cmds->infile && !pipex->cmds->infile->read)
+	if ((pipex->cmds->infile && !pipex->cmds->infile->read)
+		|| pipex->cmds->infile->type == here_doc)
 		dup2_infile(pipex->cmds);
 	if (pipex->cmds->outfile && (pipex->cmds->outfile->exist
 			|| !pipex->cmds->outfile->write))

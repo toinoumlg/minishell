@@ -6,12 +6,12 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 21:15:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/25 18:51:34 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/25 21:28:30 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
 #include "libft.h"
+#include "minishell.h"
 
 int	is_builtin_to_exec_in_parent(char *cmd)
 {
@@ -21,7 +21,7 @@ int	is_builtin_to_exec_in_parent(char *cmd)
 
 int	is_child_executable(t_cmd *cmd)
 {
-	return (!cmd->infile || (cmd->infile && !cmd->infile->read))
-		&& (!cmd->outfile || (cmd->outfile && !cmd->outfile->write));
+	return ((!cmd->infile || (cmd->infile && !cmd->infile->read))
+		|| cmd->infile->type == here_doc) && (!cmd->outfile || (cmd->outfile
+			&& !cmd->outfile->write));
 }
-
