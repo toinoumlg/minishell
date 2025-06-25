@@ -15,9 +15,10 @@ OBJ_DIR = build
 SRC_FILES = main set_env parse_read_line utils \
 	token token_list token_utils token_operator token_string token_check token_free \
 	commands commands_args commands_redirect commands_list \
-	access \
-	exec exec_builtsin set_files_fds \
-	free print_error
+	access alloc \
+	builtsin_child builtsin_parent \
+	exec set_files_fds pipes exec_utils\
+	free free_utils print_error
 
 SRC = $(addprefix $(SRC_DIR)/, $(addsuffix .c, $(SRC_FILES)))
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

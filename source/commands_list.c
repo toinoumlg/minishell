@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:45:35 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/10 17:09:00 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/25 19:00:01 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,3 @@ t_cmd	*set_new_command(void)
 	memset(new, 0, sizeof(t_cmd));
 	return (new);
 }
-
-

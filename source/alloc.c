@@ -1,48 +1,48 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   alloc.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/08 18:58:46 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/25 19:12:08 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/25 19:03:01 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/25 19:13:17 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "free_utils.h"
 #include "minishell.h"
-#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-void	free_cmds(t_cmd *cmds)
+void	*alloc_pipe_fds(t_cmd *cmds, int size)
 {
-	t_cmd	*next;
+	int	**pipe_fds;
 
+	if (!cmds->next)
+		return (NULL);
+	pipe_fds = malloc(sizeof(int[2]) * (size - 1));
+	memset(pipe_fds, 0, sizeof(int[2]) * (size - 1));
+	return (pipe_fds);
+}
+
+void	*alloc_pids(int size)
+{
+	int	*pid;
+
+	pid = malloc(sizeof(int) * size);
+	memset(pid, 0, sizeof(int) * size);
+	return (pid);
+}
+
+int	set_size(t_cmd *cmds)
+{
+	int	i;
+
+	i = 0;
 	while (cmds)
 	{
-		next = cmds->next;
-		free_cmd(cmds);
-		cmds = next;
+		i++;
+		cmds = cmds->next;
 	}
-}
-
-void	free_and_set_to_next_commands(t_cmd **cmds)
-{
-	t_cmd	*tmp;
-	t_cmd	*next;
-
-	tmp = *cmds;
-	next = tmp->next;
-	free_cmd(tmp);
-	*cmds = next;
-}
-
-void	free_child(t_pipex *pipex)
-{
-	free_cmds(pipex->cmds);
-	if (pipex->pids)
-		free(pipex->pids);
-	if (pipex->pipe_fds)
-		free(pipex->pipe_fds);
+	return (i);
 }

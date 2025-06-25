@@ -6,56 +6,37 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/15 19:59:40 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/25 19:13:31 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "access.h"
+#include "alloc.h"
 #include "commands.h"
 #include "free.h"
 #include "token.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-void	*set_pipe_fds(t_cmd *cmds)
+static void	parse_error(void)
 {
-	int	i;
-
-	i = 0;
-	if (!cmds->next)
-		return (NULL);
-	while (cmds->next)
-	{
-		i++;
-		cmds = cmds->next;
-	}
-	return (malloc(sizeof(int[2]) * i));
+	printf("Error parsing ...");
 }
 
-void	*set_pids(t_cmd *cmds)
+static void	free_get_token_list(char *read_line, t_token *tokens)
 {
-	int	i;
-
-	i = 0;
-	while (cmds)
-	{
-		i++;
-		cmds = cmds->next;
-	}
-	return (malloc(sizeof(int) * i));
+	free(read_line);
+	free_tokens(tokens);
+	parse_error();
 }
 
-int	set_size(t_cmd *cmds)
+static void	free_set_commands(char *read_line, t_token *tokens, t_cmd *cmds)
 {
-	int	i;
-
-	i = 0;
-	while (cmds)
-	{
-		i++;
-		cmds = cmds->next;
-	}
-	return (i);
+	free(read_line);
+	free_tokens(tokens);
+	free_cmds(cmds);
+	parse_error();
 }
 
 void	parse_read_line(char *read_line, t_pipex *pipex, char **env)
@@ -68,12 +49,11 @@ void	parse_read_line(char *read_line, t_pipex *pipex, char **env)
 		return (free_get_token_list(read_line, tokens));
 	if (!tokens)
 		return (free(read_line));
-	// expand_tokens();
 	if (set_commands(&tokens, &pipex->cmds))
 		return (free_set_commands(read_line, tokens, pipex->cmds));
 	try_access(pipex->cmds, env);
-	pipex->pipe_fds = set_pipe_fds(pipex->cmds);
-	pipex->pids = set_pids(pipex->cmds);
 	pipex->size = set_size(pipex->cmds);
+	pipex->pipe_fds = alloc_pipe_fds(pipex->cmds, pipex->size);
+	pipex->pids = alloc_pids(pipex->size);
 	free(read_line);
 }

@@ -6,11 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:09 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/12 16:37:39 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/25 19:13:01 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "free.h"
+#include "free_utils.h"
 #include "libft.h"
 #include "minishell.h"
 #include "token_free.h"
