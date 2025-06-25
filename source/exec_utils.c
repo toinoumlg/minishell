@@ -1,23 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.h                                             :+:      :+:    :+:   */
+/*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/08 19:00:38 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/25 19:10:37 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/24 21:15:21 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/25 18:51:34 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FREE_H
-# define FREE_H
+#include "minishell.h"
+#include "libft.h"
 
-# include "minishell.h"
+int	is_builtin_to_exec_in_parent(char *cmd)
+{
+	return (!ft_strncmp(cmd, "cd", 3) || !ft_strncmp(cmd, "export", 7)
+		|| !ft_strncmp(cmd, "unset", 6) || !ft_strncmp(cmd, "exit", 5));
+}
 
-void	free_cmds(t_cmd *cmds);
-void	free_tokens(t_token *tokens);
-void	free_and_set_to_next_commands(t_cmd **cmds);
-void	free_child(t_pipex *pipex);
+int	is_child_executable(t_cmd *cmd)
+{
+	return (!cmd->infile || (cmd->infile && !cmd->infile->read))
+		&& (!cmd->outfile || (cmd->outfile && !cmd->outfile->write));
+}
 
-#endif

@@ -1,23 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.h                                             :+:      :+:    :+:   */
+/*   alloc.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/08 19:00:38 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/25 19:10:37 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/25 19:04:35 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/25 19:13:23 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FREE_H
-# define FREE_H
+#ifndef ALLOC_H
+# define ALLOC_H
 
 # include "minishell.h"
 
-void	free_cmds(t_cmd *cmds);
-void	free_tokens(t_token *tokens);
-void	free_and_set_to_next_commands(t_cmd **cmds);
-void	free_child(t_pipex *pipex);
-
+void	*alloc_pipe_fds(t_cmd *cmds, int size);
+void	*alloc_pids(int size);
+int		set_size(t_cmd *cmds);
 #endif

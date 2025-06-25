@@ -1,22 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_builtsin.c                                    :+:      :+:    :+:   */
+/*   builtsin_child.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/15 17:10:29 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/23 18:02:38 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/25 11:43:18 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/25 11:50:59 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minishell.h"
 #include "free.h"
 #include "libft.h"
-#include "minishell.h"
 #include <stdio.h>
-#include <unistd.h>
 
-void	pwd(t_pipex *pipex)
+static void	pwd(t_pipex *pipex)
 {
 	char	**args;
 	char	path[256];
@@ -40,24 +39,7 @@ void	pwd(t_pipex *pipex)
 	exit(0);
 }
 
-void	cd(char *path)
-{
-	char	*home_path;
-
-	if (!path)
-	{
-		home_path = getenv("HOME");
-		chdir(home_path);
-		return ;
-	}
-	if (!chdir(path))
-		return ;
-	ft_putstr_fd("minishell: cd: ", 2);
-	ft_putstr_fd(path, 2);
-	ft_putstr_fd(": No such file or directory\n", 2);
-}
-
-void	echo(t_pipex *pipex)
+static void	echo(t_pipex *pipex)
 {
 	int	i;
 
@@ -76,7 +58,7 @@ void	echo(t_pipex *pipex)
 	exit(0);
 }
 
-void	exec_child_builtins(t_pipex *pipex)
+void	exec_builtin_in_child(t_pipex *pipex)
 {
 	t_cmd *cmd;
 

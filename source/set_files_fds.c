@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:50:43 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/23 18:21:13 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/25 19:00:30 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	dup2_outfile(t_pipex *pipex)
 	if (pipex->cmds->outfile->type == output)
 	{
 		pipex->cmds->outfile->fd = open(pipex->cmds->outfile->path,
-				O_CREAT | O_WRONLY, 0644);
+				O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (pipex->cmds->outfile->fd > 0)
 		{
 			if (dup2(pipex->cmds->outfile->fd, STDOUT_FILENO) == -1)
@@ -64,11 +64,11 @@ void	dup2_outfile(t_pipex *pipex)
 
 void	set_file_fds(t_pipex *pipex)
 {
+	if (pipex->pipe_fds)
+		dup2_pipes(pipex->pipe_fds, pipex->size, pipex->i);
 	if (pipex->cmds->infile && !pipex->cmds->infile->read)
 		dup2_infile(pipex->cmds);
 	if (pipex->cmds->outfile && (pipex->cmds->outfile->exist
 			|| !pipex->cmds->outfile->write))
 		dup2_outfile(pipex);
-	if (pipex->pipe_fds)
-		dup2_pipes(pipex->pipe_fds, pipex->size, pipex->i);
 }

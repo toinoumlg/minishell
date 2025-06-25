@@ -1,21 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_builtsin.h                                    :+:      :+:    :+:   */
+/*   builtsin_child.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/15 17:09:26 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/15 18:54:55 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/25 11:44:58 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/25 11:46:48 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXEC_BUILTSIN_H
-# define EXEC_BUILTSIN_H
+#ifndef BUILTSIN_CHILD_H
+# define BUILTSIN_CHILD_H
 
 # include "minishell.h"
 
-void	exec_child_builtins(t_pipex *pipex);
-void	cd(char *path);
+void	exec_builtin_in_child(t_pipex *pipex);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 17:04:13 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/23 18:59:34 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/25 18:51:42 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,18 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void	close_all_pipes(int (*pipe_fds)[2], int size, int i)
+void	close_pipes(int (*pipe_fds)[2], int size, int i)
 {
-	int	j;
-
-	j = -1;
 	if (!pipe_fds)
 		return ;
-	while (++j <= i && j < size - 1)
+	if (i == 0)
+		close(pipe_fds[i][1]);
+	else if (i == size - 1)
+		close(pipe_fds[i - 1][0]);
+	else
 	{
-		close(pipe_fds[j][0]);
-		close(pipe_fds[j][1]);
+		close(pipe_fds[i][1]);
+		close(pipe_fds[i - 1][0]);
 	}
 }
 
@@ -33,20 +34,37 @@ void	dup2_pipes(int (*pipe_fds)[2], int size, int i)
 {
 	if (i == 0)
 	{
+		close(pipe_fds[i][0]);
 		if (dup2(pipe_fds[i][1], STDOUT_FILENO) == -1)
 			perror("dup2 error:");
+		close(pipe_fds[i][1]);
 	}
 	else if (i == size - 1)
 	{
 		if (dup2(pipe_fds[i - 1][0], STDIN_FILENO) == -1)
 			perror("dup2 error:");
+		close(pipe_fds[i - 1][0]);
 	}
 	else
 	{
+		close(pipe_fds[i][0]);
 		if (dup2(pipe_fds[i - 1][0], STDIN_FILENO) == -1)
 			perror("dup2 error:");
 		if (dup2(pipe_fds[i][1], STDOUT_FILENO) == -1)
 			perror("dup2 error:");
+		close(pipe_fds[i][1]);
+		close(pipe_fds[i - 1][0]);
 	}
-	close_all_pipes(pipe_fds, size, i);
+}
+
+static int	need_to_pipe(t_pipex *pipex)
+{
+	return (pipex->size > 1 && pipex->i < pipex->size - 1);
+}
+
+void	do_pipe(t_pipex *pipex)
+{
+	if (need_to_pipe(pipex))
+		if (pipe(pipex->pipe_fds[pipex->i]) == -1)
+			exit(printf("pipe creation error\n"));
 }
