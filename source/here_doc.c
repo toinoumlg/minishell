@@ -6,10 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/26 16:56:22 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/26 17:02:59 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "free.h"
 #include "libft.h"
 #include "pipes.h"
 #include "token_list.h"
@@ -48,6 +49,7 @@ static void	write_in_child(t_pipex *pipex, int here_doc_pipe[2])
 			close(here_doc_pipe[0]);
 			if (pipex->pipe_fds)
 				close_pipes_here_doc(pipex->pipe_fds, pipex->i, pipex->size);
+			free_child(pipex);
 			exit(0);
 		}
 		write(here_doc_pipe[1], read_line, ft_strlen(read_line));

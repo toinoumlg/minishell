@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:46:33 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/09 15:58:12 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/26 18:19:08 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,6 @@
 
 # include "minishell.h"
 
-int	pick_redirects(t_cmd *new, t_token **tokens);
+int	pick_redirects(t_cmd **new, t_token **tokens);
 
 #endif

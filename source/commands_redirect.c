@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 12:15:26 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/26 16:43:27 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/26 18:55:12 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,43 @@ static t_file	*set_file(t_token **tokens, int j)
 	if (!new->path)
 		return (free(new), NULL);
 	new->type = tmp->type;
+	new->next = NULL;
 	free_i_token(tokens, j);
 	free_i_token(tokens, j);
 	return (new);
 }
 
-int	pick_redirects(t_cmd *new, t_token **tokens)
+void	append_file_to_cmd(t_cmd **new, t_file *new_redirect)
+{
+	t_cmd	*tmp;
+	t_cmd	*head;
+
+	tmp = *new;
+	head = tmp;
+	if (!tmp->redirect)
+	{
+		tmp->redirect = new_redirect;
+		tmp = *new;
+		return ;
+	}
+	while (tmp->redirect->next)
+		tmp->redirect = tmp->redirect->next;
+	tmp->redirect->next = new_redirect;
+	*new = head;
+}
+
+int	set_redirect(t_cmd **new, t_token **tokens, int j)
+{
+	t_file	*new_redirect;
+
+	new_redirect = set_file(tokens, j);
+	if (!new_redirect)
+		return (1);
+	append_file_to_cmd(new, new_redirect);
+	return (0);
+}
+
+int	pick_redirects(t_cmd **new, t_token **tokens)
 {
 	int		j;
 	t_token	*tmp;
@@ -67,37 +98,13 @@ int	pick_redirects(t_cmd *new, t_token **tokens)
 	j = 0;
 	while (!is_end_of_command(tmp))
 	{
-		if (tmp->type == output)
+		if (tmp->type == output || tmp->type == append_file
+			|| tmp->type == input || tmp->type == here_doc)
 		{
-			new->outfile = set_file(tokens, j);
-			if (!new->outfile)
+			if (!set_redirect(new, tokens, j))
+				return (pick_redirects(new, tokens));
+			else
 				return (1);
-			tmp = *tokens;
-			j = 0;
-		}
-		if (tmp->type == append_file)
-		{
-			new->append_file = set_file(tokens, j);
-			if (!new->append_file)
-				return (1);
-			tmp = *tokens;
-			j = 0;
-		}
-		if (tmp->type == input)
-		{
-			new->infile = set_file(tokens, j);
-			if (!new->infile)
-				return (1);
-			tmp = *tokens;
-			j = 0;
-		}
-		if (tmp->type == here_doc)
-		{
-			new->here_doc = set_file(tokens, j);
-			if (!new->here_doc)
-				return (1);
-			tmp = *tokens;
-			j = 0;
 		}
 		j++;
 		tmp = tmp->next;

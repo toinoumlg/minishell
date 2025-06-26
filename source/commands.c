@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 17:03:22 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/13 20:07:44 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/26 18:19:26 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	add_new_command(t_token **tokens, t_cmd **cmds)
 	new = set_new_command();
 	if (!new)
 		return (1);
-	if (pick_redirects(new, tokens))
+	if (pick_redirects(&new, tokens))
 		return (1);
 	new->args = set_args(tokens);
 	if (!new->args)

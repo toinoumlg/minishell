@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:50:43 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/26 16:30:49 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/26 19:06:04 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,16 +64,29 @@ static void	dup2_append_file(t_file *append_file)
 	}
 }
 
+int	check_redirect_type(t_file *redirects, t_enum_token type)
+{
+	if (!redirects)
+		return (0);
+	while (redirects)
+	{
+		if (redirects->type == type)
+			return (1);
+		redirects = redirects->next;
+	}
+	return (0);
+}
+
 void	set_dup2(t_pipex *pipex)
 {
-	if (pipex->cmds->here_doc)
+	if (check_redirect_type(pipex->cmds->redirect, here_doc))
 		set_here_doc(pipex);
 	if (pipex->pipe_fds)
 		dup2_pipes(pipex->pipe_fds, pipex->size, pipex->i);
-	if (pipex->cmds->infile)
+	if (check_redirect_type(pipex->cmds->redirect, input))
 		dup2_infile(pipex->cmds->infile);
-	if (pipex->cmds->append_file)
+	if (check_redirect_type(pipex->cmds->redirect, append_file))
 		dup2_append_file(pipex->cmds->append_file);
-	if (pipex->cmds->outfile)
+	if (check_redirect_type(pipex->cmds->redirect, output))
 		dup2_outfile(pipex->cmds->outfile);
 }

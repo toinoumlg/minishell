@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/26 16:33:51 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/26 18:13:00 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_cmd
 {
 	t_file			*program;
 	char			**args;
+	t_file			*redirect;
 	t_file			*infile;
 	t_file			*outfile;
 	t_file			*here_doc;
