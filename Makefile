@@ -17,7 +17,7 @@ SRC_FILES = main set_env parse_read_line utils \
 	commands commands_args commands_redirect commands_list \
 	access alloc \
 	builtsin_child builtsin_parent \
-	exec set_files_fds pipes exec_utils\
+	exec set_files_fds pipes exec_utils here_doc \
 	free free_utils print_error
 
 SRC = $(addprefix $(SRC_DIR)/, $(addsuffix .c, $(SRC_FILES)))

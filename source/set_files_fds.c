@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:50:43 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/25 21:30:15 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/26 13:39:50 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,20 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void	dup2_infile(t_cmd *cmd)
+void	dup2_infile(t_pipex *pipex)
 {
-	if (cmd->infile->type == input)
+	if (pipex->cmds->infile->type == input)
 	{
-		cmd->infile->fd = open(cmd->infile->path, O_RDONLY);
-		if (cmd->infile->fd > 0)
+		pipex->cmds->infile->fd = open(pipex->cmds->infile->path, O_RDONLY);
+		if (pipex->cmds->infile->fd > 0)
 		{
-			if (dup2(cmd->infile->fd, STDIN_FILENO))
+			if (dup2(pipex->cmds->infile->fd, STDIN_FILENO))
 				perror("dup2 error:");
-			close(cmd->infile->fd);
+			close(pipex->cmds->infile->fd);
 		}
 	}
-	else if (cmd->infile->type == here_doc)
-		set_here_doc(cmd);
+	else if (pipex->cmds->infile->type == here_doc)
+		set_here_doc(pipex);
 }
 
 void	dup2_outfile(t_pipex *pipex)
@@ -69,7 +69,7 @@ void	set_file_fds(t_pipex *pipex)
 		dup2_pipes(pipex->pipe_fds, pipex->size, pipex->i);
 	if ((pipex->cmds->infile && !pipex->cmds->infile->read)
 		|| pipex->cmds->infile->type == here_doc)
-		dup2_infile(pipex->cmds);
+		dup2_infile(pipex);
 	if (pipex->cmds->outfile && (pipex->cmds->outfile->exist
 			|| !pipex->cmds->outfile->write))
 		dup2_outfile(pipex);
