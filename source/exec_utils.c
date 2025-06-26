@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 21:15:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/25 21:28:30 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/26 16:40:54 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	is_builtin_to_exec_in_parent(char *cmd)
 
 int	is_child_executable(t_cmd *cmd)
 {
-	return ((!cmd->infile || (cmd->infile && !cmd->infile->read))
-		|| cmd->infile->type == here_doc) && (!cmd->outfile || (cmd->outfile
-			&& !cmd->outfile->write));
+	return ((!cmd->infile || !cmd->infile->read)) && (!cmd->outfile
+		|| !cmd->outfile->write) && (!cmd->append_file
+		|| !cmd->append_file->write);
 }

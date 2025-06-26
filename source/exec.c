@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/25 18:58:59 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/26 16:16:53 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,9 @@
 #include "builtsin_parent.h"
 #include "exec_utils.h"
 #include "free.h"
-#include "minishell.h"
 #include "pipes.h"
 #include "print_error.h"
-#include "set_files_fds.h"
+#include "set_dup2.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -39,7 +38,7 @@ void	child_process(t_pipex *pipex, char **envp)
 	t_cmd	*cmd;
 
 	cmd = pipex->cmds;
-	set_file_fds(pipex);
+	set_dup2(pipex);
 	if (is_child_executable(cmd))
 	{
 		exec_builtin_in_child(pipex);
@@ -56,7 +55,7 @@ void	exec_in_child(t_pipex *pipex, char **envp)
 	pipex->pids[i] = fork();
 	if (pipex->pids[i] == -1)
 		exit(printf("fork error\n"));
-	else if (pipex->pids[i] == 0)
+	else if (!pipex->pids[i])
 		child_process(pipex, envp);
 }
 

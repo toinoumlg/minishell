@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/25 18:57:43 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/26 16:33:51 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_file
 	int				read;
 	int				write;
 	int				exec;
+	struct s_file	*next;
 }					t_file;
 
 typedef struct s_cmd
@@ -43,8 +44,8 @@ typedef struct s_cmd
 	char			**args;
 	t_file			*infile;
 	t_file			*outfile;
-	int				here_doc;
-	int				append_file;
+	t_file			*here_doc;
+	t_file			*append_file;
 	struct s_cmd	*next;
 }					t_cmd;
 

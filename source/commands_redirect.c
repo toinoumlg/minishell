@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 12:15:26 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/15 11:01:44 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/26 16:43:27 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	pick_redirects(t_cmd *new, t_token **tokens)
 	j = 0;
 	while (!is_end_of_command(tmp))
 	{
-		if (tmp->type == output || tmp->type == append_file)
+		if (tmp->type == output)
 		{
 			new->outfile = set_file(tokens, j);
 			if (!new->outfile)
@@ -75,10 +75,26 @@ int	pick_redirects(t_cmd *new, t_token **tokens)
 			tmp = *tokens;
 			j = 0;
 		}
-		if (tmp->type == input || tmp->type == here_doc)
+		if (tmp->type == append_file)
+		{
+			new->append_file = set_file(tokens, j);
+			if (!new->append_file)
+				return (1);
+			tmp = *tokens;
+			j = 0;
+		}
+		if (tmp->type == input)
 		{
 			new->infile = set_file(tokens, j);
 			if (!new->infile)
+				return (1);
+			tmp = *tokens;
+			j = 0;
+		}
+		if (tmp->type == here_doc)
+		{
+			new->here_doc = set_file(tokens, j);
+			if (!new->here_doc)
 				return (1);
 			tmp = *tokens;
 			j = 0;

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/26 13:37:14 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/26 16:56:22 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,23 @@
 #include <readline/readline.h>
 #include <wait.h>
 
+static void	close_pipes_here_doc(int (*pipe_fds)[2], int i, int size)
+{
+	if (i == 0)
+	{
+		close(pipe_fds[i][1]);
+		close(pipe_fds[i][0]);
+	}
+	else if (i == size - 1)
+		close(pipe_fds[i - 1][0]);
+	else
+	{
+		close(pipe_fds[i][0]);
+		close(pipe_fds[i][1]);
+		close(pipe_fds[i - 1][0]);
+	}
+}
+
 static void	write_in_child(t_pipex *pipex, int here_doc_pipe[2])
 {
 	char	*read_line;
@@ -23,12 +40,14 @@ static void	write_in_child(t_pipex *pipex, int here_doc_pipe[2])
 	while (1)
 	{
 		read_line = readline(">");
-		if (!ft_strncmp(read_line, pipex->cmds->infile->path,
-				ft_strlen(pipex->cmds->infile->path)))
+		if (!ft_strncmp(read_line, pipex->cmds->here_doc->path,
+				ft_strlen(pipex->cmds->here_doc->path)))
 		{
 			free(read_line);
 			close(here_doc_pipe[1]);
 			close(here_doc_pipe[0]);
+			if (pipex->pipe_fds)
+				close_pipes_here_doc(pipex->pipe_fds, pipex->i, pipex->size);
 			exit(0);
 		}
 		write(here_doc_pipe[1], read_line, ft_strlen(read_line));
@@ -37,10 +56,27 @@ static void	write_in_child(t_pipex *pipex, int here_doc_pipe[2])
 	}
 }
 
-static void	set_here_doc_no_pipe(t_pipex *pipex)
+static void	set_pipe_here_doc(t_pipex *pipex, int here_doc_pipe[2])
 {
-	int	here_doc_pipe[2];
+	if (pipex->i < pipex->size - 1)
+	{
+		if (dup2(here_doc_pipe[0], pipex->pipe_fds[pipex->i][0]) == -1)
+			perror("dup2");
+	}
+	else
+	{
+		if (dup2(here_doc_pipe[0], pipex->pipe_fds[pipex->i - 1][0]) == -1)
+			perror("dup2");
+	}
+	if (pipex->i == 0)
+		if (dup2(pipex->pipe_fds[pipex->i][0], STDIN_FILENO) == -1)
+			perror("dup2");
+}
+
+void	set_here_doc(t_pipex *pipex)
+{
 	int	pid;
+	int	here_doc_pipe[2];
 
 	if (pipe(here_doc_pipe) == -1)
 		perror("pipe");
@@ -52,67 +88,16 @@ static void	set_here_doc_no_pipe(t_pipex *pipex)
 	else
 	{
 		waitpid(pid, NULL, 0);
-		close(here_doc_pipe[1]);
-		if (dup2(here_doc_pipe[0], STDIN_FILENO) == -1)
-			perror("dup2");
-		close(here_doc_pipe[0]);
+		if (!pipex->pipe_fds)
+		{
+			if (dup2(here_doc_pipe[0], STDIN_FILENO) == -1)
+				perror("dup2");
+		}
+		else
+		{
+			set_pipe_here_doc(pipex, here_doc_pipe);
+			close(here_doc_pipe[0]);
+			close(here_doc_pipe[1]);
+		}
 	}
-}
-
-static void	dup2_pipes_here_doc(int (*pipe_fds)[2], int size, int i)
-{
-	if (i == 0)
-	{
-		if (dup2(pipe_fds[i][0], STDIN_FILENO) == -1)
-			perror("dup2 error:");
-		if (dup2(pipe_fds[i][1], STDOUT_FILENO) == -1)
-			perror("dup2 error:");
-		close(pipe_fds[i][0]);
-		close(pipe_fds[i][1]);
-	}
-	else if (i == size - 1)
-	{
-		if (dup2(pipe_fds[i - 1][0], STDIN_FILENO) == -1)
-			perror("dup2 error:");
-		close(pipe_fds[i - 1][0]);
-	}
-	else
-	{
-		close(pipe_fds[i][0]);
-		if (dup2(pipe_fds[i - 1][0], STDIN_FILENO) == -1)
-			perror("dup2 error:");
-		if (dup2(pipe_fds[i][1], STDOUT_FILENO) == -1)
-			perror("dup2 error:");
-		close(pipe_fds[i][1]);
-		close(pipe_fds[i - 1][0]);
-	}
-}
-
-static void	set_here_doc_with_pipes(t_pipex *pipex)
-{
-	int	pid;
-	int	*here_doc_pipe;
-
-	if (pipex->i < pipex->size - 1)
-		here_doc_pipe = pipex->pipe_fds[pipex->i];
-	else
-		here_doc_pipe = pipex->pipe_fds[pipex->i - 1];
-	pid = fork();
-	if (pid == -1)
-		perror("fork");
-	if (!pid)
-		write_in_child(pipex, here_doc_pipe);
-	else
-	{
-		waitpid(pid, NULL, 0);
-		dup2_pipes_here_doc(pipex->pipe_fds, pipex->size, pipex->i);
-	}
-}
-
-void	set_here_doc(t_pipex *pipex)
-{
-	if (!pipex->pipe_fds)
-		set_here_doc_no_pipe(pipex);
-	else
-		set_here_doc_with_pipes(pipex);
 }

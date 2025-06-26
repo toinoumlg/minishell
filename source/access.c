@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:06 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/25 18:57:43 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/26 16:38:45 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	set_access(t_file *file)
 
 void	access_file(t_file *file)
 {
-	if (!file)
+	if (!file || file->type == here_doc)
 		return ;
 	if (check_for_directory(file))
 		return ;
@@ -94,6 +94,7 @@ void	try_access(t_cmd *cmds, char **env)
 		cmds->program->path = access_program(cmds->program, env);
 		access_file(cmds->infile);
 		access_file(cmds->outfile);
+		access_file(cmds->append_file);
 		cmds = cmds->next;
 	}
 }
