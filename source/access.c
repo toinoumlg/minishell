@@ -6,48 +6,25 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:06 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/26 16:38:45 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/29 12:56:26 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "access_program.h"
 #include "libft.h"
 #include "minishell.h"
 #include <fcntl.h>
 #include <stdio.h>
 
-void	set_all_access_to_n(t_file *program, int n)
+static void	set_access(t_file *file, char *path)
 {
-	program->exist = n;
-	program->exec = n;
-	program->read = n;
-	program->write = n;
+	file->exist = access(path, F_OK);
+	file->read = access(path, R_OK);
+	file->write = access(path, W_OK);
+	file->exec = access(path, X_OK);
 }
 
-char	*parse_env(char **env, t_file *program)
-{
-	char	*tmp;
-
-	set_all_access_to_n(program, -1);
-	while (*env)
-	{
-		tmp = ft_strjoin(*env, program->path);
-		if (!tmp)
-			return (free(program->path), NULL);
-		if (!access(tmp, F_OK))
-		{
-			program->exist = access(tmp, F_OK);
-			program->exec = access(tmp, X_OK);
-			program->read = access(tmp, R_OK);
-			program->write = access(tmp, W_OK);
-			return (free(program->path), tmp);
-		}
-		free(tmp);
-		env++;
-	}
-	return (program->path);
-}
-
-int	check_for_directory(t_file *file)
+static int	check_for_directory(t_file *file)
 {
 	int	fd;
 
@@ -62,39 +39,45 @@ int	check_for_directory(t_file *file)
 		return (0);
 }
 
-void	set_access(t_file *file)
+static void	access_file(t_file *file)
 {
-	file->exist = access(file->path, F_OK);
-	file->read = access(file->path, R_OK);
-	file->write = access(file->path, W_OK);
-	file->exec = access(file->path, X_OK);
-}
-
-void	access_file(t_file *file)
-{
-	if (!file || file->type == here_doc)
+	if (file->type == here_doc)
 		return ;
 	if (check_for_directory(file))
 		return ;
-	set_access(file);
+	set_access(file, file->path);
 }
 
-char	*access_program(t_file *program, char **env)
+static t_file	*get_error_file(t_file *redirects)
 {
-	if (ft_strncmp("/", program->path, 1))
-		return (parse_env(env, program));
-	else
-		return (set_access(program), program->path);
+	while (redirects)
+	{
+		if (redirects->is_dir)
+			return (redirects);
+		if (redirects->type == input && !(!redirects->read))
+			return (redirects);
+		if ((redirects->type == output || redirects->type == append_file)
+			&& !(redirects->exist || !redirects->write))
+			return (redirects);
+		redirects = redirects->next;
+	}
+	return (NULL);
 }
 
 void	try_access(t_cmd *cmds, char **env)
 {
+	t_file	*redirects;
+
 	while (cmds)
 	{
 		cmds->program->path = access_program(cmds->program, env);
-		access_file(cmds->infile);
-		access_file(cmds->outfile);
-		access_file(cmds->append_file);
+		redirects = cmds->redirects;
+		while (redirects)
+		{
+			access_file(redirects);
+			redirects = redirects->next;
+		}
+		cmds->error = get_error_file(cmds->redirects);
 		cmds = cmds->next;
 	}
 }

@@ -1,20 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_utils.c                                       :+:      :+:    :+:   */
+/*   parse_error.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/24 21:15:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 13:12:53 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/29 07:41:40 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/29 13:12:59 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "minishell.h"
 
-int	is_builtin_to_exec_in_parent(char *cmd)
+void	print_parse_error(char *parse_error)
 {
-	return (!ft_strncmp(cmd, "cd", 3) || !ft_strncmp(cmd, "export", 7)
-		|| !ft_strncmp(cmd, "unset", 6) || !ft_strncmp(cmd, "exit", 5));
+	ft_putstr_fd("minishell: syntax error near unexpected token '", 2);
+	if (!parse_error || *parse_error == '\000')
+	{
+		ft_putstr_fd("newline'\n", 2);
+		return ;
+	}
+	parse_error++;
+	if (*parse_error == 0 || *parse_error == '\n' || *parse_error == ' ')
+		ft_putstr_fd("newline'\n", 2);
+	else
+	{
+		ft_putchar_fd(*parse_error, 2);
+		ft_putstr_fd("'\n", 2);
+	}
 }

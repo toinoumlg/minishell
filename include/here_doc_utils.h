@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_error.h                                      :+:      :+:    :+:   */
+/*   here_doc_utils.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/15 11:40:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 06:08:53 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/25 21:10:40 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/29 13:19:10 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PRINT_ERROR_H
-# define PRINT_ERROR_H
+#ifndef HERE_DOC_UTILS_H
+# define HERE_DOC_UTILS_H
 
 # include "minishell.h"
 
-int		print_command_error(t_file *program, t_file *error);
-void	print_error_file(t_file *error);
+void	close_here_doc(int here_doc_pipe[2], t_file *here_doc_file,
+			t_pipex *pipex);
 
 #endif

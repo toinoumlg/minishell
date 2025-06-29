@@ -1,21 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_error.h                                      :+:      :+:    :+:   */
+/*   parse_error.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/15 11:40:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 06:08:53 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/29 07:47:05 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/29 13:18:40 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PRINT_ERROR_H
-# define PRINT_ERROR_H
+#ifndef PARSE_ERROR_H
+# define PARSE_ERROR_H
 
 # include "minishell.h"
 
-int		print_command_error(t_file *program, t_file *error);
-void	print_error_file(t_file *error);
+void	print_parse_error(char *parse_error);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:25:17 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/26 18:37:46 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/29 07:34:47 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,19 @@
 #include "utils.h"
 #include <string.h>
 
-int	get_tokens_list(char *read_line, t_token **tokens)
+int	get_tokens_list(char **read_line, t_token **tokens)
 {
-	while (*read_line)
+	while (**read_line)
 	{
-		if (is_quote(*read_line) && extract_quoted_string(&read_line,
-				*read_line, tokens))
+		if (is_quote(**read_line) && extract_quoted_string(read_line,
+				**read_line, tokens))
 			return (1);
-		else if (is_operator(*read_line) && add_operator_token(&read_line,
+		else if (is_operator(**read_line) && add_operator_token(read_line,
 				tokens))
 			return (1);
-		else if (*read_line == ' ')
-			read_line++;
-		else if (pick_word(&read_line, tokens))
+		else if (**read_line == ' ')
+			(*read_line)++;
+		else if (pick_word(read_line, tokens))
 			return (1);
 	}
 	if (check_pipes(*tokens))

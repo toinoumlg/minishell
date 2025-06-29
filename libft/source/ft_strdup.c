@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 09:34:41 by amalangu          #+#    #+#             */
-/*   Updated: 2025/05/02 14:51:01 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/29 07:55:21 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ char	*ft_strdup(const char *s)
 	int		len;
 	char	*dup;
 
+	if (!s)
+		return (NULL);
 	len = ft_strlen(s);
 	i = 0;
 	dup = ft_calloc(sizeof(char), len + 1);

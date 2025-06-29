@@ -1,21 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_error.h                                      :+:      :+:    :+:   */
+/*   access_program.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/15 11:40:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 06:08:53 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/08 18:46:33 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/29 12:50:14 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PRINT_ERROR_H
-# define PRINT_ERROR_H
+#ifndef ACCESS_PROGRAM_H
+# define ACCESS_PROGRAM_H
 
 # include "minishell.h"
 
-int		print_command_error(t_file *program, t_file *error);
-void	print_error_file(t_file *error);
+char	*access_program(t_file *program, char **env);
 
 #endif

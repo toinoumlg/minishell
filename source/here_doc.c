@@ -6,18 +6,18 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/26 17:02:59 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/29 13:12:43 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "free.h"
+#include "here_doc_utils.h"
 #include "libft.h"
-#include "pipes.h"
 #include "token_list.h"
 #include <readline/readline.h>
 #include <wait.h>
 
-static void	close_pipes_here_doc(int (*pipe_fds)[2], int i, int size)
+static void	close_pipes_in_write_child(int (*pipe_fds)[2], int i, int size)
 {
 	if (i == 0)
 	{
@@ -34,21 +34,22 @@ static void	close_pipes_here_doc(int (*pipe_fds)[2], int i, int size)
 	}
 }
 
-static void	write_in_child(t_pipex *pipex, int here_doc_pipe[2])
+static void	write_in_child(t_pipex *pipex, int here_doc_pipe[2],
+		char *here_doc_lim)
 {
 	char	*read_line;
 
 	while (1)
 	{
 		read_line = readline(">");
-		if (!ft_strncmp(read_line, pipex->cmds->here_doc->path,
-				ft_strlen(pipex->cmds->here_doc->path)))
+		if (!ft_strncmp(read_line, here_doc_lim, ft_strlen(here_doc_lim)))
 		{
 			free(read_line);
 			close(here_doc_pipe[1]);
 			close(here_doc_pipe[0]);
 			if (pipex->pipe_fds)
-				close_pipes_here_doc(pipex->pipe_fds, pipex->i, pipex->size);
+				close_pipes_in_write_child(pipex->pipe_fds, pipex->i,
+					pipex->size);
 			free_child(pipex);
 			exit(0);
 		}
@@ -58,24 +59,7 @@ static void	write_in_child(t_pipex *pipex, int here_doc_pipe[2])
 	}
 }
 
-static void	set_pipe_here_doc(t_pipex *pipex, int here_doc_pipe[2])
-{
-	if (pipex->i < pipex->size - 1)
-	{
-		if (dup2(here_doc_pipe[0], pipex->pipe_fds[pipex->i][0]) == -1)
-			perror("dup2");
-	}
-	else
-	{
-		if (dup2(here_doc_pipe[0], pipex->pipe_fds[pipex->i - 1][0]) == -1)
-			perror("dup2");
-	}
-	if (pipex->i == 0)
-		if (dup2(pipex->pipe_fds[pipex->i][0], STDIN_FILENO) == -1)
-			perror("dup2");
-}
-
-void	set_here_doc(t_pipex *pipex)
+void	set_here_doc(t_pipex *pipex, t_file *here_doc_file)
 {
 	int	pid;
 	int	here_doc_pipe[2];
@@ -86,20 +70,23 @@ void	set_here_doc(t_pipex *pipex)
 	if (pid == -1)
 		perror("fork");
 	if (!pid)
-		write_in_child(pipex, here_doc_pipe);
+		write_in_child(pipex, here_doc_pipe, here_doc_file->path);
 	else
 	{
 		waitpid(pid, NULL, 0);
-		if (!pipex->pipe_fds)
-		{
-			if (dup2(here_doc_pipe[0], STDIN_FILENO) == -1)
-				perror("dup2");
-		}
-		else
-		{
-			set_pipe_here_doc(pipex, here_doc_pipe);
-			close(here_doc_pipe[0]);
-			close(here_doc_pipe[1]);
-		}
+		close_here_doc(here_doc_pipe, here_doc_file, pipex);
+	}
+}
+
+void	handle_here_docs(t_pipex *pipex)
+{
+	t_file	*redirects;
+
+	redirects = pipex->cmds->redirects;
+	while (redirects)
+	{
+		if (redirects->type == here_doc)
+			set_here_doc(pipex, redirects);
+		redirects = redirects->next;
 	}
 }

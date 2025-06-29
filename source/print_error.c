@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 11:12:45 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/15 12:04:32 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/29 13:18:16 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,28 +34,31 @@ void	print_error_is_a_directory(char *path)
 	ft_putstr_fd("\n", 2);
 }
 
-void	print_error_file(t_file *input, t_file *output)
+void	print_error_file(t_file *error)
 {
-	if (input)
+	if (!error)
+		return ;
+	if (error->type == input)
 	{
-		if (input->exist)
-			print_error_no_file_or_dir(input->path);
-		if (!input->exist && input->read)
-			print_error_no_permission(input->path);
-		if (input->is_dir)
-			print_error_is_a_directory(input->path);
+		if (error->exist)
+			print_error_no_file_or_dir(error->path);
+		if (!error->exist && error->read)
+			print_error_no_permission(error->path);
+		if (error->is_dir)
+			print_error_is_a_directory(error->path);
 	}
-	if (output)
+	if (error->type == output || error->type == append_file)
 	{
-		if (output->write)
-			print_error_no_permission(output->path);
-		if (output->is_dir)
-			print_error_is_a_directory(output->path);
+		if (error->write)
+			print_error_no_permission(error->path);
+		if (error->is_dir)
+			print_error_is_a_directory(error->path);
 	}
 }
-int	print_command_error(t_file *program, t_file *infile, t_file *outfile)
+
+int	print_command_error(t_file *program, t_file *error)
 {
-	if ((infile && infile->read) || (outfile && outfile->write))
+	if (error)
 		return (1);
 	if (program->exist)
 		return (ft_putstr_fd("minishell: cmd not found: ", 2),

@@ -6,13 +6,13 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:43:18 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/25 11:50:59 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/29 12:57:13 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
 #include "free.h"
 #include "libft.h"
+#include "minishell.h"
 #include <stdio.h>
 
 static void	pwd(t_pipex *pipex)
@@ -60,7 +60,7 @@ static void	echo(t_pipex *pipex)
 
 void	exec_builtin_in_child(t_pipex *pipex)
 {
-	t_cmd *cmd;
+	t_cmd	*cmd;
 
 	cmd = pipex->cmds;
 	if (!ft_strncmp(cmd->args[0], "pwd", 4))

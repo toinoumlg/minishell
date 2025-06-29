@@ -12,12 +12,12 @@ LIBFT = $(LIBFT_DIR)/libft.a
 SRC_DIR = source
 OBJ_DIR = build
 
-SRC_FILES = main set_env parse_read_line utils \
+SRC_FILES = main set_env parse_read_line utils parse_error \
 	token token_list token_utils token_operator token_string token_check token_free \
-	commands commands_args commands_redirect commands_list \
-	access alloc \
+	commands commands_args commands_redirect commands_redirect_utils commands_list \
+	access access_program alloc \
 	builtsin_child builtsin_parent \
-	exec set_dup2 pipes exec_utils here_doc \
+	exec set_dup2 set_dup2_utils pipes exec_utils here_doc here_doc_utils \
 	free free_utils print_error
 
 SRC = $(addprefix $(SRC_DIR)/, $(addsuffix .c, $(SRC_FILES)))

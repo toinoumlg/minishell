@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/26 16:16:53 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/29 05:37:08 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ void	exit_child_no_execve(t_pipex *pipex)
 	t_cmd	*cmd;
 
 	cmd = pipex->cmds;
-	exit_value = print_command_error(cmd->program, cmd->infile, cmd->outfile);
-	print_error_file(cmd->infile, cmd->outfile);
+	exit_value = print_command_error(cmd->program, cmd->error);
+	print_error_file(cmd->error);
 	free_child(pipex);
 	exit(exit_value);
 }
@@ -39,7 +39,7 @@ void	child_process(t_pipex *pipex, char **envp)
 
 	cmd = pipex->cmds;
 	set_dup2(pipex);
-	if (is_child_executable(cmd))
+	if (!cmd->error)
 	{
 		exec_builtin_in_child(pipex);
 		execve(cmd->program->path, cmd->args, envp);

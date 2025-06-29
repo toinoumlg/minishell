@@ -6,24 +6,27 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:27:02 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/12 20:22:36 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/29 07:20:05 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdio.h>
 
-void	print_file(t_file *file)
+void	print_redirects(t_file *redirects)
 {
-	if (file->type == output || file->type == append_file)
-		printf("output path: %s\n", file->path);
-	else
-		printf("input path: %s\n", file->path);
-	if (!file->is_dir)
-		printf("F: [%d] R: [%d] W: [%d] E: [%d]\n", file->exist, file->read,
-			file->write, file->exec);
-	else
-		printf("is a directory\n");
+	while (redirects)
+	{
+		if (redirects->type == output)
+			printf("output path: %s\n", redirects->path);
+		if (redirects->type == here_doc)
+			printf("here_doc lim: %s\n", redirects->path);
+		if (redirects->type == append_file)
+			printf("append_file path: %s\n", redirects->path);
+		if (redirects->type == input)
+			printf("input path: %s\n", redirects->path);
+		redirects = redirects->next;
+	}
 }
 
 void	print_commands(t_cmd *cmds)
@@ -40,10 +43,8 @@ void	print_commands(t_cmd *cmds)
 			printf("pipe to next\n");
 		if (!cmds->next)
 			printf("is last\n");
-		if (cmds->infile)
-			print_file(cmds->infile);
-		if (cmds->outfile)
-			print_file(cmds->outfile);
+		if (cmds->redirects)
+			print_redirects(cmds->redirects);
 		printf("args: ");
 		while (cmds->args[i])
 			printf("[%s] ", cmds->args[i++]);

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/25 19:13:31 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/29 12:56:12 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,39 +14,37 @@
 #include "alloc.h"
 #include "commands.h"
 #include "free.h"
+#include "parse_error.h"
 #include "token.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-static void	parse_error(void)
+static void	free_get_token_list(char *read_line, t_token *tokens,
+		char *parse_error)
 {
-	printf("Error parsing ...");
-}
-
-static void	free_get_token_list(char *read_line, t_token *tokens)
-{
-	free(read_line);
+	print_parse_error(parse_error);
 	free_tokens(tokens);
-	parse_error();
+	free(read_line);
 }
 
 static void	free_set_commands(char *read_line, t_token *tokens, t_cmd *cmds)
 {
-	free(read_line);
 	free_tokens(tokens);
 	free_cmds(cmds);
-	parse_error();
+	free(read_line);
 }
 
 void	parse_read_line(char *read_line, t_pipex *pipex, char **env)
 {
 	t_token	*tokens;
+	char	*parse_error;
 
+	parse_error = read_line;
 	memset(pipex, 0, sizeof(t_pipex));
 	memset(&tokens, 0, sizeof(t_token *));
-	if (get_tokens_list(read_line, &tokens))
-		return (free_get_token_list(read_line, tokens));
+	if (get_tokens_list(&parse_error, &tokens))
+		return (free_get_token_list(read_line, tokens, parse_error));
 	if (!tokens)
 		return (free(read_line));
 	if (set_commands(&tokens, &pipex->cmds))

@@ -1,21 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_error.h                                      :+:      :+:    :+:   */
+/*   set_dup2_utils.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/15 11:40:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 06:08:53 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/13 19:52:37 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/29 13:17:38 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PRINT_ERROR_H
-# define PRINT_ERROR_H
+#ifndef SET_DUP2_UTILS_H
+# define SET_DUP2_UTILS_H
 
 # include "minishell.h"
 
-int		print_command_error(t_file *program, t_file *error);
-void	print_error_file(t_file *error);
+int		dup2_infile(t_file *infile);
+int		dup2_outfile(t_file *outfile);
+int		dup2_append_file(t_file *append_file);
+int		is_type_in_redirects(t_file *redirects, t_enum_token type);
+void	exit_set_files_in_child(t_pipex *pipex);
 
 #endif

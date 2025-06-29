@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 19:03:01 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/25 19:13:17 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/29 12:56:55 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ void	*alloc_pipe_fds(t_cmd *cmds, int size)
 
 	if (!cmds->next)
 		return (NULL);
-	pipe_fds = malloc(sizeof(int[2]) * (size - 1));
-	memset(pipe_fds, 0, sizeof(int[2]) * (size - 1));
+	pipe_fds = malloc(sizeof(int [2]) * (size - 1));
+	memset(pipe_fds, 0, sizeof(int [2]) * (size - 1));
 	return (pipe_fds);
 }
 
