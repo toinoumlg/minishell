@@ -2,7 +2,10 @@ NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 #CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g
-INCLUDE = -I./include -I./libft/include
+INCLUDE = -I./include -I./include/exec -I./include/parser \
+	-I./include/exec/redirects -I./include/exec/builtins \
+	-I./include/parser/commands -I./include/parser/tokens \
+	-I./libft/include
 #INCLUDE = -I./include -I./libft/include -lft -fsanitize=address
 LIBS = -lreadline -L./libft -lft
 
@@ -12,15 +15,28 @@ LIBFT = $(LIBFT_DIR)/libft.a
 SRC_DIR = source
 OBJ_DIR = build
 
-SRC_FILES = main set_env parse_read_line utils parse_error \
-	token token_list token_utils token_operator token_string token_check token_free \
-	commands commands_args commands_redirect commands_redirect_utils commands_list \
-	access access_program alloc \
-	builtsin_child builtsin_parent \
-	exec set_dup2 set_dup2_utils pipes exec_utils here_doc here_doc_utils \
-	free free_utils print_error
+EXEC_FILES = exec/exec exec/exec_utils exec/print_error \
+	exec/builtsin/builtsin_child exec/builtsin/builtsin_parent \
+	exec/redirects/here_doc exec/redirects/here_doc_utils \
+	exec/redirects/set_dup2 exec/redirects/set_dup2_utils \
+	exec/redirects/pipes
 
-SRC = $(addprefix $(SRC_DIR)/, $(addsuffix .c, $(SRC_FILES)))
+PARSER_FILES = parser/parse_read_line parser/alloc \
+	parser/access_program parser/access \
+	parser/parse_error \
+	parser/tokens/token parser/tokens/token_check \
+	parser/tokens/token_list parser/tokens/token_operator \
+	parser/tokens/token_string parser/tokens/token_utils \
+	parser/tokens/token_free \
+	parser/commands/commands parser/commands/commands_args \
+	parser/commands/commands_list parser/commands/commands_redirect \
+	parser/commands/commands_redirect_utils \
+
+MAIN_FILES = main set_env utils free free_utils 
+
+ALL_SRC_FILES = $(MAIN_FILES) $(EXEC_FILES) $(PARSER_FILES)
+
+SRC = $(addprefix $(SRC_DIR)/, $(addsuffix .c, $(ALL_SRC_FILES)))
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 DEP = $(OBJ:.o=.d)
 
@@ -36,6 +52,7 @@ $(LIBFT):
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@echo "Compiling $< into $@"
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) $(INCLUDE) -MMD -MP -g -c $< -o $@
 
 $(OBJ_DIR):
