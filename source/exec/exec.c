@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 05:37:08 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/29 19:25:55 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	exit_child_no_execve(t_pipex *pipex)
 	exit(exit_value);
 }
 
-void	child_process(t_pipex *pipex, char **envp)
+void	child_process(t_pipex *pipex)
 {
 	t_cmd	*cmd;
 
@@ -42,12 +42,12 @@ void	child_process(t_pipex *pipex, char **envp)
 	if (!cmd->error)
 	{
 		exec_builtin_in_child(pipex);
-		execve(cmd->program->path, cmd->args, envp);
+		execve(cmd->program->path, cmd->args, pipex->envp);
 	}
 	exit_child_no_execve(pipex);
 }
 
-void	exec_in_child(t_pipex *pipex, char **envp)
+void	exec_in_child(t_pipex *pipex)
 {
 	int	i;
 
@@ -56,23 +56,25 @@ void	exec_in_child(t_pipex *pipex, char **envp)
 	if (pipex->pids[i] == -1)
 		exit(printf("fork error\n"));
 	else if (!pipex->pids[i])
-		child_process(pipex, envp);
+		child_process(pipex);
 }
 
-void	try_exec(t_pipex *pipex, char **envp, char **env)
+void	try_exec(t_pipex *pipex)
 {
 	if (is_builtin_to_exec_in_parent(pipex->cmds->args[0]))
-		exec_builtin_in_parent(pipex, env);
+		exec_builtin_in_parent(pipex);
 	else
-		exec_in_child(pipex, envp);
+		exec_in_child(pipex);
 }
 
 void	exec(t_pipex *pipex, char **envp, char **env)
 {
+	pipex->env = env;
+	pipex->envp = envp;
 	while (pipex->cmds)
 	{
 		do_pipe(pipex);
-		try_exec(pipex, envp, env);
+		try_exec(pipex);
 		close_pipes(pipex->pipe_fds, pipex->size, pipex->i);
 		free_and_set_to_next_commands(&pipex->cmds);
 		pipex->i++;

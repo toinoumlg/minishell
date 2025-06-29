@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:41:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/25 19:13:56 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/29 19:24:21 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,22 +34,17 @@ static void	cd(char *path)
 	ft_putstr_fd(": No such file or directory\n", 2);
 }
 
-static void	my_exit(t_pipex *pipex, char **env)
+static void	my_exit(t_pipex *pipex)
 {
 	if (pipex->i != 0)
 		return ;
 	printf("exit\n");
 	close_pipes(pipex->pipe_fds, pipex->size, pipex->i);
-	free_cmds(pipex->cmds);
-	free_array(env);
-	if (pipex->pipe_fds)
-		free(pipex->pipe_fds);
-	if (pipex->pids)
-		free(pipex->pids);
+	free_child(pipex);
 	exit(0);
 }
 
-void	exec_builtin_in_parent(t_pipex *pipex, char **env)
+void	exec_builtin_in_parent(t_pipex *pipex)
 {
 	int	i;
 
@@ -58,5 +53,5 @@ void	exec_builtin_in_parent(t_pipex *pipex, char **env)
 	if (!ft_strncmp(pipex->cmds->args[0], "cd", 3))
 		cd(pipex->cmds->args[1]);
 	if (!ft_strncmp(pipex->cmds->args[0], "exit", 5))
-		my_exit(pipex, env);
+		my_exit(pipex);
 }

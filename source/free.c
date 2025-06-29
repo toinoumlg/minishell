@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:58:46 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/25 19:12:08 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/29 19:21:54 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,5 @@ void	free_child(t_pipex *pipex)
 		free(pipex->pids);
 	if (pipex->pipe_fds)
 		free(pipex->pipe_fds);
+	free_array(pipex->env);
 }

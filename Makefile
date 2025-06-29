@@ -32,7 +32,7 @@ PARSER_FILES = parser/parse_read_line parser/alloc \
 	parser/commands/commands_list parser/commands/commands_redirect \
 	parser/commands/commands_redirect_utils \
 
-MAIN_FILES = main set_env utils free free_utils 
+MAIN_FILES = main set_envs utils free free_utils 
 
 ALL_SRC_FILES = $(MAIN_FILES) $(EXEC_FILES) $(PARSER_FILES)
 

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 11:12:45 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 13:18:16 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/29 18:52:39 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ int	print_command_error(t_file *program, t_file *error)
 	if (program->exist)
 		return (ft_putstr_fd("minishell: cmd not found: ", 2),
 			ft_putstr_fd(program->path, 2), ft_putstr_fd("\n", 2), 127);
-	else
+	else if (program->exist)
 		return (ft_putstr_fd("minishell: no rights: ", 2),
 			ft_putstr_fd(program->path, 2), ft_putstr_fd("\n", 2), 126);
+	return (0);
 }

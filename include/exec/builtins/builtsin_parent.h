@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:48:13 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/25 18:57:43 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/29 19:24:36 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,6 @@
 
 # include "minishell.h"
 
-void	exec_builtin_in_parent(t_pipex *pipex, char **env);
+void	exec_builtin_in_parent(t_pipex *pipex);
 
 #endif
