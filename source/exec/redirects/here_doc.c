@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 13:12:43 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/30 14:35:02 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static void	write_in_child(t_pipex *pipex, int here_doc_pipe[2],
 	while (1)
 	{
 		read_line = readline(">");
-		if (!ft_strncmp(read_line, here_doc_lim, ft_strlen(here_doc_lim)))
+		if (!ft_strncmp(read_line, here_doc_lim, ft_strlen(here_doc_lim) + 1))
 		{
 			free(read_line);
 			close(here_doc_pipe[1]);

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:43:18 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 19:26:45 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/30 14:32:37 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,12 @@ static void	echo(t_pipex *pipex)
 		i++;
 	while (pipex->cmds->args[i])
 	{
-		printf("%s", pipex->cmds->args[i++]);
+		ft_putstr_fd(pipex->cmds->args[i++], 1);
 		if (pipex->cmds->args[i])
-			printf(" ");
+			ft_putstr_fd(" ", 1);
 	}
 	if (ft_strncmp(pipex->cmds->args[1], "-n", 3))
-		printf("\n");
+		ft_putstr_fd("\n", 1);
 	free_child(pipex);
 	exit(0);
 }

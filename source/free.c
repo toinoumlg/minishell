@@ -6,12 +6,13 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:58:46 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 19:21:54 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/30 15:03:45 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "free_utils.h"
 #include "minishell.h"
+#include <readline/history.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -46,4 +47,5 @@ void	free_child(t_pipex *pipex)
 	if (pipex->pipe_fds)
 		free(pipex->pipe_fds);
 	free_array(pipex->env);
+	clear_history();
 }

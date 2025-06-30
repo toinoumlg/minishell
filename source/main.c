@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 19:27:35 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/30 15:19:11 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "parse_read_line.h"
 #include "set_envs.h"
 #include "utils.h"
+#include <readline/history.h>
 #include <readline/readline.h>
 #include <string.h>
 #include <sys/wait.h>
@@ -47,14 +48,12 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	while (argv && argc)
 	{
-		// read_line = readline("minishell> ");
-		read_line = ft_strdup("<Makefile cat | ct -e | cat > outi \0");
+		read_line = readline("minishell> ");
 		parse_read_line(read_line, &minishell.pipex, minishell.env);
-		exec(&minishell.pipex, envp, minishell.env);
+		exec(&minishell.pipex, minishell.envp, minishell.env);
 		wait_for_childrens(minishell.pipex.pids, minishell.pipex.size);
-		free_array(minishell.env);
-		exit(1);
 	}
+	clear_history();
 	free_array(minishell.env);
 	return (0);
 }
