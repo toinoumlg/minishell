@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:33:35 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/25 18:57:43 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/30 18:11:18 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,6 @@
 
 # include "minishell.h"
 
-void	exec(t_pipex *pipex, char **envp, char **env);
+void	exec(t_pipex *pipex);
 
 #endif

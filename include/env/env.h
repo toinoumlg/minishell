@@ -1,21 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_read_line.h                                  :+:      :+:    :+:   */
+/*   env.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/27 15:10:45 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/30 17:57:01 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/30 16:41:45 by amalangu          #+#    #+#             */
+/*   Updated: 2025/06/30 18:51:05 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSE_READ_LINE_H
-# define PARSE_READ_LINE_H
+#ifndef ENV_H
+# define ENV_H
 
-# include "minishell.h"
+# define PATH "PATH"
+# define USER "USER"
+# define DESKTOP_SESSION "DESKTOP_SESSION"
+# define HOME "HOME"
+# define SHELL "SHELL"
+# define USERNAME "USERNAME"
+# define PWD "PWD"
+# define OLDPWD "OLDPWD"
+# define TERM "TERM"
 
-void	parse_read_line(char *read_line, t_pipex *pipex,
-			t_minishell *minishell);
 
 #endif

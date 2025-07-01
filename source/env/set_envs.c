@@ -6,25 +6,35 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:57:54 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/30 14:26:12 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/30 18:40:47 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "env.h"
+#include "envp.h"
 #include "free_utils.h"
 #include "libft.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-char	**get_env(char **envp)
+static char	**get_env(char *path)
 {
-	int	i;
+	return (ft_split(ft_strchr(path, '/'), ':'));
+}
 
-	i = -1;
-	while (envp[++i])
-		if (ft_strnstr(envp[i], "PATH", 5))
-			return (ft_split(ft_strchr(envp[i], '/'), ':'));
-	return (NULL);
+static int	same_name(char *name, char *envp_name)
+{
+	return (!(ft_strncmp(name, envp_name, ft_strlen(name) + 1)));
+}
+
+static char	*get_envp_line(t_envp *envp, char *name)
+{
+	while (envp && !same_name(name, envp->name))
+		envp = envp->next;
+	if (!envp)
+		return (NULL);
+	return (envp->line);
 }
 
 void	set_envs(t_minishell *minishell, char **envp)
@@ -34,7 +44,9 @@ void	set_envs(t_minishell *minishell, char **envp)
 	int		i;
 
 	i = -1;
-	env = get_env(envp);
+	envp = NULL;
+	set_envp(&minishell->envp, envp);
+	env = get_env(get_envp_line(minishell->envp, PATH));
 	if (!env)
 		exit(1);
 	while (env[++i])
@@ -49,5 +61,4 @@ void	set_envs(t_minishell *minishell, char **envp)
 			return (free_array(env), exit(1));
 	}
 	minishell->env = env;
-	minishell->envp = envp;
 }

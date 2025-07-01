@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 19:25:55 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/30 18:14:24 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "builtsin_parent.h"
 #include "exec_utils.h"
 #include "free.h"
+#include "libft.h"
 #include "pipes.h"
 #include "print_error.h"
 #include "set_dup2.h"
@@ -42,7 +43,7 @@ void	child_process(t_pipex *pipex)
 	if (!cmd->error)
 	{
 		exec_builtin_in_child(pipex);
-		execve(cmd->program->path, cmd->args, pipex->envp);
+		execve(cmd->program->path, cmd->args, pipex->envp_array);
 	}
 	exit_child_no_execve(pipex);
 }
@@ -67,10 +68,8 @@ void	try_exec(t_pipex *pipex)
 		exec_in_child(pipex);
 }
 
-void	exec(t_pipex *pipex, char **envp, char **env)
+void	exec(t_pipex *pipex)
 {
-	pipex->env = env;
-	pipex->envp = envp;
 	while (pipex->cmds)
 	{
 		do_pipe(pipex);

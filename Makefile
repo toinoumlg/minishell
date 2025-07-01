@@ -5,7 +5,7 @@ CFLAGS = -Wall -Wextra -Werror
 INCLUDE = -I./include -I./include/exec -I./include/parser \
 	-I./include/exec/redirects -I./include/exec/builtins \
 	-I./include/parser/commands -I./include/parser/tokens \
-	-I./libft/include
+	-I./include/env -I./libft/include
 #INCLUDE = -I./include -I./libft/include -lft -fsanitize=address
 LIBS = -lreadline -L./libft -lft
 
@@ -32,9 +32,11 @@ PARSER_FILES = parser/parse_read_line parser/alloc \
 	parser/commands/commands_list parser/commands/commands_redirect \
 	parser/commands/commands_redirect_utils \
 
-MAIN_FILES = main set_envs utils free free_utils
+ENV_FILES = env/set_envs env/envp env/envp_no_input
 
-ALL_SRC_FILES = $(MAIN_FILES) $(EXEC_FILES) $(PARSER_FILES)
+MAIN_FILES = main utils free free_utils
+
+ALL_SRC_FILES = $(MAIN_FILES) $(EXEC_FILES) $(PARSER_FILES) $(ENV_FILES)
 
 SRC = $(addprefix $(SRC_DIR)/, $(addsuffix .c, $(ALL_SRC_FILES)))
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

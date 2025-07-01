@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/30 15:19:11 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/30 18:30:13 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int	main(int argc, char **argv, char **envp)
 	char		*read_line;
 	t_minishell	minishell;
 
+	envp = NULL;
 	memset(&minishell, 0, sizeof(t_minishell));
 	set_envs(&minishell, envp);
 	if (!minishell.env)
@@ -49,11 +50,10 @@ int	main(int argc, char **argv, char **envp)
 	while (argv && argc)
 	{
 		read_line = readline("minishell> ");
-		parse_read_line(read_line, &minishell.pipex, minishell.env);
-		exec(&minishell.pipex, minishell.envp, minishell.env);
+		parse_read_line(read_line, &minishell.pipex, &minishell);
+		exec(&minishell.pipex);
 		wait_for_childrens(minishell.pipex.pids, minishell.pipex.size);
 	}
-	clear_history();
 	free_array(minishell.env);
 	return (0);
 }

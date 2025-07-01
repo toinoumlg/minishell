@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:43:18 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/30 14:32:37 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/06/30 18:54:16 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,12 @@ static void	echo(t_pipex *pipex)
 	int	i;
 
 	i = 1;
+	if (!pipex->cmds->args[i])
+	{
+		ft_putstr_fd("\n", 1);
+		free_child(pipex);
+		exit(1);
+	}
 	if (!ft_strncmp(pipex->cmds->args[i], "-n", 3))
 		i++;
 	while (pipex->cmds->args[i])
@@ -58,6 +64,21 @@ static void	echo(t_pipex *pipex)
 	exit(0);
 }
 
+static void	env(t_pipex *pipex)
+{
+	t_envp	*envp;
+
+	envp = *pipex->envp;
+	while (envp)
+	{
+		ft_putstr_fd(envp->line, 1);
+		ft_putstr_fd("\n", 1);
+		envp = envp->next;
+	}
+	free_child(pipex);
+	exit(0);
+}
+
 void	exec_builtin_in_child(t_pipex *pipex)
 {
 	t_cmd	*cmd;
@@ -67,4 +88,6 @@ void	exec_builtin_in_child(t_pipex *pipex)
 		pwd(pipex);
 	if (!ft_strncmp(cmd->args[0], "echo", 5))
 		echo(pipex);
+	if (!ft_strncmp(pipex->cmds->args[0], "env", 4))
+		env(pipex);
 }
