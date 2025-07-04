@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:18 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/03 21:13:28 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/04 15:08:53 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ static void	pwd_error(t_minishell *minishell)
 	free_on_exit_error(minishell);
 	exit(1);
 }
+
 void	pwd(t_minishell *minishell)
 {
 	char	path[256];

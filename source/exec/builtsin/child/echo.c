@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:05:22 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/03 19:16:26 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/04 15:09:13 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 void	echo(t_minishell *minishell)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	if (!minishell->cmds->args[i])

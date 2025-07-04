@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/03 21:15:57 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/04 15:08:41 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ typedef struct s_minishell
 	t_cmd			*cmds;
 	int				i;
 	int				size;
-	int (*pipe_fds)[2];
+	int				(*pipe_fds)[2];
 	int				*pids;
 	char			**env;
 	char			**envp_array;

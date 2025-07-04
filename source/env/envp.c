@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 17:41:48 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/04 13:49:12 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/04 15:08:20 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ t_envp	*set_new_envp(char *envp_line)
 		return (free(new_envp->line), free(new_envp), NULL);
 	new_envp->value = set_value(envp_line);
 	if (!new_envp->value)
-		return (free(new_envp->name), free(new_envp->line), free(new_envp), NULL);
+		return (free(new_envp->name), free(new_envp->line), free(new_envp),
+			NULL);
 	return (new_envp);
 }
 
@@ -83,8 +84,8 @@ void	append_new_envp(t_envp **envp_struct, t_envp *new_envp)
 
 void	set_envp(t_envp **envp_struct, char **envp)
 {
-	int i;
-	t_envp *new;
+	int		i;
+	t_envp	*new;
 
 	i = 0;
 	if (!envp)
