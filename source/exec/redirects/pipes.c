@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 17:04:13 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/26 13:39:27 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/03 19:10:30 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,14 @@ void	dup2_pipes(int (*pipe_fds)[2], int size, int i)
 	}
 }
 
-static int	need_to_pipe(t_pipex *pipex)
+static int	need_to_pipe(t_minishell *minishell)
 {
-	return (pipex->size > 1 && pipex->i < pipex->size - 1);
+	return (minishell->size > 1 && minishell->i < minishell->size - 1);
 }
 
-void	do_pipe(t_pipex *pipex)
+void	do_pipe(t_minishell *minishell)
 {
-	if (need_to_pipe(pipex))
-		if (pipe(pipex->pipe_fds[pipex->i]) == -1)
+	if (need_to_pipe(minishell))
+		if (pipe(minishell->pipe_fds[minishell->i]) == -1)
 			exit(printf("pipe creation error\n"));
 }

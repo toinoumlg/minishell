@@ -6,11 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 18:31:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/30 18:51:32 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/04 13:49:42 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "env.h"
+#include "envp_var.h"
 #include "libft.h"
 #include "minishell.h"
 #include <stdlib.h>

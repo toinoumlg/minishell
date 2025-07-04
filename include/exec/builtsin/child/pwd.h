@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtsin_child.h                                   :+:      :+:    :+:   */
+/*   pwd.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/25 11:44:58 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 19:25:41 by amalangu         ###   ########.fr       */
+/*   Created: 2025/07/01 15:18:52 by amalangu          #+#    #+#             */
+/*   Updated: 2025/07/03 19:08:21 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUILTSIN_CHILD_H
-# define BUILTSIN_CHILD_H
+#ifndef PWD_H
+# define PWD_H
 
 # include "minishell.h"
 
-void	exec_builtin_in_child(t_pipex *pipex);
+void	pwd(t_minishell *minishell);
 
 #endif

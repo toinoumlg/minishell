@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 07:47:05 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 13:18:40 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/03 21:42:00 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,6 @@
 
 # include "minishell.h"
 
-void	print_parse_error(char *parse_error);
+int	parsing_error(char *parse_error, t_minishell *minishell);
 
 #endif

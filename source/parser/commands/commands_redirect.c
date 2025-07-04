@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 12:15:26 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 13:02:40 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/03 20:52:49 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,38 +31,30 @@ static void	append_redirects(t_file **redirects, t_file *new_redirect)
 	*redirects = head;
 }
 
-static int	set_redirect(t_cmd **new, t_token **tokens, int j)
+static void	set_redirect(t_cmd *new_cmd, t_minishell *minishell, int j)
 {
 	t_file	*new_redirect;
-	t_cmd	*tmp;
 
-	tmp = *new;
-	new_redirect = set_file(tokens, j);
-	if (!new_redirect)
-		return (1);
-	append_redirects(&tmp->redirects, new_redirect);
-	return (0);
+	new_redirect = set_file(minishell, new_cmd, j);
+	append_redirects(&new_cmd->redirects, new_redirect);
 }
 
-int	pick_redirects(t_cmd **new, t_token **tokens)
+void	pick_redirects(t_cmd *new_cmd, t_minishell *minishell)
 {
 	int		j;
-	t_token	*tmp;
+	t_token	*tokens;
 
-	tmp = *tokens;
+	tokens = minishell->tokens;
 	j = 0;
-	while (!is_end_of_command(tmp))
+	while (!is_end_of_command(tokens))
 	{
-		if (tmp->type == output || tmp->type == append_file
-			|| tmp->type == input || tmp->type == here_doc)
+		if (tokens->type == output || tokens->type == append_file
+			|| tokens->type == input || tokens->type == here_doc)
 		{
-			if (!set_redirect(new, tokens, j))
-				return (pick_redirects(new, tokens));
-			else
-				return (1);
+			set_redirect(new_cmd, minishell, j);
+			return (pick_redirects(new_cmd, minishell));
 		}
 		j++;
-		tmp = tmp->next;
+		tokens = tokens->next;
 	}
-	return (0);
 }

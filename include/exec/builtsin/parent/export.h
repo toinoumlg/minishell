@@ -1,27 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.h                                              :+:      :+:    :+:   */
+/*   export.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/30 16:41:45 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/30 18:51:05 by amalangu         ###   ########.fr       */
+/*   Created: 2025/07/01 15:35:42 by amalangu          #+#    #+#             */
+/*   Updated: 2025/07/03 19:07:59 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ENV_H
-# define ENV_H
+#ifndef EXPORT_H
+# define EXPORT_H
 
-# define PATH "PATH"
-# define USER "USER"
-# define DESKTOP_SESSION "DESKTOP_SESSION"
-# define HOME "HOME"
-# define SHELL "SHELL"
-# define USERNAME "USERNAME"
-# define PWD "PWD"
-# define OLDPWD "OLDPWD"
-# define TERM "TERM"
+# include "minishell.h"
 
+void	my_export(t_minishell *minishell);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:45 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/30 17:57:01 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/03 20:29:07 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include "minishell.h"
 
-void	parse_read_line(char *read_line, t_pipex *pipex,
-			t_minishell *minishell);
+void	parse_read_line(t_minishell *minishell);
 
 #endif

@@ -6,12 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/30 18:14:24 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/04 14:48:54 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtsin_child.h"
-#include "builtsin_parent.h"
+#include "builtsin.h"
 #include "exec_utils.h"
 #include "free.h"
 #include "libft.h"
@@ -22,61 +21,62 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void	exit_child_no_execve(t_pipex *pipex)
+void	exit_child_no_execve(t_minishell *minishell)
 {
 	int		exit_value;
 	t_cmd	*cmd;
 
-	cmd = pipex->cmds;
+	cmd = minishell->cmds;
 	exit_value = print_command_error(cmd->program, cmd->error);
 	print_error_file(cmd->error);
-	free_child(pipex);
+	free_on_exit_error(minishell);
 	exit(exit_value);
 }
 
-void	child_process(t_pipex *pipex)
+void	child_process(t_minishell *minishell)
 {
 	t_cmd	*cmd;
 
-	cmd = pipex->cmds;
-	set_dup2(pipex);
+	cmd = minishell->cmds;
+	set_dup2(minishell);
 	if (!cmd->error)
 	{
-		exec_builtin_in_child(pipex);
-		execve(cmd->program->path, cmd->args, pipex->envp_array);
+		exec_builtsin_in_child(minishell);
+		execve(cmd->program->path, cmd->args, minishell->envp_array);
 	}
-	exit_child_no_execve(pipex);
+	exit_child_no_execve(minishell);
 }
 
-void	exec_in_child(t_pipex *pipex)
+void	exec_in_child(t_minishell *minishell)
 {
 	int	i;
 
-	i = pipex->i;
-	pipex->pids[i] = fork();
-	if (pipex->pids[i] == -1)
-		exit(printf("fork error\n"));
-	else if (!pipex->pids[i])
-		child_process(pipex);
+	i = minishell->i;
+	minishell->pids[i] = fork();
+	if (minishell->pids[i] == -1)
+		exit(free_on_exit_error(minishell));
+	else if (!minishell->pids[i])
+		child_process(minishell);
 }
 
-void	try_exec(t_pipex *pipex)
+void	try_exec(t_minishell *minishell)
 {
-	if (is_builtin_to_exec_in_parent(pipex->cmds->args[0]))
-		exec_builtin_in_parent(pipex);
+	if (is_builtin_to_exec_in_parent(minishell->cmds->args[0]))
+		exec_builtsin_in_parent(minishell);
 	else
-		exec_in_child(pipex);
+		exec_in_child(minishell);
 }
 
-void	exec(t_pipex *pipex)
+void	exec(t_minishell *minishell)
 {
-	while (pipex->cmds)
+	while (minishell->cmds)
 	{
-		do_pipe(pipex);
-		try_exec(pipex);
-		close_pipes(pipex->pipe_fds, pipex->size, pipex->i);
-		free_and_set_to_next_commands(&pipex->cmds);
-		pipex->i++;
+		do_pipe(minishell);
+		try_exec(minishell);
+		close_pipes(minishell->pipe_fds, minishell->size, minishell->i);
+		free_and_set_to_next_commands(&minishell->cmds);
+		minishell->i++;
 	}
-	free(pipex->pipe_fds);
+	free(minishell->pipe_fds);
+	minishell->pipe_fds = NULL;
 }

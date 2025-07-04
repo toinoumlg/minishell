@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:58:46 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/30 18:28:29 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/03 21:28:35 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,15 +56,25 @@ void	free_envp(t_envp *envp)
 		envp = next;
 	}
 }
-void	free_child(t_pipex *pipex)
+
+int	free_on_exit_error(t_minishell *minishell)
 {
-	free_cmds(pipex->cmds);
-	if (pipex->pids)
-		free(pipex->pids);
-	if (pipex->pipe_fds)
-		free(pipex->pipe_fds);
-	free_array(pipex->env);
-	free_array(pipex->envp_array);
-	free_envp(*pipex->envp);
+	if (minishell->cmds)
+		free_cmds(minishell->cmds);
+	if (minishell->env)
+		free_array(minishell->env);
+	if (minishell->envp)
+		free_envp(minishell->envp);
+	if (minishell->envp_array)
+		free_array(minishell->envp_array);
+	if (minishell->pids)
+		free(minishell->pids);
+	if (minishell->pipe_fds)
+		free(minishell->pipe_fds);
+	if (minishell->read_line)
+		free(minishell->read_line);
+	if (minishell->tokens)
+		free_tokens(minishell->tokens);
 	clear_history();
+	return (1);
 }

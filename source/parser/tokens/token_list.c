@@ -6,35 +6,38 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:28:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 08:20:54 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/03 21:10:05 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "free.h"
 #include "libft.h"
-#include "minishell.h"
 #include <string.h>
 
-int	add_string_to_token(char *start, int i, t_token *new)
+void	add_string_to_token(char *start, int i, t_token *new_token,
+		t_minishell *minishell)
 {
-	new->string = ft_strdup(start);
-	if (!new->string)
-		return (1);
-	new->string[i] = 0;
-	return (0);
+	new_token->string = ft_strdup(start);
+	if (!new_token->string)
+	{
+		free(new_token);
+		exit(free_on_exit_error(minishell));
+	}
+	new_token->string[i] = 0;
 }
 
-t_token	*set_new_token(void)
+t_token	*set_new_token(t_minishell *minishell)
 {
-	t_token	*new;
+	t_token	*new_token;
 
-	new = malloc(sizeof(t_token));
-	if (!new)
-		return (NULL);
-	memset(new, 0, sizeof(t_token));
-	return (new);
+	new_token = malloc(sizeof(t_token));
+	if (!new_token)
+		exit(free_on_exit_error(minishell));
+	memset(new_token, 0, sizeof(t_token));
+	return (new_token);
 }
 
-void	append_new_token(t_token **tokens, t_token *new)
+void	append_new_token(t_token **tokens, t_token *new_token)
 {
 	t_token	*tmp;
 	t_token	*head;
@@ -45,13 +48,12 @@ void	append_new_token(t_token **tokens, t_token *new)
 	head = tmp;
 	if (!tmp)
 	{
-		*tokens = new;
+		*tokens = new_token;
 		return ;
 	}
 	while (tmp->next && ++i)
 		tmp = tmp->next;
 	++i;
-	tmp->next = new;
+	tmp->next = new_token;
 	*tokens = head;
-	return ;
 }

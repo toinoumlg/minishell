@@ -6,17 +6,19 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:27:41 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/13 20:13:28 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/01 16:07:48 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdlib.h>
 
-int	is_metacharacter(char c)
+int	is_metacharacter(char c, int i)
 {
+	if (i == 0 && c == '$')
+		return (0);
 	if (c == ' ' || c == '	' || c == '\n' || c == '|' || c == '&' || c == ';'
-		|| c == '(' || c == ')' || c == '<' || c == '>' || c == 0)
+			|| c == '(' || c == ')' || c == '<' || c == '>' || c == 0 || c == '$')
 		return (1);
 	else
 		return (0);
@@ -35,7 +37,7 @@ int	get_word_size(char **read_line)
 	int	i;
 
 	i = 0;
-	while (!is_metacharacter(**read_line) && ++i)
+	while (!is_metacharacter(**read_line, i) && ++i)
 		(*read_line)++;
 	return (i);
 }

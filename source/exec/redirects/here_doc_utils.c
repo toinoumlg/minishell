@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 13:05:05 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 13:17:42 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/03 19:10:29 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,25 @@
 #include "minishell.h"
 #include <stdio.h>
 
-static void	set_pipe_here_doc(t_pipex *pipex, int here_doc_pipe[2])
+static void	set_pipe_here_doc(t_minishell *minishell, int here_doc_pipe[2])
 {
-	if (pipex->i < pipex->size - 1)
+	if (minishell->i < minishell->size - 1)
 	{
-		if (dup2(here_doc_pipe[0], pipex->pipe_fds[pipex->i][0]) == -1)
+		if (dup2(here_doc_pipe[0], minishell->pipe_fds[minishell->i][0]) == -1)
 			perror("dup2");
 	}
 	else
 	{
-		if (dup2(here_doc_pipe[0], pipex->pipe_fds[pipex->i - 1][0]) == -1)
+		if (dup2(here_doc_pipe[0], minishell->pipe_fds[minishell->i - 1][0]) ==
+			-1)
 			perror("dup2");
 	}
-	if (pipex->i == 0)
-		if (dup2(pipex->pipe_fds[pipex->i][0], STDIN_FILENO) == -1)
+	if (minishell->i == 0)
+		if (dup2(minishell->pipe_fds[minishell->i][0], STDIN_FILENO) == -1)
 			perror("dup2");
 }
 
-static int	is_type_in_redirects(t_file *redirects, t_enum_token type)
+static int	contains_type(t_file *redirects, t_enum_token type)
 {
 	if (!redirects)
 		return (0);
@@ -45,15 +46,15 @@ static int	is_type_in_redirects(t_file *redirects, t_enum_token type)
 }
 
 void	close_here_doc(int here_doc_pipe[2], t_file *here_doc_file,
-		t_pipex *pipex)
+		t_minishell *minishell)
 {
-	if (is_type_in_redirects(here_doc_file->next, here_doc))
+	if (contains_type(here_doc_file->next, here_doc))
 	{
 		close(here_doc_pipe[0]);
 		close(here_doc_pipe[1]);
 		return ;
 	}
-	if (!pipex->pipe_fds)
+	if (!minishell->pipe_fds)
 	{
 		if (dup2(here_doc_pipe[0], STDIN_FILENO) == -1)
 			perror("dup2");
@@ -62,7 +63,7 @@ void	close_here_doc(int here_doc_pipe[2], t_file *here_doc_file,
 	}
 	else
 	{
-		set_pipe_here_doc(pipex, here_doc_pipe);
+		set_pipe_here_doc(minishell, here_doc_pipe);
 		close(here_doc_pipe[0]);
 		close(here_doc_pipe[1]);
 	}

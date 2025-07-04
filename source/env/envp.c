@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 17:41:48 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/30 18:57:32 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/04 13:49:12 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,25 +45,25 @@ static char	*set_value(char *envp_line)
 
 t_envp	*set_new_envp(char *envp_line)
 {
-	t_envp	*new;
+	t_envp	*new_envp;
 
-	new = malloc(sizeof(t_envp));
-	if (!new)
+	new_envp = malloc(sizeof(t_envp));
+	if (!new_envp)
 		return (NULL);
-	memset(new, 0, sizeof(t_envp));
-	new->line = ft_strdup(envp_line);
-	if (!new->line)
-		return (free(new), NULL);
-	new->name = set_name(envp_line);
-	if (!new->name)
-		return (free(new->line), free(new), NULL);
-	new->value = set_value(envp_line);
-	if (!new->value)
-		return (free(new->name), free(new->line), free(new), NULL);
-	return (new);
+	memset(new_envp, 0, sizeof(t_envp));
+	new_envp->line = ft_strdup(envp_line);
+	if (!new_envp->line)
+		return (free(new_envp), NULL);
+	new_envp->name = set_name(envp_line);
+	if (!new_envp->name)
+		return (free(new_envp->line), free(new_envp), NULL);
+	new_envp->value = set_value(envp_line);
+	if (!new_envp->value)
+		return (free(new_envp->name), free(new_envp->line), free(new_envp), NULL);
+	return (new_envp);
 }
 
-void	append_new_envp(t_envp **envp_struct, t_envp *new)
+void	append_new_envp(t_envp **envp_struct, t_envp *new_envp)
 {
 	t_envp	*tmp;
 	t_envp	*head;
@@ -72,12 +72,12 @@ void	append_new_envp(t_envp **envp_struct, t_envp *new)
 	head = tmp;
 	if (!tmp)
 	{
-		*envp_struct = new;
+		*envp_struct = new_envp;
 		return ;
 	}
 	while (tmp->next)
 		tmp = tmp->next;
-	tmp->next = new;
+	tmp->next = new_envp;
 	*envp_struct = head;
 }
 

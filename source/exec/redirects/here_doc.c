@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/30 14:35:02 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/03 19:16:26 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	close_pipes_in_write_child(int (*pipe_fds)[2], int i, int size)
 	}
 }
 
-static void	write_in_child(t_pipex *pipex, int here_doc_pipe[2],
+static void	write_in_child(t_minishell *minishell, int here_doc_pipe[2],
 		char *here_doc_lim)
 {
 	char	*read_line;
@@ -47,10 +47,10 @@ static void	write_in_child(t_pipex *pipex, int here_doc_pipe[2],
 			free(read_line);
 			close(here_doc_pipe[1]);
 			close(here_doc_pipe[0]);
-			if (pipex->pipe_fds)
-				close_pipes_in_write_child(pipex->pipe_fds, pipex->i,
-					pipex->size);
-			free_child(pipex);
+			if (minishell->pipe_fds)
+				close_pipes_in_write_child(minishell->pipe_fds, minishell->i,
+					minishell->size);
+			free_on_exit_error(minishell);
 			exit(0);
 		}
 		write(here_doc_pipe[1], read_line, ft_strlen(read_line));
@@ -59,7 +59,7 @@ static void	write_in_child(t_pipex *pipex, int here_doc_pipe[2],
 	}
 }
 
-void	set_here_doc(t_pipex *pipex, t_file *here_doc_file)
+void	set_here_doc(t_minishell *minishell, t_file *here_doc_file)
 {
 	int	pid;
 	int	here_doc_pipe[2];
@@ -70,23 +70,23 @@ void	set_here_doc(t_pipex *pipex, t_file *here_doc_file)
 	if (pid == -1)
 		perror("fork");
 	if (!pid)
-		write_in_child(pipex, here_doc_pipe, here_doc_file->path);
+		write_in_child(minishell, here_doc_pipe, here_doc_file->path);
 	else
 	{
 		waitpid(pid, NULL, 0);
-		close_here_doc(here_doc_pipe, here_doc_file, pipex);
+		close_here_doc(here_doc_pipe, here_doc_file, minishell);
 	}
 }
 
-void	handle_here_docs(t_pipex *pipex)
+void	handle_here_docs(t_minishell *minishell)
 {
 	t_file	*redirects;
 
-	redirects = pipex->cmds->redirects;
+	redirects = minishell->cmds->redirects;
 	while (redirects)
 	{
 		if (redirects->type == here_doc)
-			set_here_doc(pipex, redirects);
+			set_here_doc(minishell, redirects);
 		redirects = redirects->next;
 	}
 }

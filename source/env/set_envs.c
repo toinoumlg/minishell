@@ -6,12 +6,13 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:57:54 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/30 18:40:47 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/04 13:47:46 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "env.h"
 #include "envp.h"
+#include "envp_var.h"
+#include "free.h"
 #include "free_utils.h"
 #include "libft.h"
 #include <stdio.h>
@@ -30,10 +31,16 @@ static int	same_name(char *name, char *envp_name)
 
 static char	*get_envp_line(t_envp *envp, char *name)
 {
+	t_envp	*head;
+
+	head = envp;
 	while (envp && !same_name(name, envp->name))
 		envp = envp->next;
 	if (!envp)
-		return (NULL);
+	{
+		free_envp(head);
+		exit(1);
+	}
 	return (envp->line);
 }
 
@@ -44,21 +51,19 @@ void	set_envs(t_minishell *minishell, char **envp)
 	int		i;
 
 	i = -1;
-	envp = NULL;
+	memset(minishell, 0, sizeof(t_minishell));
 	set_envp(&minishell->envp, envp);
 	env = get_env(get_envp_line(minishell->envp, PATH));
-	if (!env)
-		exit(1);
 	while (env[++i])
 	{
 		tmp = ft_strdup(env[i]);
 		if (!tmp)
-			return (free_array(env), exit(1));
+			return (free_array(env), exit(free_on_exit_error(minishell)));
 		free(env[i]);
 		env[i] = ft_strjoin(tmp, "/");
 		free(tmp);
 		if (!env[i])
-			return (free_array(env), exit(1));
+			return (free_array(env), exit(free_on_exit_error(minishell)));
 	}
 	minishell->env = env;
 }

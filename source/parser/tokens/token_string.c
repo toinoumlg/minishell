@@ -6,11 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:56:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/09 16:22:33 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/03 20:47:40 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "free.h"
 #include "token_list.h"
 #include "token_utils.h"
 
@@ -26,37 +26,33 @@ int	get_quoted_string_size(char quote, char **read_line)
 	return (i + 1);
 }
 
-int	extract_quoted_string(char **read_line, char quote, t_token **tokens)
+int	extract_quoted_string(char **read_line, char quote, t_minishell *minishell)
 {
-	t_token	*new;
+	t_token	*new_token;
 	char	*start;
 	int		i;
 
 	i = 0;
-	new = set_new_token();
-	if (!new)
-		return (1);
+	new_token = set_new_token(minishell);
 	start = *read_line;
 	i = get_quoted_string_size(quote, read_line);
 	if (quote == '\'')
 	{
-		new->type = simple_quote;
-		if (add_string_to_token(start, i + 1, new))
-			return (1);
+		new_token->type = simple_quote;
+		add_string_to_token(start, i + 1, new_token, minishell);
 	}
 	else
 	{
-		new->type = double_quote;
-		if (add_string_to_token(start, 1 + i, new))
-			return (1);
+		new_token->type = double_quote;
+		add_string_to_token(start, 1 + i, new_token, minishell);
 	}
-	append_new_token(tokens, new);
+	append_new_token(&minishell->tokens, new_token);
 	return (0);
 }
 
-int	pick_word(char **read_line, t_token **tokens)
+int	pick_word(char **read_line, t_minishell *minishell)
 {
-	t_token	*new;
+	t_token	*new_token;
 	char	*start;
 	int		i;
 
@@ -64,10 +60,11 @@ int	pick_word(char **read_line, t_token **tokens)
 	if (!**read_line)
 		return (0);
 	i = get_word_size(read_line);
-	new = set_new_token();
-	if (!new || i <= 0 || add_string_to_token(start, i, new))
+	if (i <= 0)
 		return (1);
-	new->type = word;
-	append_new_token(tokens, new);
+	new_token = set_new_token(minishell);
+	add_string_to_token(start, i, new_token, minishell);
+	new_token->type = word;
+	append_new_token(&minishell->tokens, new_token);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/30 18:18:52 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/04 14:51:04 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,25 +18,11 @@
 #include "libft.h"
 #include "parse_error.h"
 #include "token.h"
+#include "token_expand.h"
 #include <readline/history.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-static void	free_get_token_list(char *read_line, t_token *tokens,
-		char *parse_error)
-{
-	print_parse_error(parse_error);
-	free_tokens(tokens);
-	free(read_line);
-}
-
-static void	free_set_commands(char *read_line, t_token *tokens, t_cmd *cmds)
-{
-	free_tokens(tokens);
-	free_cmds(cmds);
-	free(read_line);
-}
 
 static int	get_envp_size(t_envp *envp)
 {
@@ -51,7 +37,7 @@ static int	get_envp_size(t_envp *envp)
 	return (i);
 }
 
-static char	**set_path_envp(t_envp *envp)
+static char	**set_envp_array(t_envp *envp)
 {
 	char	**envp_array;
 	int		i;
@@ -71,27 +57,39 @@ static char	**set_path_envp(t_envp *envp)
 	return (envp_array);
 }
 
-void	parse_read_line(char *read_line, t_pipex *pipex, t_minishell *minishell)
+void	pre_parsing(t_minishell *minishell)
 {
-	t_token	*tokens;
+	if (minishell->envp_array)
+		free_array(minishell->envp_array);
+	minishell->size = 0;
+	minishell->i = 0;
+	minishell->envp_array = set_envp_array(minishell->envp);
+	if (!minishell->envp_array)
+		exit(free_on_exit_error(minishell));
+}
+
+void	post_parsing(t_minishell *minishell)
+{
+	try_access(minishell->cmds, minishell->env);
+	minishell->size = set_size(minishell->cmds);
+	minishell->pipe_fds = alloc_pipe_fds(minishell);
+	minishell->pids = alloc_pids(minishell);
+	if ((minishell->size > 1 && !minishell->pipe_fds) || !minishell->pids)
+		exit(free_on_exit_error(minishell));
+}
+
+void	parse_read_line(t_minishell *minishell)
+{
 	char	*parse_error;
 
-	parse_error = read_line;
-	add_history(read_line);
-	memset(pipex, 0, sizeof(t_pipex));
-	memset(&tokens, 0, sizeof(t_token *));
-	pipex->envp_array = set_path_envp(minishell->envp);
-	pipex->envp = &minishell->envp;
-	pipex->env = minishell->env;
-	if (get_tokens_list(&parse_error, &tokens))
-		return (free_get_token_list(read_line, tokens, parse_error));
-	if (!tokens)
-		return (free(read_line));
-	if (set_commands(&tokens, &pipex->cmds))
-		return (free_set_commands(read_line, tokens, pipex->cmds));
-	try_access(pipex->cmds, minishell->env);
-	pipex->size = set_size(pipex->cmds);
-	pipex->pipe_fds = alloc_pipe_fds(pipex->cmds, pipex->size);
-	pipex->pids = alloc_pids(pipex->size);
-	free(read_line);
+	parse_error = minishell->read_line;
+	add_history(minishell->read_line);
+	pre_parsing(minishell);
+	if (get_tokens_list(&parse_error, minishell))
+		return ;
+	if (!minishell->tokens)
+		return (free(minishell->read_line));
+	expand_tokens(minishell);
+	set_commands(minishell);
+	post_parsing(minishell);
 }

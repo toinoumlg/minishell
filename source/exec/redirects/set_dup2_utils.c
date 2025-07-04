@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:50:43 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 13:18:24 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/03 19:16:26 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	dup2_append_file(t_file *append_file)
 	return (0);
 }
 
-int	is_type_in_redirects(t_file *redirects, t_enum_token type)
+int	contains_type(t_file *redirects, t_enum_token type)
 {
 	if (!redirects)
 		return (0);
@@ -78,9 +78,9 @@ int	is_type_in_redirects(t_file *redirects, t_enum_token type)
 	return (0);
 }
 
-void	exit_set_files_in_child(t_pipex *pipex)
+void	exit_set_files_in_child(t_minishell *minishell)
 {
-	free_child(pipex);
+	free_on_exit_error(minishell);
 	perror("set_file");
 	exit(1);
 }

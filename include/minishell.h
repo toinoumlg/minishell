@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/30 18:33:19 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/03 21:15:57 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ typedef struct s_envp
 	struct s_envp	*next;
 }					t_envp;
 
-typedef struct s_pipex
+typedef struct s_minishell
 {
 	t_cmd			*cmds;
 	int				i;
@@ -71,14 +71,10 @@ typedef struct s_pipex
 	int				*pids;
 	char			**env;
 	char			**envp_array;
-	t_envp			**envp;
-}					t_pipex;
-
-typedef struct s_minishell
-{
-	char			**env;
 	t_envp			*envp;
-	t_pipex			pipex;
+	t_token			*tokens;
+	int				last_status;
+	char			*read_line;
 }					t_minishell;
 
 #endif

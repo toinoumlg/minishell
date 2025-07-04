@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 12:47:29 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/30 14:29:27 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/01 17:49:08 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ static char	*parse_env(char **env, t_file *program)
 		free(tmp);
 		env++;
 	}
-	set_access(program, program->path);
+	program->exec = -1;
+	program->exist = -1;
 	return (program->path);
 }
 

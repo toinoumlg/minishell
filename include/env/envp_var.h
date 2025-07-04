@@ -1,20 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtsin_parent.h                                  :+:      :+:    :+:   */
+/*   env_var.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/25 11:48:13 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 19:24:36 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/30 16:41:45 by amalangu          #+#    #+#             */
+/*   Updated: 2025/07/01 15:59:17 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUILTSIN_PARENT_H
-# define BUILTSIN_PARENT_H
+#ifndef ENVP_VAR_H
+# define ENVP_VAR_H
 
-# include "minishell.h"
-
-void	exec_builtin_in_parent(t_pipex *pipex);
+# define PATH "PATH"
+# define USER "USER"
+# define DESKTOP_SESSION "DESKTOP_SESSION"
+# define HOME "HOME"
+# define SHELL "SHELL"
+# define USERNAME "USERNAME"
+# define PWD "PWD"
+# define OLDPWD "OLDPWD"
+# define TERM "TERM"
 
 #endif

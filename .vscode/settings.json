@@ -34,6 +34,19 @@
 		"fcntl.h": "c",
 		"set_files_fds.h": "c",
 		"print_error.h": "c",
-		"unistd.h": "c"
+		"unistd.h": "c",
+		"utils.h": "c",
+		"exec.h": "c",
+		"free_utils.h": "c",
+		"typeinfo": "c",
+		"exec_utils.h": "c",
+		"envp_no_input.h": "c",
+		"cstdlib": "c",
+		"envp.h": "c",
+		"echo.h": "c",
+		"env.h": "c",
+		"token.h": "c",
+		"set_envs.h": "c",
+		"parse_error.h": "c"
 	}
 }

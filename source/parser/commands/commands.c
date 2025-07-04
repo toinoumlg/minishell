@@ -6,55 +6,49 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 17:03:22 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 13:04:34 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/04 12:50:50 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "commands_args.h"
 #include "commands_list.h"
 #include "commands_redirect.h"
+#include "free.h"
 #include "libft.h"
 #include "token_free.h"
 #include <string.h>
 
-t_file	*set_program(char *path)
+void	set_program(t_cmd *new_cmd, t_minishell *minishell)
 {
-	t_file	*new;
-
-	if (!path)
-		return (NULL);
-	new = malloc(sizeof(t_file));
-	if (!new)
-		return (NULL);
-	memset(new, 0, sizeof(t_file));
-	new->path = path;
-	return (new);
+	new_cmd->program = malloc(sizeof(t_file));
+	if (!new_cmd->program)
+	{
+		free_cmds(new_cmd);
+		exit(free_on_exit_error(minishell));
+	}
+	memset(new_cmd->program, 0, sizeof(t_file));
+	new_cmd->program->path = ft_strdup(new_cmd->args[0]);
+	if (!new_cmd->program->path)
+	{
+		free_cmds(new_cmd);
+		exit(free_on_exit_error(minishell));
+	}
 }
 
-static int	add_new_command(t_token **tokens, t_cmd **cmds)
+static void	add_new_command(t_minishell *minishell)
 {
-	t_cmd	*new;
+	t_cmd	*new_cmd;
 
-	new = set_new_command();
-	if (!new)
-		return (1);
-	if (pick_redirects(&new, tokens))
-		return (1);
-	new->args = set_args(tokens);
-	if (!new->args)
-		return (1);
-	new->program = set_program(ft_strdup(new->args[0]));
-	if (!new)
-		return (1);
-	free_pipe(tokens);
-	append_new_command(cmds, new);
-	return (0);
+	new_cmd = set_new_command(minishell);
+	pick_redirects(new_cmd, minishell);
+	new_cmd->args = set_args(new_cmd, minishell);
+	set_program(new_cmd, minishell);
+	free_pipe(&minishell->tokens);
+	append_new_command(&minishell->cmds, new_cmd);
 }
 
-int	set_commands(t_token **tokens, t_cmd **cmds)
+void	set_commands(t_minishell *minishell)
 {
-	while (*tokens)
-		if (add_new_command(tokens, cmds))
-			return (1);
-	return (0);
+	while (minishell->tokens)
+		add_new_command(minishell);
 }

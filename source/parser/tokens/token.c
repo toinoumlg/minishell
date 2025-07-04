@@ -6,35 +6,38 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:25:17 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 07:34:47 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/04 13:01:06 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "parse_error.h"
+#include "token_check.h"
 #include "token_operator.h"
 #include "token_string.h"
-#include "token_check.h"
 #include "token_utils.h"
 #include "utils.h"
+#include <stdlib.h>
 #include <string.h>
 
-int	get_tokens_list(char **read_line, t_token **tokens)
+int	get_tokens_list(char **parse_error, t_minishell *minishell)
 {
-	while (**read_line)
+	memset(&minishell->tokens, 0, sizeof(t_token *));
+	while (**parse_error)
 	{
-		if (is_quote(**read_line) && extract_quoted_string(read_line,
-				**read_line, tokens))
-			return (1);
-		else if (is_operator(**read_line) && add_operator_token(read_line,
-				tokens))
-			return (1);
-		else if (**read_line == ' ')
-			(*read_line)++;
-		else if (pick_word(read_line, tokens))
-			return (1);
+		if (is_quote(**parse_error) && extract_quoted_string(parse_error,
+				**parse_error, minishell))
+			return (parsing_error(*parse_error, minishell));
+		else if (is_operator(**parse_error) && add_operator_token(parse_error,
+				minishell))
+			return (parsing_error(*parse_error, minishell));
+		else if (**parse_error == ' ')
+			(*parse_error)++;
+		else if (pick_word(parse_error, minishell))
+			return (parsing_error(*parse_error, minishell));
 	}
-	if (check_pipes(*tokens))
-		return (1);
-	else
-		return (0);
+	if (check_pipes(minishell->tokens))
+		return (parsing_error(*parse_error, minishell));
+	free(minishell->read_line);
+	minishell->read_line = NULL;
+	return (0);
 }

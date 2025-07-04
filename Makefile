@@ -3,7 +3,8 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror
 #CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g
 INCLUDE = -I./include -I./include/exec -I./include/parser \
-	-I./include/exec/redirects -I./include/exec/builtins \
+	-I./include/exec/redirects -I./include/exec/builtsin \
+	-I./include/exec/builtsin/parent -I./include/exec/builtsin/child \
 	-I./include/parser/commands -I./include/parser/tokens \
 	-I./include/env -I./libft/include
 #INCLUDE = -I./include -I./libft/include -lft -fsanitize=address
@@ -16,10 +17,15 @@ SRC_DIR = source
 OBJ_DIR = build
 
 EXEC_FILES = exec/exec exec/exec_utils exec/print_error \
-	exec/builtsin/builtsin_child exec/builtsin/builtsin_parent \
 	exec/redirects/here_doc exec/redirects/here_doc_utils \
 	exec/redirects/set_dup2 exec/redirects/set_dup2_utils \
 	exec/redirects/pipes
+
+BUILTSIN = exec/builtsin/builtsin  \
+	exec/builtsin/parent/cd exec/builtsin/parent/exit \
+	exec/builtsin/parent/export exec/builtsin/parent/unset \
+	exec/builtsin/child/echo exec/builtsin/child/env \
+	exec/builtsin/child/pwd
 
 PARSER_FILES = parser/parse_read_line parser/alloc \
 	parser/access_program parser/access \
@@ -27,7 +33,7 @@ PARSER_FILES = parser/parse_read_line parser/alloc \
 	parser/tokens/token parser/tokens/token_check \
 	parser/tokens/token_list parser/tokens/token_operator \
 	parser/tokens/token_string parser/tokens/token_utils \
-	parser/tokens/token_free \
+	parser/tokens/token_expand parser/tokens/token_free \
 	parser/commands/commands parser/commands/commands_args \
 	parser/commands/commands_list parser/commands/commands_redirect \
 	parser/commands/commands_redirect_utils \
@@ -36,7 +42,7 @@ ENV_FILES = env/set_envs env/envp env/envp_no_input
 
 MAIN_FILES = main utils free free_utils
 
-ALL_SRC_FILES = $(MAIN_FILES) $(EXEC_FILES) $(PARSER_FILES) $(ENV_FILES)
+ALL_SRC_FILES = $(MAIN_FILES) $(EXEC_FILES) $(PARSER_FILES) $(ENV_FILES) $(BUILTSIN)
 
 SRC = $(addprefix $(SRC_DIR)/, $(addsuffix .c, $(ALL_SRC_FILES)))
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

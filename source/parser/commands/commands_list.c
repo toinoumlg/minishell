@@ -6,15 +6,15 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:45:35 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/25 19:00:01 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/03 21:06:04 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "free.h"
 #include <stdlib.h>
 #include <string.h>
 
-void	append_new_command(t_cmd **cmds, t_cmd *new)
+void	append_new_command(t_cmd **cmds, t_cmd *new_cmd)
 {
 	t_cmd	*tmp;
 	t_cmd	*head;
@@ -23,23 +23,23 @@ void	append_new_command(t_cmd **cmds, t_cmd *new)
 	head = tmp;
 	if (!tmp)
 	{
-		*cmds = new;
+		*cmds = new_cmd;
 		return ;
 	}
 	while (tmp->next)
 		tmp = tmp->next;
-	tmp->next = new;
+	tmp->next = new_cmd;
 	*cmds = head;
 	return ;
 }
 
-t_cmd	*set_new_command(void)
+t_cmd	*set_new_command(t_minishell *minishell)
 {
 	t_cmd	*new;
 
 	new = malloc(sizeof(t_cmd));
 	if (!new)
-		return (NULL);
+		exit(free_on_exit_error(minishell));
 	memset(new, 0, sizeof(t_cmd));
 	return (new);
 }
