@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pledieu <pledieu@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:25:17 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/04 13:01:06 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/20 15:46:48 by pledieu          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,39 @@
 #include <stdlib.h>
 #include <string.h>
 
-int	get_tokens_list(char **parse_error, t_minishell *minishell)
+int get_tokens_list(char **parse_error, t_minishell *minishell)
 {
-	memset(&minishell->tokens, 0, sizeof(t_token *));
-	while (**parse_error)
+    memset(&minishell->tokens, 0, sizeof(t_token *));
+    int was_space = 1; // initialement vrai (avant le premier token)
+
+    while (**parse_error)
 	{
-		if (is_quote(**parse_error) && extract_quoted_string(parse_error,
-				**parse_error, minishell))
-			return (parsing_error(*parse_error, minishell));
-		else if (is_operator(**parse_error) && add_operator_token(parse_error,
-				minishell))
-			return (parsing_error(*parse_error, minishell));
-		else if (**parse_error == ' ')
+		if (**parse_error == ' ')
+		{
+			was_space = 1;
 			(*parse_error)++;
-		else if (pick_word(parse_error, minishell))
-			return (parsing_error(*parse_error, minishell));
+		}
+		else if (is_quote(**parse_error))
+		{
+			t_token *new = extract_quoted_string(parse_error, **parse_error, minishell);
+			if (new)
+				new->separated_by_space = was_space;
+			was_space = 0;
+		}
+		else if (is_operator(**parse_error))
+		{
+			t_token *new = add_operator_token(parse_error, minishell);
+			if (new)
+				new->separated_by_space = was_space;
+			was_space = 0;
+		}
+		else
+		{
+			t_token *new = pick_word(parse_error, minishell);
+			if (new)
+				new->separated_by_space = was_space;
+			was_space = 0;
+		}
 	}
-	if (check_pipes(minishell->tokens))
-		return (parsing_error(*parse_error, minishell));
-	free(minishell->read_line);
-	minishell->read_line = NULL;
-	return (0);
+    return (0);
 }

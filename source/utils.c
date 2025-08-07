@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pledieu <pledieu@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:27:02 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 07:20:05 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/20 14:08:52 by pledieu          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ void	print_tokens(t_token *tokens)
 			printf("simple_quote\n");
 		if (tokens->type == double_quote)
 			printf("double_quote\n");
+		printf("\n");
 		tokens = tokens->next;
 		i++;
 	}

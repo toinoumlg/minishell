@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_operator.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pledieu <pledieu@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:32:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/03 20:46:28 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/20 15:51:35 by pledieu          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,13 +87,40 @@ int	add_input_redirect(char **read_line, t_minishell *minishell)
 	return (0);
 }
 
-int	add_operator_token(char **read_line, t_minishell *minishell)
+int    get_operator_size(char **line)
 {
-	if (**read_line == '<' && add_input_redirect(read_line, minishell))
-		return (1);
-	else if (**read_line == '>' && add_output_redirect(read_line, minishell))
-		return (1);
-	else if (**read_line == '|' && add_pipe(read_line, minishell))
-		return (1);
-	return (0);
+    if (**line == '|' || **line == '<' || **line == '>')
+    {
+        if ((**line == '<' && *(*line + 1) == '<')
+            || (**line == '>' && *(*line + 1) == '>'))
+        {
+            (*line) += 2;
+            return (2);
+        }
+        (*line)++;
+        return (1);
+    }
+    return (0);
+}
+
+t_token *add_operator_token(char **read_line, t_minishell *minishell)
+{
+    t_token    *new_token;
+
+    new_token = set_new_token(minishell);
+    if (!new_token)
+        return (NULL);
+    if (**read_line == '|')
+        new_token->type = is_pipe;
+    else if (**read_line == '<' && *(*read_line + 1) != '<')
+        new_token->type = input;
+    else if (**read_line == '>' && *(*read_line + 1) != '>')
+        new_token->type = output;
+    else if (**read_line == '<' && *(*read_line + 1) == '<')
+        new_token->type = here_doc;
+    else if (**read_line == '>' && *(*read_line + 1) == '>')
+        new_token->type = append_file;
+
+    add_string_to_token(*read_line, get_operator_size(read_line), new_token, minishell);
+    return (append_new_token(&minishell->tokens, new_token));
 }

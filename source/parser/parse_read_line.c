@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_read_line.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pledieu <pledieu@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/04 14:51:04 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/20 15:54:06 by pledieu          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "utils.h"
 
 static int	get_envp_size(t_envp *envp)
 {
@@ -77,6 +78,34 @@ void	post_parsing(t_minishell *minishell)
 	if ((minishell->size > 1 && !minishell->pipe_fds) || !minishell->pids)
 		exit(free_on_exit_error(minishell));
 }
+#include "token.h"
+#include "libft.h"
+
+ 
+void merge_adjacent_words(t_token **tokens)
+{
+    t_token *cur = *tokens;
+    t_token *next;
+
+    while (cur && cur->next)
+    {
+        next = cur->next;
+        if (next->separated_by_space == 0 &&
+            (cur->type == word || cur->type == simple_quote || cur->type == double_quote) &&
+            (next->type == word || next->type == simple_quote || next->type == double_quote))
+        {
+            char *merged = ft_strjoin(cur->string, next->string);
+            free(cur->string);
+            cur->string = merged;
+
+            cur->next = next->next;
+            free(next->string);
+            free(next);
+        }
+        else
+            cur = cur->next;
+    }
+}
 
 void	parse_read_line(t_minishell *minishell)
 {
@@ -90,6 +119,8 @@ void	parse_read_line(t_minishell *minishell)
 	if (!minishell->tokens)
 		return (free(minishell->read_line));
 	expand_tokens(minishell);
+	merge_adjacent_words(&minishell->tokens);
+	// print_tokens(minishell->tokens);
 	set_commands(minishell);
 	post_parsing(minishell);
 }

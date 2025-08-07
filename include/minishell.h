@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pledieu <pledieu@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/04 15:08:41 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/20 15:48:00 by pledieu          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,11 @@ typedef struct s_cmd
 
 typedef struct s_token
 {
-	char			*string;
-	t_enum_token	type;
-	struct s_token	*next;
-}					t_token;
+    char            *string;
+    t_enum_token             type;
+    int             separated_by_space; // NOUVEAU CHAMP
+    struct s_token  *next;
+} t_token;
 
 typedef struct s_envp
 {

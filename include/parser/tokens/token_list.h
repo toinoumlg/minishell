@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:38:11 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/03 20:44:39 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/07 13:15:23 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "minishell.h"
 
-void	append_new_token(t_token **tokens, t_token *new_token);
+t_token	*append_new_token(t_token **tokens, t_token *new_token);
 t_token	*set_new_token(t_minishell *minishell);
 void	add_string_to_token(char *start, int i, t_token *new_token,
 			t_minishell *minishell);

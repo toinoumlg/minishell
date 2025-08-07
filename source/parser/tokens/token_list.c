@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_list.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pledieu <pledieu@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:28:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/03 21:10:05 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/20 15:40:05 by pledieu          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,23 +37,19 @@ t_token	*set_new_token(t_minishell *minishell)
 	return (new_token);
 }
 
-void	append_new_token(t_token **tokens, t_token *new_token)
+t_token    *append_new_token(t_token **tokens, t_token *new_token)
 {
-	t_token	*tmp;
-	t_token	*head;
-	int		i;
+    t_token    *tmp;
 
-	i = 0;
-	tmp = *tokens;
-	head = tmp;
-	if (!tmp)
-	{
-		*tokens = new_token;
-		return ;
-	}
-	while (tmp->next && ++i)
-		tmp = tmp->next;
-	++i;
-	tmp->next = new_token;
-	*tokens = head;
+    new_token->next = NULL;
+    if (!*tokens)
+        *tokens = new_token;
+    else
+    {
+        tmp = *tokens;
+        while (tmp->next)
+            tmp = tmp->next;
+        tmp->next = new_token;
+    }
+    return (new_token);
 }

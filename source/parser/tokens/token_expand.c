@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   token_expand.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: pledieu <pledieu@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 16:14:42 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/03 21:35:11 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/07/20 15:02:54 by pledieu          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "free.h"
 #include "libft.h"
 #include "token_free.h"
+#include <string.h>
 
 static char	*value_for_name(char *name, t_envp *envp)
 {
@@ -77,11 +78,11 @@ void	expand_tokens(t_minishell *minishell)
 	i = 0;
 	while (tokens)
 	{
-		if (tokens->type == word)
+		if (tokens->type == word || tokens->type == double_quote)
 		{
-			if (tokens->string[0] == '$')
+			if (ft_strchr(tokens->string, '$'))
 			{
-				if (tokens->string[1] == '?' && !tokens->string[2])
+				if (strcmp(tokens->string, "$?") == 0)
 					expand_last_status(tokens, minishell);
 				else
 					expand_from_envp(tokens, minishell, i);
