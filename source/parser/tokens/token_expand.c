@@ -3,92 +3,139 @@
 /*                                                        :::      ::::::::   */
 /*   token_expand.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pledieu <pledieu@student.42lyon.fr>        +#+  +:+       +#+        */
+/*   By: yalaatik <yalaatik@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 16:14:42 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/20 15:02:54 by pledieu          ###   ########lyon.fr   */
+/*   Updated: 2025/08/09 16:12:06 by yalaatik         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "free.h"
+#include "minishell.h"
 #include "libft.h"
-#include "token_free.h"
-#include <string.h>
+#include <stdlib.h>
 
-static char	*value_for_name(char *name, t_envp *envp)
+/* ---- lookup env: renvoie une DUP de la valeur ou "" si absente ---- */
+static char	*env_lookup_dup(const char *name, t_minishell *m)
 {
-	while (envp)
+	t_envp	*e;
+	size_t	nlen;
+
+	e = m->envp;
+	nlen = ft_strlen(name);
+	while (e)
 	{
-		if (!ft_strncmp(name, envp->name, ft_strlen(name) + 1))
-			return (ft_strdup(envp->value));
-		envp = envp->next;
-	}
-	return (NULL);
-}
-
-static void	expand_last_status(t_token *tokens, t_minishell *minishell)
-{
-	char	*tmp;
-
-	tmp = ft_itoa(minishell->last_status);
-	if (!tmp)
-		exit(free_on_exit_error(minishell));
-	tokens->string = ft_strdup(tmp);
-	free(tmp);
-	if (!tokens->string)
-		exit(free_on_exit_error(minishell));
-}
-
-static int	index_in_envp(char *name, t_envp *envp)
-{
-	int	i;
-
-	i = 0;
-	while (envp)
-	{
-		if (!ft_strncmp(name, envp->name, ft_strlen(name) + 1))
-			return (i);
-		i++;
-		envp = envp->next;
-	}
-	return (-1);
-}
-
-static void	expand_from_envp(t_token *tokens, t_minishell *minishell, int i)
-{
-	char	*tmp;
-
-	tmp = tokens->string;
-	if (!tmp)
-		exit(free_on_exit_error(minishell));
-	if (index_in_envp(tmp + 1, minishell->envp) < 0)
-		return (free_i_token(&minishell->tokens, i));
-	tokens->string = value_for_name(tmp + 1, minishell->envp);
-	free(tmp);
-	if (!tokens->string)
-		exit(free_on_exit_error(minishell));
-}
-
-void	expand_tokens(t_minishell *minishell)
-{
-	t_token	*tokens;
-	int		i;
-
-	tokens = minishell->tokens;
-	i = 0;
-	while (tokens)
-	{
-		if (tokens->type == word || tokens->type == double_quote)
+		if (e->name && ft_strncmp(e->name, name, nlen) == 0
+			&& e->name[nlen] == '\0')
 		{
-			if (ft_strchr(tokens->string, '$'))
-			{
-				if (strcmp(tokens->string, "$?") == 0)
-					expand_last_status(tokens, minishell);
-				else
-					expand_from_envp(tokens, minishell, i);
-			}
+			if (e->value)
+				return (ft_strdup(e->value));
+			return (ft_strdup(""));
 		}
+		e = e->next;
+	}
+	return (ft_strdup(""));
+}
+
+/* petits helpers locaux */
+static int	is_var_start(char c)
+{
+	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_')
+		return (1);
+	return (0);
+}
+
+static int	is_var_char(char c)
+{
+	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')
+		|| (c >= '0' && c <= '9') || c == '_')
+		return (1);
+	return (0);
+}
+
+static void	strjoin_inplace(char **dst, const char *src)
+{
+	char	*tmp;
+
+	tmp = *dst;
+	if (src)
+		*dst = ft_strjoin(*dst, src);
+	else
+		*dst = ft_strjoin(*dst, "");
+	free(tmp);
+}
+
+static void	expand_token_inline(t_token *t, t_minishell *m)
+{
+	char	*s;
+	char	*out;
+	int		i;
+	int		j;
+	char	saved;
+	char	*val;
+	char	buf[2];
+
+	s = t->string;
+	out = ft_strdup("");
+	i = 0;
+	j = 0;
+	saved = 0;
+	val = NULL;
+	buf[0] = 0;
+	buf[1] = 0;
+	while (s[i])
+	{
+		if (s[i] == '$')
+		{
+			i++;
+			if (!s[i])
+			{
+				strjoin_inplace(&out, "$");
+				break ;
+			}
+			if (s[i] == '?')
+			{
+				val = ft_itoa(m->last_status);
+				strjoin_inplace(&out, val);
+				free(val);
+				i++;
+				continue ;
+			}
+			if (is_var_start(s[i]))
+			{
+				j = i;
+				while (s[j] && is_var_char(s[j]))
+					j++;
+				saved = s[j];
+				s[j] = '\0';
+				val = env_lookup_dup(&s[i], m);
+				strjoin_inplace(&out, val);
+				if (val)
+					free(val);
+				s[j] = saved;
+				i = j;
+				continue ;
+			}
+			strjoin_inplace(&out, "$");
+			continue ;
+		}
+		buf[0] = s[i];
+		buf[1] = '\0';
+		strjoin_inplace(&out, buf);
 		i++;
-		tokens = tokens->next;
+	}
+	free(t->string);
+	t->string = out;
+}
+
+void	expand_tokens(t_minishell *m)
+{
+	t_token	*t;
+
+	t = m->tokens;
+	while (t)
+	{
+		if (t->type == word || t->type == double_quote)
+			expand_token_inline(t, m);
+		t = t->next;
 	}
 }

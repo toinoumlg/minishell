@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands_args.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: yalaatik <yalaatik@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:09 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/04 12:51:19 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/09 16:20:25 by yalaatik         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "token_free.h"
 #include "token_utils.h"
 #include <string.h>
+#include "parser/tokens/token_utils.h"
 
 static int	get_args_size(t_token *tokens)
 {

@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   token_check.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: yalaatik <yalaatik@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:46:48 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/13 20:13:11 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/09 16:34:22 by yalaatik         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "token_utils.h"
+#include "parser/tokens/token_utils.h"
 
 int	check_pipes(t_token *tokens)
 {

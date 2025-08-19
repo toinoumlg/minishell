@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_read_line.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pledieu <pledieu@student.42lyon.fr>        +#+  +:+       +#+        */
+/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/20 15:54:06 by pledieu          ###   ########lyon.fr   */
+/*   Updated: 2025/08/19 14:28:43 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,7 @@ void	post_parsing(t_minishell *minishell)
 	if ((minishell->size > 1 && !minishell->pipe_fds) || !minishell->pids)
 		exit(free_on_exit_error(minishell));
 }
-#include "token.h"
-#include "libft.h"
 
- 
 void merge_adjacent_words(t_token **tokens)
 {
     t_token *cur = *tokens;
@@ -118,8 +115,8 @@ void	parse_read_line(t_minishell *minishell)
 		return ;
 	if (!minishell->tokens)
 		return (free(minishell->read_line));
-	expand_tokens(minishell);
 	merge_adjacent_words(&minishell->tokens);
+	expand_tokens(minishell);
 	// print_tokens(minishell->tokens);
 	set_commands(minishell);
 	post_parsing(minishell);

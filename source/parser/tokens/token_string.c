@@ -3,34 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   token_string.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pledieu <pledieu@student.42lyon.fr>        +#+  +:+       +#+        */
+/*   By: yalaatik <yalaatik@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:56:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/20 15:52:56 by pledieu          ###   ########lyon.fr   */
+/*   Updated: 2025/08/09 16:34:05 by yalaatik         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "token_list.h"
-#include "token_utils.h"
+#include "parser/tokens/token_utils.h"
 #include "parse_error.h"
 #include <stdlib.h>
 
-int get_quoted_string_size(char quote, char **read_line)
-{
-	int i;
-
-	i = 0;
-	while (**read_line && **read_line != quote)
-	{
-		i++;
-		(*read_line)++;
-	}
-	if (**read_line == quote)
-		(*read_line)++; 
-	else
-		return (-1);
-	return i;
-}
 
 t_token *extract_quoted_string(char **read_line, char quote, t_minishell *minishell)
 {

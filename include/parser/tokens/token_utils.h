@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: yalaatik <yalaatik@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:36:27 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/10 16:59:05 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/09 15:47:10 by yalaatik         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,11 @@
 
 # include "minishell.h"
 
-int	is_operator(char read_c);
-int	get_word_size(char **read_line);
-int	is_metacharacter(char c);
-int	is_quote(char read_c);
-int	is_end_of_command(t_token *token);
+int	is_space(char c);
+int	is_quote(char c);
+int	is_operator(char c);
+int	get_word_size(char **p);
+int	get_quoted_string_size(char quote, char **line);
+int	get_operator_size(char **read_line);
 
 #endif

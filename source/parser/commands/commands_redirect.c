@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   commands_redirect.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: yalaatik <yalaatik@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 12:15:26 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/03 20:52:49 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/09 16:38:56 by yalaatik         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "commands_redirect_utils.h"
-#include "token_utils.h"
+#include "parser/tokens/token_utils.h"
+#include "parser/tokens/token_free.h"
 
 static void	append_redirects(t_file **redirects, t_file *new_redirect)
 {

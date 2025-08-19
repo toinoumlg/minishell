@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   commands_redirect_utils.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: yalaatik <yalaatik@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 12:15:26 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/03 20:23:31 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/09 16:20:41 by yalaatik         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "free.h"
 #include "libft.h"
 #include "token_free.h"
-#include "token_utils.h"
+#include "parser/tokens/token_utils.h"
 #include <stdlib.h>
 #include <string.h>
 

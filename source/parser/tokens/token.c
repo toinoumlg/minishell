@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pledieu <pledieu@student.42lyon.fr>        +#+  +:+       +#+        */
+/*   By: yalaatik <yalaatik@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:25:17 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/20 15:46:48 by pledieu          ###   ########lyon.fr   */
+/*   Updated: 2025/08/09 16:40:26 by yalaatik         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "token_check.h"
 #include "token_operator.h"
 #include "token_string.h"
-#include "token_utils.h"
+#include "parser/tokens/token_utils.h"
 #include "utils.h"
 #include <stdlib.h>
 #include <string.h>
@@ -38,7 +38,7 @@ int get_tokens_list(char **parse_error, t_minishell *minishell)
 				new->separated_by_space = was_space;
 			was_space = 0;
 		}
-		else if (is_operator(**parse_error))
+		else if (is_operator_char(**parse_error))
 		{
 			t_token *new = add_operator_token(parse_error, minishell);
 			if (new)
