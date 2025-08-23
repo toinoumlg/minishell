@@ -14,4 +14,5 @@ A refacto:
 - Sortir et free correctement le parsing
 - export / unset : faire fonctionner avec les variables d'environnement/ refedefinir 
 et expend si on utilise des variables d'env
-- envp : _ / oldpwd / pwd 
+- envp : _ / oldpwd / pwd
+- si pas minishell lance avec "env -i" (sans environnement) ?
