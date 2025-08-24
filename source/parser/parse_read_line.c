@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/19 14:28:43 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:37:16 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,6 @@ void	parse_read_line(t_minishell *minishell)
 		return (free(minishell->read_line));
 	merge_adjacent_words(&minishell->tokens);
 	expand_tokens(minishell);
-	// print_tokens(minishell->tokens);
 	set_commands(minishell);
 	post_parsing(minishell);
 }

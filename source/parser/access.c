@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:06 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 12:56:26 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:49:24 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,10 @@ void	try_access(t_cmd *cmds, char **env)
 		while (redirects)
 		{
 			access_file(redirects);
+			// besoin de faire la prise de here doc ici le here_doc aura un fd 
+			// qui correspond au fd pour read le pipe qui dans lequel on ecrit.
+			if(redirects->type == here_doc)
+				get_here_doc();
 			redirects = redirects->next;
 		}
 		cmds->error = get_error_file(cmds->redirects);
