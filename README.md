@@ -16,3 +16,5 @@ A refacto:
 et expend si on utilise des variables d'env
 - envp : _ / oldpwd / pwd
 - si minishell lance avec "env -i" (sans environnement) ?
+- supprimer le fait de recreer un envp si lancer avec env -i et lancer la boucle quand meme
+- changer la redirection pour le here doc quand fait dans un pipe autre que le premier doit bloquer l'exec

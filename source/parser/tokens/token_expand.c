@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   token_expand.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yalaatik <yalaatik@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 16:14:42 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/09 16:12:06 by yalaatik         ###   ########lyon.fr   */
+/*   Updated: 2025/08/24 16:10:43 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
 #include "libft.h"
+#include "minishell.h"
+#include "token_free.h"
 #include <stdlib.h>
 
 /* ---- lookup env: renvoie une DUP de la valeur ou "" si absente ---- */
@@ -46,8 +47,8 @@ static int	is_var_start(char c)
 
 static int	is_var_char(char c)
 {
-	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')
-		|| (c >= '0' && c <= '9') || c == '_')
+	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0'
+			&& c <= '9') || c == '_')
 		return (1);
 	return (0);
 }
@@ -127,6 +128,23 @@ static void	expand_token_inline(t_token *t, t_minishell *m)
 	t->string = out;
 }
 
+t_token	*free_empty_tokens(t_token *tokens)
+{
+	t_token	*head;
+	int		i;
+
+	head = tokens;
+	i = 0;
+	while (tokens)
+	{
+		if (!ft_strlen(tokens->string))
+			free_i_token(&head, i);
+		i++;
+		tokens = tokens->next;
+	}
+	return (head);
+}
+
 void	expand_tokens(t_minishell *m)
 {
 	t_token	*t;
@@ -138,4 +156,5 @@ void	expand_tokens(t_minishell *m)
 			expand_token_inline(t, m);
 		t = t->next;
 	}
+	m->tokens = free_empty_tokens(m->tokens);
 }

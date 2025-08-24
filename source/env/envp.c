@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 17:41:48 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/04 15:08:20 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:20:38 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "libft.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 static char	*set_name(char *envp_line)
 {

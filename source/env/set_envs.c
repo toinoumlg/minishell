@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:57:54 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/04 13:47:46 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:23:10 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ static int	same_name(char *name, char *envp_name)
 	return (!(ft_strncmp(name, envp_name, ft_strlen(name) + 1)));
 }
 
+// ne pas exit si lance avec env -i
 static char	*get_envp_line(t_envp *envp, char *name)
 {
 	t_envp	*head;
