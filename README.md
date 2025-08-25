@@ -14,7 +14,10 @@ A refacto:
 - Sortir et free correctement le parsing
 - export / unset : faire fonctionner avec les variables d'environnement/ refedefinir 
 et expend si on utilise des variables d'env
+	export a crashtest ca devrait etre plutot bon
 - envp : _ / oldpwd / pwd
+	oldpwd et pwd fait et update quand on on change de directory
 - si minishell lance avec "env -i" (sans environnement) ?
 - supprimer le fait de recreer un envp si lancer avec env -i et lancer la boucle quand meme
 - changer la redirection pour le here doc quand fait dans un pipe autre que le premier doit bloquer l'exec
+(here_doc fait dans le parsing avec un fork)

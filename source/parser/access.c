@@ -6,11 +6,12 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:06 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/24 16:49:24 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/25 17:20:26 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "access_program.h"
+#include "here_doc.h"
 #include "libft.h"
 #include "minishell.h"
 #include <fcntl.h>
@@ -41,10 +42,10 @@ static int	check_for_directory(t_file *file)
 
 static void	access_file(t_file *file)
 {
-	if (file->type == here_doc)
-		return ;
 	if (check_for_directory(file))
 		return ;
+	if (file->type == here_doc)
+		set_here_doc(file);
 	set_access(file, file->path);
 }
 
@@ -75,10 +76,6 @@ void	try_access(t_cmd *cmds, char **env)
 		while (redirects)
 		{
 			access_file(redirects);
-			// besoin de faire la prise de here doc ici le here_doc aura un fd 
-			// qui correspond au fd pour read le pipe qui dans lequel on ecrit.
-			if(redirects->type == here_doc)
-				get_here_doc();
 			redirects = redirects->next;
 		}
 		cmds->error = get_error_file(cmds->redirects);

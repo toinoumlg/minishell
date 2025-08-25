@@ -47,6 +47,8 @@
 		"env.h": "c",
 		"token.h": "c",
 		"set_envs.h": "c",
-		"parse_error.h": "c"
+		"parse_error.h": "c",
+		"set_dup2_utils.h": "c",
+		"pipes.h": "c"
 	}
 }

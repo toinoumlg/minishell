@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/24 16:37:16 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/25 19:03:09 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@
 #include "parse_error.h"
 #include "token.h"
 #include "token_expand.h"
+#include "utils.h"
 #include <readline/history.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "utils.h"
 
 static int	get_envp_size(t_envp *envp)
 {
@@ -75,33 +75,37 @@ void	post_parsing(t_minishell *minishell)
 	minishell->size = set_size(minishell->cmds);
 	minishell->pipe_fds = alloc_pipe_fds(minishell);
 	minishell->pids = alloc_pids(minishell);
+	free(minishell->read_line);
+	minishell->read_line = NULL;
 	if ((minishell->size > 1 && !minishell->pipe_fds) || !minishell->pids)
 		exit(free_on_exit_error(minishell));
 }
 
-void merge_adjacent_words(t_token **tokens)
+void	merge_adjacent_words(t_token **tokens)
 {
-    t_token *cur = *tokens;
-    t_token *next;
+	t_token	*cur;
+	t_token	*next;
+	char	*merged;
 
-    while (cur && cur->next)
-    {
-        next = cur->next;
-        if (next->separated_by_space == 0 &&
-            (cur->type == word || cur->type == simple_quote || cur->type == double_quote) &&
-            (next->type == word || next->type == simple_quote || next->type == double_quote))
-        {
-            char *merged = ft_strjoin(cur->string, next->string);
-            free(cur->string);
-            cur->string = merged;
-
-            cur->next = next->next;
-            free(next->string);
-            free(next);
-        }
-        else
-            cur = cur->next;
-    }
+	cur = *tokens;
+	while (cur && cur->next)
+	{
+		next = cur->next;
+		if (next->separated_by_space == 0 && (cur->type == word
+				|| cur->type == simple_quote || cur->type == double_quote)
+			&& (next->type == word || next->type == simple_quote
+				|| next->type == double_quote))
+		{
+			merged = ft_strjoin(cur->string, next->string);
+			free(cur->string);
+			cur->string = merged;
+			cur->next = next->next;
+			free(next->string);
+			free(next);
+		}
+		else
+			cur = cur->next;
+	}
 }
 
 void	parse_read_line(t_minishell *minishell)

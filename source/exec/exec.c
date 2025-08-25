@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/04 14:48:54 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/25 17:52:25 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,16 @@ void	try_exec(t_minishell *minishell)
 		exec_in_child(minishell);
 }
 
+static void	close_here_doc(t_file *redirects)
+{
+	while (redirects)
+	{
+		if (redirects->type == here_doc)
+			close(redirects->fd);
+		redirects = redirects->next;
+	}
+}
+
 void	exec(t_minishell *minishell)
 {
 	while (minishell->cmds)
@@ -74,6 +84,7 @@ void	exec(t_minishell *minishell)
 		do_pipe(minishell);
 		try_exec(minishell);
 		close_pipes(minishell->pipe_fds, minishell->size, minishell->i);
+		close_here_doc(minishell->cmds->redirects);
 		free_and_set_to_next_commands(&minishell->cmds);
 		minishell->i++;
 	}

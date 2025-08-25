@@ -6,15 +6,15 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 17:41:48 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/24 16:20:38 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/25 19:37:35 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "envp_no_input.h"
 #include "libft.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 
 static char	*set_name(char *envp_line)
 {
@@ -44,7 +44,7 @@ static char	*set_value(char *envp_line)
 	return (ft_strdup(++envp_line));
 }
 
-t_envp	*set_new_envp(char *envp_line)
+static t_envp	*set_new_envp(char *envp_line)
 {
 	t_envp	*new_envp;
 
