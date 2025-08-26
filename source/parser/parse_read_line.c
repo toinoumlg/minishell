@@ -6,13 +6,14 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/25 19:03:09 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/26 19:41:59 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "access.h"
 #include "alloc.h"
 #include "commands.h"
+#include "envp_utils.h"
 #include "free.h"
 #include "free_utils.h"
 #include "libft.h"
@@ -38,6 +39,11 @@ static int	get_envp_size(t_envp *envp)
 	return (i);
 }
 
+static char	**get_env(char *path)
+{
+	return (ft_split(ft_strchr(path, '/'), ':'));
+}
+
 static char	**set_envp_array(t_envp *envp)
 {
 	char	**envp_array;
@@ -58,12 +64,32 @@ static char	**set_envp_array(t_envp *envp)
 	return (envp_array);
 }
 
+char	**set_env_array(t_minishell *minishell)
+{
+	char	**env;
+	char	*tmp;
+	int		i;
+
+	i = -1;
+	env = get_env(find_existing_envp("PATH", minishell->envp)->value);
+	while (env[++i])
+	{
+		tmp = env[i];
+		env[i] = ft_strjoin(tmp, "/");
+		free(tmp);
+		if (!env[i])
+			return (free_array(env), exit(free_on_exit_error(minishell)), NULL);
+	}
+	return (env);
+}
+
 void	pre_parsing(t_minishell *minishell)
 {
 	if (minishell->envp_array)
 		free_array(minishell->envp_array);
 	minishell->size = 0;
 	minishell->i = 0;
+	minishell->env = set_env_array(minishell);
 	minishell->envp_array = set_envp_array(minishell->envp);
 	if (!minishell->envp_array)
 		exit(free_on_exit_error(minishell));

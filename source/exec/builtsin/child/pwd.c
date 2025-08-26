@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:18 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/25 18:27:50 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/26 19:47:20 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,34 @@ static void	pwd_error(t_minishell *minishell)
 	exit(1);
 }
 
+static char	*get_env_value(char *name, t_envp *envp)
+{
+	while (envp)
+	{
+		if (!ft_strncmp(name, envp->name, ft_strlen(name) + 1))
+			return (envp->value);
+		envp = envp->next;
+	}
+	return (NULL);
+}
+
 void	pwd(t_minishell *minishell)
 {
 	char	*path;
+	int		to_free;
 
+	to_free = 0;
 	if (minishell->cmds->args[1])
 		pwd_error(minishell);
-	path = getcwd(NULL, 0);
+	path = get_env_value("PWD", minishell->envp);
+	if (!path)
+	{
+		path = getcwd(NULL, 0);
+		to_free = 1;
+	}
 	printf("%s\n", path);
-	free(path);
 	free_on_exit_error(minishell);
+	if (to_free)
+		free(path);
 	exit(0);
 }

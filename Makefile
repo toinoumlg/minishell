@@ -38,7 +38,7 @@ PARSER_FILES = parser/parse_read_line parser/alloc \
 	parser/commands/commands_list parser/commands/commands_redirect \
 	parser/commands/commands_redirect_utils \
 
-ENV_FILES = env/set_envs env/envp env/envp_no_input
+ENV_FILES = env/set_envs env/envp env/envp_utils
 
 MAIN_FILES = main utils free free_utils
 

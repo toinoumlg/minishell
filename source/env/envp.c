@@ -6,12 +6,12 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 17:41:48 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/25 19:37:35 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/26 19:57:35 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "envp_no_input.h"
 #include "libft.h"
+#include "minishell.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -44,10 +44,12 @@ static char	*set_value(char *envp_line)
 	return (ft_strdup(++envp_line));
 }
 
-static t_envp	*set_new_envp(char *envp_line)
+t_envp	*set_new_envp(char *envp_line)
 {
 	t_envp	*new_envp;
 
+	if (!ft_strchr(envp_line, '='))
+		return (NULL);
 	new_envp = malloc(sizeof(t_envp));
 	if (!new_envp)
 		return (NULL);
@@ -83,19 +85,22 @@ void	append_new_envp(t_envp **envp_struct, t_envp *new_envp)
 	*envp_struct = head;
 }
 
-void	set_envp(t_envp **envp_struct, char **envp)
+// Parse all then envp array and create a struct containing:
+// char *line = full line of the variable
+// char *name = left-side of the equal-sign
+// char *value = right-side of the equal sign
+void	set_envp(t_minishell *minishell, char **envp)
 {
 	int		i;
 	t_envp	*new;
 
+	memset(minishell, 0, sizeof(t_minishell));
 	i = 0;
-	if (!envp)
-		return (set_envp_no_input(envp_struct));
 	while (envp[i])
 	{
 		new = set_new_envp(envp[i++]);
 		if (!new)
 			return ;
-		append_new_envp(envp_struct, new);
+		append_new_envp(&minishell->envp, new);
 	}
 }
