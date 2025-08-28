@@ -6,14 +6,14 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/25 18:00:36 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/28 16:29:03 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "envp.h"
 #include "exec.h"
 #include "free.h"
 #include "parse_read_line.h"
-#include "set_envs.h"
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <stdlib.h>
@@ -55,7 +55,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	minishell;
 
-	set_envs(&minishell, envp);
+	set_envp(&minishell, envp);
 	while (argv && argc)
 	{
 		minishell.read_line = readline("minishell> ");

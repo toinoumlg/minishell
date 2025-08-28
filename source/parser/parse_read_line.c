@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/26 19:41:59 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/28 15:20:49 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ void	pre_parsing(t_minishell *minishell)
 {
 	if (minishell->envp_array)
 		free_array(minishell->envp_array);
+	if (minishell->env)
+		free_array(minishell->env);
 	minishell->size = 0;
 	minishell->i = 0;
 	minishell->env = set_env_array(minishell);

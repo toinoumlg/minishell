@@ -60,6 +60,7 @@
 		"utility": "c",
 		"text_encoding": "c",
 		"token_expand.h": "c",
-		"envp_utils.h": "c"
+		"envp_utils.h": "c",
+		"wait.h": "c"
 	}
 }

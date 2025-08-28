@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 17:41:48 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/26 19:57:35 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/27 17:29:23 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void	append_new_envp(t_envp **envp_struct, t_envp *new_envp)
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = new_envp;
+	new_envp->prev = tmp;
 	*envp_struct = head;
 }
 

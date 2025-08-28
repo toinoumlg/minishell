@@ -6,10 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/26 19:56:35 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/28 15:34:43 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "envp.h"
 #include "libft.h"
 #include "minishell.h"
 #include <stdio.h>
@@ -25,6 +26,27 @@ static char	*set_line(char *getenv_line, char *name)
 	return (line);
 }
 
+t_envp	*add_pwd(t_envp **envp)
+{
+	t_envp	*pwd;
+	char	*line;
+
+	line = "PWD=null";
+	pwd = set_new_envp(line);
+	append_new_envp(envp, pwd);
+	return (pwd);
+}
+
+t_envp	*add_oldpwd(t_envp **envp)
+{
+	t_envp	*oldpwd;
+	char	*line;
+
+	line = "OLDPWD=null";
+	oldpwd = set_new_envp(line);
+	append_new_envp(envp, oldpwd);
+	return (oldpwd);
+}
 
 void	update_pwd(t_envp *envp)
 {
@@ -35,13 +57,16 @@ void	update_pwd(t_envp *envp)
 	pwd = NULL;
 	while (envp)
 	{
-		// fix case where we have unset OLDPWD / PWD
 		if (!ft_strncmp("OLDPWD", envp->name, 7))
 			oldpwd = envp;
 		if (!ft_strncmp("PWD", envp->name, 4))
 			pwd = envp;
 		envp = envp->next;
 	}
+	if (!pwd)
+		pwd = add_pwd(&envp);
+	if (!oldpwd)
+		oldpwd = add_oldpwd(&envp);
 	free(oldpwd->value);
 	oldpwd->value = pwd->value;
 	pwd->value = getcwd(NULL, 0);
