@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/28 15:20:49 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/08/29 08:27:34 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,27 +109,31 @@ void	post_parsing(t_minishell *minishell)
 		exit(free_on_exit_error(minishell));
 }
 
+int	token_separated_by_space(t_token *token)
+{
+	return (token->next->type == space && (token->next->next->type == word
+			|| token->next->next->type == simple_quote
+			|| token->next->next->type == double_quote)
+		&& (token->next->next->type == word
+			|| token->next->next->type == simple_quote
+			|| token->next->next->type == double_quote));
+}
+
 void	merge_adjacent_words(t_token **tokens)
 {
 	t_token	*cur;
-	t_token	*next;
 	char	*merged;
 
 	cur = *tokens;
-	while (cur && cur->next)
+	while (cur && cur->next && cur->next->next)
 	{
-		next = cur->next;
-		if (next->separated_by_space == 0 && (cur->type == word
-				|| cur->type == simple_quote || cur->type == double_quote)
-			&& (next->type == word || next->type == simple_quote
-				|| next->type == double_quote))
+		if (token_separated_by_space(cur))
 		{
-			merged = ft_strjoin(cur->string, next->string);
+			merged = ft_strjoin(cur->string, cur->next->next->string);
 			free(cur->string);
 			cur->string = merged;
-			cur->next = next->next;
-			free(next->string);
-			free(next);
+			cur->next = cur->next->next;
+			free(cur->next);
 		}
 		else
 			cur = cur->next;
