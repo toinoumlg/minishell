@@ -9,4 +9,5 @@ A refacto:
 - si pas de = dans le export export quand meme mais ne pas afficher en utilisant la cmd env
 - ./minishell | ./minish (istty)
 - exit a refacto un peu pareil cd
-- quand path unset 2 loop uniquement
+- quand path unset exit au bout de 2 prompt ?
+- quand pipe toujours fork
