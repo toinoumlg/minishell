@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/08 13:04:13 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/08 14:20:56 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,10 @@ static char	**set_envp_array(t_envp *envp)
 	while (envp)
 	{
 		envp_array[i] = ft_strdup(envp->line);
-		if (!envp_array[i++])
+		if (!envp_array[i])
 			return (free_array(envp_array), NULL);
 		envp = envp->next;
+		i++;
 	}
 	envp_array[i] = NULL;
 	return (envp_array);
@@ -69,9 +70,13 @@ char	**set_env_array(t_minishell *minishell)
 	char	**env;
 	char	*tmp;
 	int		i;
+	t_envp	*path;
 
 	i = -1;
-	env = get_env(find_existing_envp("PATH", minishell->envp)->value);
+	path = find_existing_envp("PATH", minishell->envp);
+	if (!path)
+		return (NULL);
+	env = get_env(path->value);
 	while (env[++i])
 	{
 		tmp = env[i];

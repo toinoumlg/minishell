@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 16:58:49 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/26 19:43:10 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/08 13:52:15 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ t_envp	*find_existing_envp(char *name, t_envp *envp)
 	int	i;
 
 	i = 0;
+	if (!envp || !name)
+		return (NULL);
 	while (envp)
 	{
 		if (!ft_strncmp(name, envp->name, ft_strlen(name) + 1))

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 17:41:48 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/27 17:29:23 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/08 14:05:08 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,15 @@ static char	*set_name(char *envp_line)
 			return (name);
 		}
 	}
-	free(name);
-	return (NULL);
+	return (name);
 }
 
 static char	*set_value(char *envp_line)
 {
 	while (*envp_line != '=')
 		envp_line++;
+	if (!envp_line)
+		return (NULL);
 	return (ft_strdup(++envp_line));
 }
 
@@ -48,8 +49,6 @@ t_envp	*set_new_envp(char *envp_line)
 {
 	t_envp	*new_envp;
 
-	if (!ft_strchr(envp_line, '='))
-		return (NULL);
 	new_envp = malloc(sizeof(t_envp));
 	if (!new_envp)
 		return (NULL);
@@ -82,8 +81,23 @@ void	append_new_envp(t_envp **envp_struct, t_envp *new_envp)
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = new_envp;
-	new_envp->prev = tmp;
 	*envp_struct = head;
+}
+
+void	set_basic_envp(t_minishell *minishell)
+{
+	char	*tmp;
+	char	*full_line;
+
+	tmp = getcwd(NULL, 0);
+	full_line = ft_strjoin("PWD=", tmp);
+	append_new_envp(&minishell->envp, set_new_envp(full_line));
+	free(full_line);
+	full_line = ft_strjoin("OLDPWD=", tmp);
+	append_new_envp(&minishell->envp, set_new_envp(full_line));
+	free(tmp);
+	free(full_line);
+	append_new_envp(&minishell->envp, set_new_envp("_"));
 }
 
 // Parse all then envp array and create a struct containing:
@@ -97,6 +111,9 @@ void	set_envp(t_minishell *minishell, char **envp)
 
 	memset(minishell, 0, sizeof(t_minishell));
 	i = 0;
+	envp = NULL;
+	if (!envp || !envp[i])
+		return (set_basic_envp(minishell));
 	while (envp[i])
 	{
 		new = set_new_envp(envp[i++]);

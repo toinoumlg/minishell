@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/08 12:59:32 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/08 14:13:06 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@ void	exit_child_no_execve(t_minishell *minishell)
 	exit_value = print_command_error(cmd->program, cmd->error);
 	print_error_file(cmd->error);
 	free_on_exit_error(minishell);
+	if (!minishell->env)
+	{
+		ft_putstr_fd(cmd->args[0], 2);
+		ft_putstr_fd(": command not found\n", 2);
+	}
 	exit(exit_value);
 }
 

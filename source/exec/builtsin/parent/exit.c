@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/28 16:35:03 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/08 13:38:59 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	my_exit(t_minishell *minishell)
 	{
 		if (args[1])
 		{
+			ft_putstr_fd("exit\n", 2);
 			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 			minishell->pids[minishell->i] = -2;
 			return ;

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 12:47:29 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/01 17:49:08 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/08 13:56:27 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ static char	*parse_env(char **env, t_file *program)
 {
 	char	*tmp;
 
+	if (!env)
+		return (NULL);
 	while (*env)
 	{
 		tmp = ft_strjoin(*env, program->path);

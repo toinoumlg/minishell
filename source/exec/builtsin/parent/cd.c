@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/28 15:34:43 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/08 13:35:03 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static char	*set_line(char *getenv_line, char *name)
 	return (line);
 }
 
+// Might need to change and set it to something else than null
 t_envp	*add_pwd(t_envp **envp)
 {
 	t_envp	*pwd;
