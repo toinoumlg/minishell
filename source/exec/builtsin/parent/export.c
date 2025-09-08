@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:25 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/28 15:51:18 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/08 11:23:25 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	swap_string(char **array, int i, int j)
 	array[j] = tmp;
 }
 
-char	**sort_envp(char **envp)
+void	sort_envp(char **envp)
 {
 	char	**envp_sorted;
 	int		i;
@@ -46,7 +46,7 @@ char	**sort_envp(char **envp)
 	envp_sorted = envp;
 	i = 0;
 	if (!envp_sorted)
-		return (NULL);
+		return ;
 	while (envp_sorted[i])
 	{
 		j = i + 1;
@@ -60,9 +60,13 @@ char	**sort_envp(char **envp)
 		i++;
 	}
 	i = 0;
-	while (envp_sorted[i + 1])
-		printf("declare -x %s\n", envp_sorted[i++]);
-	return (envp_sorted);
+	while (envp_sorted[i])
+	{
+		if (ft_strncmp(envp_sorted[i], "_=", 2))
+			printf("declare -x %s\n", envp_sorted[i]);
+		i++;
+	}
+	return ;
 }
 
 void	print_sorted_envp(t_minishell *minishell)

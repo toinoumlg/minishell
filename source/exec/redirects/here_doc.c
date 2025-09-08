@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/25 17:44:19 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/08 10:33:08 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,28 @@
 #include <readline/readline.h>
 #include <wait.h>
 
-static void	write_in_child(int here_doc_pipe[2], char *here_doc_lim)
+static void	exit_on_eof(int here_doc_pipe[2], char *lim)
+{
+	close(here_doc_pipe[1]);
+	close(here_doc_pipe[0]);
+	write(2,
+		"minishell: warning: here-document delimited by end-of-file (wanted `",
+		68);
+	write(2, lim, ft_strlen(lim));
+	write(2, "')\n", 3);
+	exit(0);
+}
+
+static void	write_in_child(int here_doc_pipe[2], char *lim)
 {
 	char	*read_line;
 
 	while (1)
 	{
 		read_line = readline(">");
-		if (!ft_strncmp(read_line, here_doc_lim, ft_strlen(here_doc_lim) + 1))
+		if (!read_line)
+			exit_on_eof(here_doc_pipe, lim);
+		if (!ft_strncmp(read_line, lim, ft_strlen(lim) + 1))
 		{
 			free(read_line);
 			close(here_doc_pipe[1]);

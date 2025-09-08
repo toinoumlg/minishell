@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   commands_args.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yalaatik <yalaatik@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:09 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/09 16:20:25 by yalaatik         ###   ########lyon.fr   */
+/*   Updated: 2025/09/08 10:56:01 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "free.h"
 #include "free_utils.h"
 #include "libft.h"
+#include "parser/tokens/token_utils.h"
 #include "token_free.h"
 #include "token_utils.h"
 #include <string.h>
-#include "parser/tokens/token_utils.h"
 
 static int	get_args_size(t_token *tokens)
 {
@@ -49,6 +49,8 @@ char	**set_args(t_cmd *new_cmd, t_minishell *minishell)
 	int		i;
 
 	tmp = minishell->tokens;
+	if (!minishell->tokens || minishell->tokens->type == is_pipe)
+		return (NULL);
 	args = set_array(get_args_size(minishell->tokens), minishell);
 	i = 0;
 	while (!is_end_of_command(tmp))

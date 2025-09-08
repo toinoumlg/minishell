@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 17:03:22 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/04 12:50:50 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/08 10:35:07 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 
 void	set_program(t_cmd *new_cmd, t_minishell *minishell)
 {
+	if (!new_cmd->args)
+		return ;
 	new_cmd->program = malloc(sizeof(t_file));
 	if (!new_cmd->program)
 	{

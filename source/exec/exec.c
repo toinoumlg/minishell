@@ -6,11 +6,12 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/26 16:28:07 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/08 12:59:32 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtsin.h"
+#include "envp_utils.h"
 #include "exec_utils.h"
 #include "free.h"
 #include "libft.h"
@@ -61,6 +62,8 @@ void	exec_in_child(t_minishell *minishell)
 
 void	try_exec(t_minishell *minishell)
 {
+	if (!minishell->cmds->args)
+		return ;
 	if (is_builtin_to_exec_in_parent(minishell->cmds->args[0]))
 		exec_builtsin_in_parent(minishell);
 	else
@@ -77,11 +80,43 @@ static void	close_here_doc(t_file *redirects)
 	}
 }
 
+static void	change_underscore(char *value, t_envp *envp)
+{
+	t_envp	*under_score;
+	char	*tmp;
+
+	under_score = find_existing_envp("_", envp);
+	under_score->value = ft_strdup(value);
+	free(under_score->line);
+	under_score->line = ft_strjoin(under_score->name, "=");
+	tmp = under_score->line;
+	under_score->line = ft_strjoin(tmp, value);
+	free(tmp);
+}
+
+static void	handle_underscore(t_minishell *minishell)
+{
+	char	**args;
+	int		i;
+
+	i = 0;
+	args = minishell->cmds->args;
+	if (!args)
+		return ;
+	while (args[i])
+		i++;
+	if (i == 1)
+		change_underscore(minishell->cmds->program->path, minishell->envp);
+	else if (i > 1)
+		change_underscore(minishell->cmds->args[i - 1], minishell->envp);
+}
+
 void	exec(t_minishell *minishell)
 {
 	while (minishell->cmds)
 	{
 		do_pipe(minishell);
+		handle_underscore(minishell);
 		try_exec(minishell);
 		close_pipes(minishell->pipe_fds, minishell->size, minishell->i);
 		close_here_doc(minishell->cmds->redirects);

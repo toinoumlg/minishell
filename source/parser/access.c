@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:06 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/25 17:20:26 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/08 10:36:40 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ void	try_access(t_cmd *cmds, char **env)
 
 	while (cmds)
 	{
-		cmds->program->path = access_program(cmds->program, env);
+		if (cmds->program)
+			cmds->program->path = access_program(cmds->program, env);
 		redirects = cmds->redirects;
 		while (redirects)
 		{

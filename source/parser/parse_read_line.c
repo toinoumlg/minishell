@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/28 15:20:49 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/08 13:04:13 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,12 @@ void	parse_read_line(t_minishell *minishell)
 	char	*parse_error;
 
 	parse_error = minishell->read_line;
+	if (!minishell->read_line)
+	{
+		free_on_exit_error(minishell);
+		write(2, "exit\n", 5);
+		exit(0);
+	}
 	add_history(minishell->read_line);
 	pre_parsing(minishell);
 	if (get_tokens_list(&parse_error, minishell))
