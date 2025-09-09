@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 17:41:48 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/08 14:05:08 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/09 13:48:53 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,6 @@ void	set_envp(t_minishell *minishell, char **envp)
 
 	memset(minishell, 0, sizeof(t_minishell));
 	i = 0;
-	envp = NULL;
 	if (!envp || !envp[i])
 		return (set_basic_envp(minishell));
 	while (envp[i])

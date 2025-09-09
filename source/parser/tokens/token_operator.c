@@ -3,89 +3,73 @@
 /*                                                        :::      ::::::::   */
 /*   token_operator.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yalaatik <yalaatik@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:32:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/09 17:05:51 by yalaatik         ###   ########lyon.fr   */
+/*   Updated: 2025/09/09 14:54:51 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "free.h"
+#include "libft.h"
 #include "minishell.h"
 #include "token_list.h"
-#include <stdlib.h>
-#include "parser/tokens/token_utils.h"
+#include "token_utils.h"
 
-int	add_pipe(char **read_line, t_minishell *minishell)
+t_enum_token	get_operator_type(char **line)
 {
-	t_token	*new_token;
+	char	*ptr;
+
+	ptr = *line;
+	if (ptr && (ptr + 1))
+	{
+		if (*ptr == '>')
+		{
+			if (!is_operator(*(ptr + 1)))
+				return (output);
+			if (*(ptr + 1) == '>' && !is_operator(*(ptr + 1)))
+				return (append_file);
+		}
+		if (*ptr == '<')
+		{
+			if (!is_operator(*(ptr + 1)))
+				return (input);
+			if (*(ptr + 1) == '<' && !is_operator(*(ptr + 1)))
+				return (here_doc);
+		}
+	}
+	return (word);
+}
+
+void	set_operator_string(char **read_line, t_minishell *minishell,
+		t_token *new)
+{
+	int	size;
+
+	new->string = ft_strdup(*read_line);
+	if (!new->string)
+	{
+		free(new);
+		exit(free_on_exit_error(minishell));
+	}
+	if (new->type == append_file || new->type == here_doc)
+		size = 2;
+	else
+		size = 1;
+	new->string[size] = 0;
+}
+
+int	add_operator_token(char **read_line, t_minishell *minishell, int *was_space)
+{
+	t_token			*new_token;
 
 	new_token = set_new_token(minishell);
-	(*read_line)++;
-	add_string_to_token("|", 1, new_token, minishell);
-	new_token->type = is_pipe;
+	new_token->type = get_operator_type(read_line);
+	if (new_token->type == word)
+		return (1);
+	set_operator_string(read_line, minishell, new_token);
+	new_token->separated_by_space = *was_space;
+	*was_space = 0;
 	append_new_token(&minishell->tokens, new_token);
 	return (0);
 }
-
-static int	is_end_of_read_line(char *read_line)
-{
-	while (read_line && *read_line != '\n' && *read_line != '\000')
-	{
-		if (*read_line == ' ')
-			read_line++;
-		else
-			return (0);
-	}
-	return (1);
-}
-
-int	add_output_redirect(char **read_line, t_minishell *minishell)
-{
-	t_token	*new_token;
-
-	new_token = set_new_token(minishell);
-	(*read_line)++;
-	if (**read_line == '>')
-	{
-		(*read_line)++;
-		if (is_end_of_read_line(*read_line))
-			return (free(new_token), 1);
-		add_string_to_token(">>", 2, new_token, minishell);
-		new_token->type = append_file;
-		append_new_token(&minishell->tokens, new_token);
-		return (0);
-	}
-	if (is_end_of_read_line(*read_line))
-		return (free(new_token), 1);
-	add_string_to_token(">", 1, new_token, minishell);
-	new_token->type = output;
-	append_new_token(&minishell->tokens, new_token);
-	return (0);
-}
-
-int	add_input_redirect(char **read_line, t_minishell *minishell)
-{
-	t_token	*new_token;
-
-	new_token = set_new_token(minishell);
-	(*read_line)++;
-	if (**read_line == '<')
-	{
-		(*read_line)++;
-		if (is_end_of_read_line(*read_line))
-			return (free(new_token), 1);
-		add_string_to_token("<<", 2, new_token, minishell);
-		new_token->type = here_doc;
-		append_new_token(&minishell->tokens, new_token);
-		return (0);
-	}
-	if (is_end_of_read_line(*read_line))
-		return (free(new_token), 1);
-	add_string_to_token("<", 1, new_token, minishell);
-	new_token->type = input;
-	append_new_token(&minishell->tokens, new_token);
-	return (0);
-}
-
-

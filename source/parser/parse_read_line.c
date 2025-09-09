@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/08 14:20:56 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/09 14:11:23 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,14 @@ void	post_parsing(t_minishell *minishell)
 		exit(free_on_exit_error(minishell));
 }
 
+int	need_merge(t_token *cur, t_token *next)
+{
+	return (!next->separated_by_space && (cur->type == word
+			|| cur->type == simple_quote || cur->type == double_quote)
+		&& (next->type == word || next->type == simple_quote
+			|| next->type == double_quote));
+}
+
 void	merge_adjacent_words(t_token **tokens)
 {
 	t_token	*cur;
@@ -124,10 +132,7 @@ void	merge_adjacent_words(t_token **tokens)
 	while (cur && cur->next)
 	{
 		next = cur->next;
-		if (next->separated_by_space == 0 && (cur->type == word
-				|| cur->type == simple_quote || cur->type == double_quote)
-			&& (next->type == word || next->type == simple_quote
-				|| next->type == double_quote))
+		if (need_merge(cur, next))
 		{
 			merged = ft_strjoin(cur->string, next->string);
 			free(cur->string);
@@ -145,17 +150,17 @@ void	parse_read_line(t_minishell *minishell)
 {
 	char	*parse_error;
 
-	parse_error = minishell->read_line;
 	if (!minishell->read_line)
 	{
 		free_on_exit_error(minishell);
 		write(2, "exit\n", 5);
 		exit(0);
 	}
+	parse_error = minishell->read_line;
 	add_history(minishell->read_line);
 	pre_parsing(minishell);
 	if (get_tokens_list(&parse_error, minishell))
-		return ;
+		return (parsing_error(parse_error, minishell));
 	if (!minishell->tokens)
 		return (free(minishell->read_line));
 	merge_adjacent_words(&minishell->tokens);
