@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   token_free.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yalaatik <yalaatik@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:51:29 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/09 16:38:26 by yalaatik         ###   ########lyon.fr   */
+/*   Updated: 2025/09/09 19:56:27 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "parser/tokens/token_utils.h"
 #include "parser/tokens/token_free.h"
+#include "parser/tokens/token_utils.h"
 #include <stdlib.h>
 
 void	free_first_token(t_token **tokens)
@@ -87,4 +87,3 @@ void	free_tokens_from_args(t_token **tokens)
 	}
 	*tokens = tmp;
 }
-

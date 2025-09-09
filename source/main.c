@@ -3,23 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yalaatik <yalaatik@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 15:00:10 by yalaatik         ###   ########lyon.fr   */
+/*   Updated: 2025/09/09 20:16:20 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "envp.h"
 #include "exec.h"
 #include "free.h"
+#include "free_utils.h"
 #include "parse_read_line.h"
+#include "signals.h"
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
-#include "signals.h"
 #include <unistd.h>
 
 void	set_last_status(int status, int *last_status)
@@ -49,14 +50,15 @@ void	wait_for_childrens(t_minishell *minishell)
 			status = minishell->pids[i++];
 	}
 	set_last_status(status, &minishell->last_status);
-	free(minishell->pids);
-	minishell->pids = NULL;
+	ft_free(minishell->pids);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	minishell;
 
+	if (!isatty(0) || !isatty(1))
+		return (1);
 	set_envp(&minishell, envp);
 	while (argv && argc)
 	{

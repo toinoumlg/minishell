@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 07:41:40 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 13:39:37 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/09 19:43:28 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	free_on_parse_error(t_minishell *minishell)
 	if (minishell->tokens)
 		free_tokens(minishell->tokens);
 	if (minishell->read_line)
-		free(minishell->read_line);
+		ft_free(minishell->read_line);
 	if (minishell->envp_array)
 		free_array(minishell->envp_array);
 }

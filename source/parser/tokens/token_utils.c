@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:27:41 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 14:53:21 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/09 19:57:28 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,7 @@
 
 int	is_end_of_command(t_token *token)
 {
-	if (token == NULL)
-		return (1);
-	if (token->type == is_pipe)
+	if (token == NULL || token->type == is_pipe)
 		return (1);
 	return (0);
 }
@@ -57,9 +55,13 @@ int	get_word_size(char **p)
 
 	n = 0;
 	ptr = *p;
-	while (*ptr && !is_space(*ptr) && !is_operator(*ptr)
-		&& !is_quote(*ptr))
+	while (*ptr && !is_space(*ptr) && !is_operator(*ptr) && !is_quote(*ptr))
 	{
+		if (*ptr == ';' || *ptr == '\\')
+		{
+			*p = ptr;
+			return (-1);
+		}
 		ptr++;
 		n++;
 	}

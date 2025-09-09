@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:58:46 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/03 21:28:35 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/09 19:41:01 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,12 @@ void	free_envp(t_envp *envp)
 	{
 		next = envp->next;
 		if (envp->line)
-			free(envp->line);
+			ft_free(envp->line);
 		if (envp->name)
-			free(envp->name);
+			ft_free(envp->name);
 		if (envp->value)
-			free(envp->value);
-		free(envp);
+			ft_free(envp->value);
+		ft_free(envp);
 		envp = next;
 	}
 }
@@ -68,11 +68,11 @@ int	free_on_exit_error(t_minishell *minishell)
 	if (minishell->envp_array)
 		free_array(minishell->envp_array);
 	if (minishell->pids)
-		free(minishell->pids);
+		ft_free(minishell->pids);
 	if (minishell->pipe_fds)
-		free(minishell->pipe_fds);
+		ft_free(minishell->pipe_fds);
 	if (minishell->read_line)
-		free(minishell->read_line);
+		ft_free(minishell->read_line);
 	if (minishell->tokens)
 		free_tokens(minishell->tokens);
 	clear_history();

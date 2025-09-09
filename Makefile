@@ -30,7 +30,7 @@ BUILTSIN = exec/builtsin/builtsin  \
 PARSER_FILES = parser/parse_read_line parser/alloc \
 	parser/access_program parser/access \
 	parser/parse_error \
-	parser/tokens/token parser/tokens/token_check \
+	parser/tokens/token \
 	parser/tokens/token_list parser/tokens/token_operator \
 	parser/tokens/token_string parser/tokens/token_utils \
 	parser/tokens/token_expand parser/tokens/token_free \

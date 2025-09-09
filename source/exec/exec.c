@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yalaatik <yalaatik@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 14:41:10 by yalaatik         ###   ########lyon.fr   */
+/*   Updated: 2025/09/09 19:41:43 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,15 @@
 #include "envp_utils.h"
 #include "exec_utils.h"
 #include "free.h"
+#include "free_utils.h"
 #include "libft.h"
 #include "pipes.h"
 #include "print_error.h"
 #include "set_dup2.h"
+#include "signals.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "signals.h"
 
 void	exit_child_no_execve(t_minishell *minishell)
 {
@@ -94,11 +95,11 @@ static void	change_underscore(char *value, t_envp *envp)
 
 	under_score = find_existing_envp("_", envp);
 	under_score->value = ft_strdup(value);
-	free(under_score->line);
+	ft_free(under_score->line);
 	under_score->line = ft_strjoin(under_score->name, "=");
 	tmp = under_score->line;
 	under_score->line = ft_strjoin(tmp, value);
-	free(tmp);
+	ft_free(tmp);
 }
 
 static void	handle_underscore(t_minishell *minishell)
@@ -130,6 +131,6 @@ void	exec(t_minishell *minishell)
 		free_and_set_to_next_commands(&minishell->cmds);
 		minishell->i++;
 	}
-	free(minishell->pipe_fds);
+	ft_free(minishell->pipe_fds);
 	minishell->pipe_fds = NULL;
 }

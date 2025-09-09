@@ -6,11 +6,12 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 12:47:29 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/08 13:56:27 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/09 19:43:11 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "free_utils.h"
 #include "minishell.h"
 #include <stdio.h>
 
@@ -32,13 +33,13 @@ static char	*parse_env(char **env, t_file *program)
 	{
 		tmp = ft_strjoin(*env, program->path);
 		if (!tmp)
-			return (free(program->path), NULL);
+			return (ft_free(program->path), NULL);
 		if (!access(tmp, F_OK))
 		{
 			set_access(program, tmp);
-			return (free(program->path), tmp);
+			return (ft_free(program->path), tmp);
 		}
-		free(tmp);
+		ft_free(tmp);
 		env++;
 	}
 	program->exec = -1;

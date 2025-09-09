@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 16:10:06 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/09 20:13:48 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <readline/readline.h>
 #include <wait.h>
 
-static void	exit_on_eof( char *lim)
+static void	exit_on_eof(char *lim)
 {
 	write(2,
 		"minishell: warning: here-document delimited by end-of-file (wanted `",
@@ -37,7 +37,7 @@ static void	write_here_doc(int fd, char *lim)
 	{
 		read_line = readline(">");
 		if (!read_line)
-			return (exit_on_eof( lim));
+			return (exit_on_eof(lim));
 		if (!ft_strncmp(read_line, lim, ft_strlen(lim) + 1))
 		{
 			free(read_line);
@@ -55,11 +55,10 @@ void	set_here_doc(t_file *here_doc_file)
 {
 	int	fd[2];
 
-	fd[0] = open("/tmp/here_doc", O_CREAT | O_WRONLY);
-	fd[1] = open("/tmp/here_doc", O_RDONLY);
+	fd[1] = open("/tmp/here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0600);
 	write_here_doc(fd[1], here_doc_file->path);
+	close(fd[1]);
+	fd[0] = open("/tmp/here_doc", O_RDONLY);
 	here_doc_file->fd = fd[0];
 	unlink("/tmp/here_doc");
-	close(fd[1]);
-
 }

@@ -1,6 +1,5 @@
 /* ************************************************************************** */
 
-
 #include "free.h"
 #include "libft.h"
 #include <string.h>
@@ -28,19 +27,19 @@ t_token	*set_new_token(t_minishell *minishell)
 	return (new_token);
 }
 
-t_token    *append_new_token(t_token **tokens, t_token *new_token)
+t_token	*append_new_token(t_token **tokens, t_token *new_token)
 {
-    t_token    *tmp;
+	t_token	*tmp;
 
-    new_token->next = NULL;
-    if (!*tokens)
-        *tokens = new_token;
-    else
-    {
-        tmp = *tokens;
-        while (tmp->next)
-            tmp = tmp->next;
-        tmp->next = new_token;
-    }
-    return (new_token);
+	new_token->next = NULL;
+	if (!*tokens)
+		*tokens = new_token;
+	else
+	{
+		tmp = *tokens;
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = new_token;
+	}
+	return (new_token);
 }
