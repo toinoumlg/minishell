@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: yalaatik <yalaatik@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/08 14:13:06 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/09 14:41:10 by yalaatik         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "signals.h"
 
 void	exit_child_no_execve(t_minishell *minishell)
 {
@@ -44,6 +45,7 @@ void	child_process(t_minishell *minishell)
 	t_cmd	*cmd;
 
 	cmd = minishell->cmds;
+	set_signals_child();
 	set_dup2(minishell);
 	if (!cmd->error)
 	{

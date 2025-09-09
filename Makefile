@@ -40,7 +40,7 @@ PARSER_FILES = parser/parse_read_line parser/alloc \
 
 ENV_FILES = env/envp env/envp_utils
 
-MAIN_FILES = main utils free free_utils
+MAIN_FILES = main utils free free_utils signals
 
 ALL_SRC_FILES = $(MAIN_FILES) $(EXEC_FILES) $(PARSER_FILES) $(ENV_FILES) $(BUILTSIN)
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: yalaatik <yalaatik@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/08 10:33:08 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/09 14:47:39 by yalaatik         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "token_list.h"
 #include <readline/readline.h>
 #include <wait.h>
+#include "signals.h"
 
 static void	exit_on_eof(int here_doc_pipe[2], char *lim)
 {
@@ -33,6 +34,7 @@ static void	write_in_child(int here_doc_pipe[2], char *lim)
 {
 	char	*read_line;
 
+	set_signals_heredoc();
 	while (1)
 	{
 		read_line = readline(">");

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: yalaatik <yalaatik@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/28 16:29:03 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:00:10 by yalaatik         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
+#include "signals.h"
+#include <unistd.h>
 
 void	set_last_status(int status, int *last_status)
 {
@@ -58,6 +60,7 @@ int	main(int argc, char **argv, char **envp)
 	set_envp(&minishell, envp);
 	while (argv && argc)
 	{
+		set_signals();
 		minishell.read_line = readline("minishell> ");
 		parse_read_line(&minishell);
 		exec(&minishell);
