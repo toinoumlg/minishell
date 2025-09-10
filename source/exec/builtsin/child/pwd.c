@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:18 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 20:01:01 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/10 10:37:59 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static void	pwd_error(t_minishell *minishell)
 		ft_putstr_fd(args[0], 2);
 		ft_putstr_fd(" too many arguments\n", 2);
 	}
-	free_on_exit_error(minishell);
+	free_minishell(minishell);
 	exit(1);
 }
 
@@ -63,15 +63,12 @@ void	pwd(t_minishell *minishell)
 	{
 		path = getcwd(NULL, 0);
 		if (!path)
-		{
-			perror("minishell: getcwd");
-			exit(free_on_exit_error(minishell));
-		}
+			exit_perror(minishell, "minishell: getcwd");
 		to_free = 1;
 	}
 	printf("%s\n", path);
-	free_on_exit_error(minishell);
 	if (to_free)
 		free(path);
+	free_minishell(minishell);
 	exit(0);
 }

@@ -6,11 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:25 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 20:00:54 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/10 09:14:41 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "envp.h"
+#include "init_envp.h"
 #include "envp_utils.h"
 #include "free.h"
 #include "libft.h"
@@ -75,6 +75,64 @@ void	print_sorted_envp(t_minishell *minishell)
 	minishell->pids[minishell->i] = -1;
 }
 
+static char	*set_name_export(char *envp_line)
+{
+	char	*name;
+	int		i;
+
+	i = -1;
+	name = ft_strdup(envp_line);
+	if (!name)
+		return (NULL);
+	while (envp_line[++i])
+	{
+		if (envp_line[i] == '=')
+		{
+			name[i] = 0;
+			return (name);
+		}
+	}
+	return (name);
+}
+
+static char	*set_value_export(char *envp_line)
+{
+	char	*value;
+
+	value = ft_strchr(envp_line, '=');
+	printf("%s\n", value);
+	if (value)
+	{
+		value = ft_strdup(value);
+		if (!value)
+			return (NULL);
+		return (value);
+	}
+	else
+		return (NULL);
+}
+
+// to reworks (leaks)
+static t_envp	*set_new_envp_export(char *envp_line)
+{
+	t_envp	*new_envp;
+
+	new_envp = malloc(sizeof(t_envp));
+	if (!new_envp)
+		return (NULL);
+	memset(new_envp, 0, sizeof(t_envp));
+	new_envp->line = ft_strdup(envp_line);
+	if (!new_envp->line)
+		return (NULL);
+	new_envp->name = set_name_export(envp_line);
+	if (!new_envp->name)
+		return (NULL);
+	new_envp->value = set_value_export(envp_line);
+	if (!new_envp->value)
+		return (NULL);
+	return (new_envp);
+}
+
 void	my_export(t_minishell *minishell)
 {
 	t_envp	*new_envp;
@@ -91,7 +149,7 @@ void	my_export(t_minishell *minishell)
 	}
 	while (minishell->cmds->args[i])
 	{
-		new_envp = set_new_envp(minishell->cmds->args[i++]);
+		new_envp = set_new_envp_export(minishell->cmds->args[i++]);
 		if (new_envp)
 		{
 			existing = find_existing_envp(new_envp->name, minishell->envp);

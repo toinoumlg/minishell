@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:25:17 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 19:53:54 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/10 08:28:36 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/// @brief parse returned string from readline()
-/// @param parse_error serves has a ptr on where the error happend in parsing
-/// @param minishell whole minishell struct with every alloc to exit and free correctly
-/// @return 1 if a parsing error happens, if parse is correct
 int	get_tokens_list(char **parse_error, t_minishell *minishell)
 {
 	int	was_space;
@@ -39,8 +35,9 @@ int	get_tokens_list(char **parse_error, t_minishell *minishell)
 			return (1);
 		else if (**parse_error == ' ')
 		{
+			while (**parse_error == ' ')
+				(*parse_error)++;
 			was_space = 1;
-			(*parse_error)++;
 		}
 		else if (pick_word(parse_error, minishell, &was_space))
 			return (1);

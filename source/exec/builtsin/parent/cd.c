@@ -6,16 +6,18 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 19:58:40 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/10 09:14:35 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "envp.h"
+#include "init_envp.h"
+#include "envp_utils.h"
 #include "libft.h"
 #include "minishell.h"
 #include <stdio.h>
+#include <string.h>
 
-static char	*set_line(char *getenv_line, char *name)
+static char	*set_line_cd(char *getenv_line, char *name)
 {
 	char	*tmp;
 	char	*line;
@@ -26,6 +28,63 @@ static char	*set_line(char *getenv_line, char *name)
 	return (line);
 }
 
+static char	*set_name_cd(char *envp_line)
+{
+	char	*name;
+	int		i;
+
+	i = -1;
+	name = ft_strdup(envp_line);
+	if (!name)
+		return (NULL);
+	while (envp_line[++i])
+	{
+		if (envp_line[i] == '=')
+		{
+			name[i] = 0;
+			return (name);
+		}
+	}
+	return (name);
+}
+
+static char	*set_value_cd(char *envp_line)
+{
+	char	*value;
+
+	value = ft_strchr(envp_line, '=');
+	if (value)
+	{
+		value = ft_strdup(value);
+		if (!value)
+			return (NULL);
+		return (value);
+	}
+	else
+		return (NULL);
+}
+
+// to reworks (leaks)
+static t_envp	*new_envp(char *envp_line)
+{
+	t_envp	*new_envp;
+
+	new_envp = malloc(sizeof(t_envp));
+	if (!new_envp)
+		return (NULL);
+	memset(new_envp, 0, sizeof(t_envp));
+	new_envp->line = ft_strdup(envp_line);
+	if (!new_envp->line)
+		return (NULL);
+	new_envp->name = set_name_cd(envp_line);
+	if (!new_envp->name)
+		return (NULL);
+	new_envp->value = set_value_cd(envp_line);
+	if (!new_envp->value)
+		return (NULL);
+	return (new_envp);
+}
+
 // Might need to change and set it to something else than null
 t_envp	*add_pwd(t_envp **envp)
 {
@@ -33,7 +92,7 @@ t_envp	*add_pwd(t_envp **envp)
 	char	*line;
 
 	line = "PWD=null";
-	pwd = set_new_envp(line);
+	pwd = new_envp(line);
 	append_new_envp(envp, pwd);
 	return (pwd);
 }
@@ -44,7 +103,7 @@ t_envp	*add_oldpwd(t_envp **envp)
 	char	*line;
 
 	line = "OLDPWD=null";
-	oldpwd = set_new_envp(line);
+	oldpwd = new_envp(line);
 	append_new_envp(envp, oldpwd);
 	return (oldpwd);
 }
@@ -78,8 +137,8 @@ void	update_pwd(t_envp *envp)
 	}
 	free(oldpwd->line);
 	free(pwd->line);
-	pwd->line = set_line(pwd->value, pwd->name);
-	oldpwd->line = set_line(oldpwd->value, oldpwd->name);
+	pwd->line = set_line_cd(pwd->value, pwd->name);
+	oldpwd->line = set_line_cd(oldpwd->value, oldpwd->name);
 }
 
 char	*get_env_value(char *name, t_envp *envp)

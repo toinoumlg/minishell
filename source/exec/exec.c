@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 19:41:43 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/10 10:47:59 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,7 @@ void	exit_child_no_execve(t_minishell *minishell)
 	cmd = minishell->cmds;
 	exit_value = print_command_error(cmd->program, cmd->error);
 	print_error_file(cmd->error);
-	free_on_exit_error(minishell);
-	if (!minishell->env)
-	{
-		ft_putstr_fd(cmd->args[0], 2);
-		ft_putstr_fd(": command not found\n", 2);
-	}
+	free_minishell(minishell);
 	exit(exit_value);
 }
 
@@ -63,7 +58,7 @@ void	exec_in_child(t_minishell *minishell)
 	i = minishell->i;
 	minishell->pids[i] = fork();
 	if (minishell->pids[i] == -1)
-		exit(free_on_exit_error(minishell));
+		exit(free_minishell(minishell));
 	else if (!minishell->pids[i])
 		child_process(minishell);
 }
@@ -88,43 +83,45 @@ static void	close_here_doc(t_file *redirects)
 	}
 }
 
-static void	change_underscore(char *value, t_envp *envp)
-{
-	t_envp	*under_score;
-	char	*tmp;
+// static void	change_underscore(char *value, t_envp *envp)
+// {
+// 	t_envp	*under_score;
+// 	char	*tmp;
 
-	under_score = find_existing_envp("_", envp);
-	under_score->value = ft_strdup(value);
-	ft_free(under_score->line);
-	under_score->line = ft_strjoin(under_score->name, "=");
-	tmp = under_score->line;
-	under_score->line = ft_strjoin(tmp, value);
-	ft_free(tmp);
-}
+// 	under_score = find_existing_envp("_", envp);
+// 	under_score->value = ft_strdup(value);
+// 	ft_free(under_score->line);
+// 	under_score->line = ft_strjoin(under_score->name, "=");
+// 	tmp = under_score->line;
+// 	under_score->line = ft_strjoin(tmp, value);
+// 	ft_free(tmp);
+// }
 
-static void	handle_underscore(t_minishell *minishell)
-{
-	char	**args;
-	int		i;
+// static void	handle_underscore(t_minishell *minishell)
+// {
+// 	char	**args;
+// 	int		i;
 
-	i = 0;
-	args = minishell->cmds->args;
-	if (!args)
-		return ;
-	while (args[i])
-		i++;
-	if (i == 1)
-		change_underscore(minishell->cmds->program->path, minishell->envp);
-	else if (i > 1)
-		change_underscore(minishell->cmds->args[i - 1], minishell->envp);
-}
+// 	i = 0;
+// 	args = minishell->cmds->args;
+// 	if (!args)
+// 		return ;
+// 	while (args[i])
+// 		i++;
+// 	if (i == 1)
+// 		change_underscore(minishell->cmds->program->path, minishell->envp);
+// 	else if (i > 1)
+// 		change_underscore(minishell->cmds->args[i - 1], minishell->envp);
+// }
 
 void	exec(t_minishell *minishell)
 {
+	if (!minishell->cmds)
+		return ;
 	while (minishell->cmds)
 	{
 		do_pipe(minishell);
-		handle_underscore(minishell);
+		// handle_underscore(minishell);
 		try_exec(minishell);
 		close_pipes(minishell->pipe_fds, minishell->size, minishell->i);
 		close_here_doc(minishell->cmds->redirects);
@@ -132,5 +129,4 @@ void	exec(t_minishell *minishell)
 		minishell->i++;
 	}
 	ft_free(minishell->pipe_fds);
-	minishell->pipe_fds = NULL;
 }

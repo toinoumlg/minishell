@@ -11,7 +11,7 @@ void	add_string_to_token(char *start, int i, t_token *new_token,
 	if (!new_token->string)
 	{
 		free(new_token);
-		exit(free_on_exit_error(minishell));
+		exit(free_minishell(minishell));
 	}
 	new_token->string[i] = 0;
 }
@@ -22,7 +22,7 @@ t_token	*set_new_token(t_minishell *minishell)
 
 	new_token = malloc(sizeof(t_token));
 	if (!new_token)
-		exit(free_on_exit_error(minishell));
+		exit_perror(minishell, "malloc :");
 	memset(new_token, 0, sizeof(t_token));
 	return (new_token);
 }

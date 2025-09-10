@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:32:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 19:55:07 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/10 06:53:36 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ t_enum_token	get_operator_type(char **line)
 			if (*(ptr + 1) == '<' && !is_operator(*(ptr + 2)))
 				return (here_doc);
 		}
+		if (*ptr == '|' && *(ptr + 1) != '|')
+			return (is_pipe);
 	}
 	return (0);
 }
@@ -50,7 +52,7 @@ void	set_operator_string(char **read_line, t_minishell *minishell,
 	if (!new->string)
 	{
 		free(new);
-		exit(free_on_exit_error(minishell));
+		exit(free_minishell(minishell));
 	}
 	if (new->type == append_file || new->type == here_doc)
 		size = 2;

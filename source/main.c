@@ -6,14 +6,14 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 20:16:20 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/10 10:47:39 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "envp.h"
 #include "exec.h"
 #include "free.h"
 #include "free_utils.h"
+#include "init_envp.h"
 #include "parse_read_line.h"
 #include "signals.h"
 #include <readline/history.h>
@@ -29,6 +29,13 @@ void	set_last_status(int status, int *last_status)
 		*last_status = WEXITSTATUS(status);
 	else
 	{
+		if (status == -4)
+		{
+			if (*last_status == 0)
+				*last_status = 1;
+			else
+				return ;
+		}
 		if (status == -2)
 			*last_status = 1;
 		if (status == -1)
@@ -41,6 +48,8 @@ void	wait_for_childrens(t_minishell *minishell)
 	int	i;
 	int	status;
 
+	if (!minishell->cmds)
+		return ;
 	i = 0;
 	while (i < minishell->size)
 	{
@@ -50,7 +59,8 @@ void	wait_for_childrens(t_minishell *minishell)
 			status = minishell->pids[i++];
 	}
 	set_last_status(status, &minishell->last_status);
-	ft_free(minishell->pids);
+	if (minishell->pids)
+		ft_free(minishell->pids);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -59,7 +69,7 @@ int	main(int argc, char **argv, char **envp)
 
 	if (!isatty(0) || !isatty(1))
 		return (1);
-	set_envp(&minishell, envp);
+	init_envp(&minishell, envp);
 	while (argv && argc)
 	{
 		set_signals();

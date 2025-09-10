@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/08 13:38:59 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/10 06:53:36 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,59 +17,64 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int	has_alpha(char *str)
+static int	is_nbr(char *str)
 {
-	if (!str)
-		return (1);
-	while (str)
+	while (str && *str != 0)
 	{
-		if (ft_isalpha(*str))
+		if (ft_isdigit(*str))
 			str++;
 		else
-			return (1);
+			return (0);
 	}
-	return (0);
+	return (1);
+}
+
+static int	ft_strlen_array(char **array)
+{
+	int	i;
+
+	i = 0;
+	if (array)
+	{
+		while (array[i])
+			i++;
+	}
+	return (i);
+}
+
+int	exit_alpha(t_minishell *minishell)
+{
+	printf("exit\n");
+	ft_putstr_fd("minishell: exit: ", 2);
+	ft_putstr_fd(minishell->cmds->args[1], 2);
+	ft_putstr_fd(": numeric argument required\n", 2);
+	close_pipes(minishell->pipe_fds, minishell->size, minishell->i);
+	free_minishell(minishell);
+	return (2);
 }
 
 void	my_exit(t_minishell *minishell)
 {
-	char	*args[2];
-	int		result;
+	int	result;
+	int	args_size;
 
 	result = 0;
-	args[0] = minishell->cmds->args[1];
-	args[1] = minishell->cmds->args[2];
-	if (minishell->i != 0)
+	args_size = ft_strlen_array(minishell->cmds->args);
+	if (args_size > 1 && !is_nbr(minishell->cmds->args[1]))
+		exit(exit_alpha(minishell));
+	else if (args_size > 2)
 	{
-		minishell->pids[minishell->i] = -1;
+		ft_putstr_fd("exit\n", 2);
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		minishell->pids[minishell->i] = -4;
 		return ;
 	}
-	if (args[0])
-	{
-		if (args[1])
-		{
-			ft_putstr_fd("exit\n", 2);
-			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-			minishell->pids[minishell->i] = -2;
-			return ;
-		}
-		if (has_alpha(args[0]))
-		{
-			printf("exit\n");
-			ft_putstr_fd("minishell: exit: ", 2);
-			ft_putstr_fd(args[0], 2);
-			ft_putstr_fd(": numeric argument required\n", 2);
-			close_pipes(minishell->pipe_fds, minishell->size, minishell->i);
-			free_on_exit_error(minishell);
-			exit(2);
-		}
-		else
-			result = ft_atoi(args[0]);
-	}
+	else if (args_size == 2)
+		result = ft_atoi(minishell->cmds->args[1]);
 	else
 		result = minishell->last_status;
 	printf("exit\n");
 	close_pipes(minishell->pipe_fds, minishell->size, minishell->i);
-	free_on_exit_error(minishell);
+	free_minishell(minishell);
 	exit(result % 256);
 }

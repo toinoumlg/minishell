@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 12:15:26 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 19:57:09 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/10 06:53:36 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static t_file	*new_file(t_minishell *minishell, t_cmd *new_cmd)
 	if (!new)
 	{
 		free(new_cmd);
-		exit(free_on_exit_error(minishell));
+		exit(free_minishell(minishell));
 	}
 	memset(new, 0, sizeof(t_file));
 	return (new);
@@ -53,7 +53,7 @@ t_file	*set_file(t_minishell *minishell, t_cmd *new_cmd, int j)
 	{
 		free(new);
 		free_cmds(new_cmd);
-		exit(free_on_exit_error(minishell));
+		exit(free_minishell(minishell));
 	}
 	new->type = tmp->type;
 	free_i_token(&minishell->tokens, j);

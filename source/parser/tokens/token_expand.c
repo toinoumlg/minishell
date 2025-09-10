@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 16:14:42 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 19:55:28 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/10 08:38:27 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,5 +156,5 @@ void	expand_tokens(t_minishell *m)
 			expand_token_inline(t, m);
 		t = t->next;
 	}
-	m->tokens = free_empty_tokens(m->tokens);
+	// m->tokens = free_empty_tokens(m->tokens);
 }

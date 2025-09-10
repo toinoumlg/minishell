@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 20:21:25 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/10 11:00:38 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,74 +44,72 @@ static char	**get_env(char *path)
 	return (ft_split(ft_strchr(path, '/'), ':'));
 }
 
-static char	**set_envp_array(t_envp *envp)
+void	set_envp_array(t_minishell *minishell)
 {
-	char	**envp_array;
 	int		i;
+	t_envp	*envp;
 
+	if (minishell->envp_array)
+		free_array(minishell->envp_array);
+	envp = minishell->envp;
 	i = 0;
-	envp_array = malloc(sizeof(char *) * (get_envp_size(envp) + 1));
+	minishell->envp_array = malloc(sizeof(char *) * (get_envp_size(envp) + 1));
 	if (!envp)
-		return (NULL);
+		exit_perror(minishell, "malloc :");
 	while (envp)
 	{
-		envp_array[i] = ft_strdup(envp->line);
-		if (!envp_array[i])
-			return (free_array(envp_array), NULL);
-		envp = envp->next;
+		minishell->envp_array[i] = ft_strdup(envp->line);
+		if (!minishell->envp_array[i])
+			exit_perror(minishell, "malloc :");
 		i++;
+		envp = envp->next;
 	}
-	envp_array[i] = NULL;
-	return (envp_array);
+	minishell->envp_array[i] = NULL;
 }
 
-char	**set_env_array(t_minishell *minishell)
+void	set_env_array(t_minishell *minishell)
 {
-	char	**env;
 	char	*tmp;
 	int		i;
 	t_envp	*path;
 
-	i = -1;
+	i = 0;
 	path = find_existing_envp("PATH", minishell->envp);
+	if (minishell->env)
+		free_array(minishell->env);
 	if (!path)
-		return (NULL);
-	env = get_env(path->value);
-	while (env[++i])
 	{
-		tmp = env[i];
-		env[i] = ft_strjoin(tmp, "/");
-		free(tmp);
-		if (!env[i])
-			return (free_array(env), exit(free_on_exit_error(minishell)), NULL);
+		minishell->env = NULL;
+		return ;
 	}
-	return (env);
+	minishell->env = get_env(path->value);
+	if (!minishell->env)
+		exit_perror(minishell, "malloc :");
+	while (minishell->env[i])
+	{
+		tmp = minishell->env[i];
+		minishell->env[i] = ft_strjoin(tmp, "/");
+		free(tmp);
+		if (!minishell->env[i])
+			exit_perror(minishell, "malloc :");
+		i++;
+	}
+	minishell->env[i] = 0;
 }
 
 void	pre_parsing(t_minishell *minishell)
 {
-	if (minishell->envp_array)
-		free_array(minishell->envp_array);
-	if (minishell->env)
-		free_array(minishell->env);
-	minishell->size = 0;
 	minishell->i = 0;
-	minishell->env = set_env_array(minishell);
-	minishell->envp_array = set_envp_array(minishell->envp);
-	if (!minishell->envp_array)
-		exit(free_on_exit_error(minishell));
+	set_env_array(minishell);
+	set_envp_array(minishell);
 }
 
 void	post_parsing(t_minishell *minishell)
 {
 	try_access(minishell->cmds, minishell->env);
-	minishell->size = set_size(minishell->cmds);
-	minishell->pipe_fds = alloc_pipe_fds(minishell);
-	minishell->pids = alloc_pids(minishell);
-	free(minishell->read_line);
-	minishell->read_line = NULL;
-	if ((minishell->size > 1 && !minishell->pipe_fds) || !minishell->pids)
-		exit(free_on_exit_error(minishell));
+	set_size(minishell);
+	alloc_pipe_fds(minishell);
+	alloc_pids(minishell);
 }
 
 int	need_merge(t_token *cur, t_token *next)
@@ -152,7 +150,7 @@ void	parse_read_line(t_minishell *minishell)
 
 	if (!minishell->read_line)
 	{
-		free_on_exit_error(minishell);
+		free_minishell(minishell);
 		write(2, "exit\n", 5);
 		exit(0);
 	}
@@ -162,7 +160,7 @@ void	parse_read_line(t_minishell *minishell)
 	if (get_tokens_list(&parse_error, minishell))
 		return (parsing_error(parse_error, minishell));
 	if (!minishell->tokens)
-		return (free(minishell->read_line));
+		return (minishell->cmds = NULL, ft_free(minishell->read_line));
 	merge_adjacent_words(&minishell->tokens);
 	expand_tokens(minishell);
 	set_commands(minishell);

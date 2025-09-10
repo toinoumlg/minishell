@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:58:46 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 19:41:01 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/10 10:57:44 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	free_and_set_to_next_commands(t_cmd **cmds)
 	*cmds = next;
 }
 
-void	free_envp(t_envp *envp)
+int	free_envp(t_envp *envp)
 {
 	t_envp	*next;
 
@@ -55,9 +55,10 @@ void	free_envp(t_envp *envp)
 		ft_free(envp);
 		envp = next;
 	}
+	return (1);
 }
 
-int	free_on_exit_error(t_minishell *minishell)
+int	free_minishell(t_minishell *minishell)
 {
 	if (minishell->cmds)
 		free_cmds(minishell->cmds);
@@ -77,4 +78,10 @@ int	free_on_exit_error(t_minishell *minishell)
 		free_tokens(minishell->tokens);
 	clear_history();
 	return (1);
+}
+
+int	exit_perror(t_minishell *minishell, char *str)
+{
+	perror(str);
+	exit(free_minishell(minishell));
 }

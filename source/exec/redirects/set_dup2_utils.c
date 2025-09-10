@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:50:43 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/25 17:42:44 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/10 06:53:36 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	contains_type(t_file *redirects, t_enum_token type)
 
 void	exit_set_files_in_child(t_minishell *minishell)
 {
-	free_on_exit_error(minishell);
+	free_minishell(minishell);
 	perror("set_file");
 	exit(1);
 }

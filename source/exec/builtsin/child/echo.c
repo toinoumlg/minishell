@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:05:22 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/04 15:09:13 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/10 06:53:36 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	echo(t_minishell *minishell)
 	if (!minishell->cmds->args[i])
 	{
 		ft_putstr_fd("\n", 1);
-		free_on_exit_error(minishell);
+		free_minishell(minishell);
 		exit(0);
 	}
 	if (!ft_strncmp(minishell->cmds->args[i], "-n", 3))
@@ -34,6 +34,6 @@ void	echo(t_minishell *minishell)
 	}
 	if (ft_strncmp(minishell->cmds->args[1], "-n", 3))
 		ft_putstr_fd("\n", 1);
-	free_on_exit_error(minishell);
+	free_minishell(minishell);
 	exit(0);
 }

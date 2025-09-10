@@ -6,14 +6,16 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 17:04:13 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/25 17:50:48 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/10 10:08:51 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "free.h"
 #include "minishell.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+
 
 void	close_pipes(int (*pipe_fds)[2], int size, int i)
 {
@@ -30,28 +32,28 @@ void	close_pipes(int (*pipe_fds)[2], int size, int i)
 	}
 }
 
-void	dup2_pipes(int (*pipe_fds)[2], int size, int i)
+void	dup2_pipes(int (*pipe_fds)[2], int size, int i, t_minishell *minishell)
 {
 	if (i == 0)
 	{
 		close(pipe_fds[i][0]);
 		if (dup2(pipe_fds[i][1], STDOUT_FILENO) == -1)
-			perror("dup2 error:");
+			exit_perror(minishell, "dup2 :");
 		close(pipe_fds[i][1]);
 	}
 	else if (i == size - 1)
 	{
 		if (dup2(pipe_fds[i - 1][0], STDIN_FILENO) == -1)
-			perror("dup2 error:");
+			exit_perror(minishell, "dup2 :");
 		close(pipe_fds[i - 1][0]);
 	}
 	else
 	{
 		close(pipe_fds[i][0]);
 		if (dup2(pipe_fds[i - 1][0], STDIN_FILENO) == -1)
-			perror("dup2 error:");
+			exit_perror(minishell, "dup2 :");
 		if (dup2(pipe_fds[i][1], STDOUT_FILENO) == -1)
-			perror("dup2 error:");
+			exit_perror(minishell, "dup2 :");
 		close(pipe_fds[i][1]);
 		close(pipe_fds[i - 1][0]);
 	}
@@ -66,5 +68,5 @@ void	do_pipe(t_minishell *minishell)
 {
 	if (need_to_pipe(minishell))
 		if (pipe(minishell->pipe_fds[minishell->i]) == -1)
-			exit(printf("pipe creation error\n"));
+			exit_perror(minishell,"pipe :");
 }

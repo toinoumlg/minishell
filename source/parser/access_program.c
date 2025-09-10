@@ -6,12 +6,12 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 12:47:29 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 19:43:11 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/10 09:07:48 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "free_utils.h"
+#include "libft.h"
 #include "minishell.h"
 #include <stdio.h>
 
@@ -27,6 +27,8 @@ static char	*parse_env(char **env, t_file *program)
 {
 	char	*tmp;
 
+	if (!*program->path)
+		return (set_access(program, program->path), program->path);
 	if (!env)
 		return (NULL);
 	while (*env)

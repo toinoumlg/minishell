@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:14 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/03 19:16:26 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/10 08:08:41 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,6 @@ void	env(t_minishell *minishell)
 		ft_putstr_fd("\n", 1);
 		envp = envp->next;
 	}
-	free_on_exit_error(minishell);
+	free_minishell(minishell);
 	exit(0);
 }
