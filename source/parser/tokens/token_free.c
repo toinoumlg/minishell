@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:51:29 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 19:56:27 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/11 17:38:28 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "parser/tokens/token_utils.h"
 #include <stdlib.h>
 
-void	free_first_token(t_token **tokens)
+static void	free_first_token(t_token **tokens)
 {
 	t_token	*tmp;
 	t_token	*next;
