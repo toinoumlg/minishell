@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:58:46 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/10 10:57:44 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/11 12:49:51 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,27 @@ int	free_envp(t_envp *envp)
 	{
 		next = envp->next;
 		if (envp->line)
-			ft_free(envp->line);
+			free(envp->line);
 		if (envp->name)
-			ft_free(envp->name);
+			free(envp->name);
 		if (envp->value)
-			ft_free(envp->value);
-		ft_free(envp);
+			free(envp->value);
+		free(envp);
 		envp = next;
 	}
 	return (1);
+}
+
+void	set_minishell_to_null(t_minishell *minishell)
+{
+	minishell->cmds = NULL;
+	minishell->env = NULL;
+	minishell->envp = NULL;
+	minishell->envp_array = NULL;
+	minishell->read_line = NULL;
+	minishell->pids = NULL;
+	minishell->pipe_fds = NULL;
+	minishell->tokens = NULL;
 }
 
 int	free_minishell(t_minishell *minishell)
@@ -69,13 +81,14 @@ int	free_minishell(t_minishell *minishell)
 	if (minishell->envp_array)
 		free_array(minishell->envp_array);
 	if (minishell->pids)
-		ft_free(minishell->pids);
-	if (minishell->pipe_fds)
-		ft_free(minishell->pipe_fds);
+		free(minishell->pids);
 	if (minishell->read_line)
-		ft_free(minishell->read_line);
+		free(minishell->read_line);
+	if (minishell->pipe_fds)
+		free(minishell->pipe_fds);
 	if (minishell->tokens)
 		free_tokens(minishell->tokens);
+	set_minishell_to_null(minishell);
 	clear_history();
 	return (1);
 }

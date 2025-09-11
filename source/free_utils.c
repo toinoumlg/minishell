@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 19:01:50 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 19:41:27 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/11 11:27:55 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ void	free_array(char **args)
 	if (args)
 	{
 		while (args[i])
-			ft_free(args[i++]);
-		ft_free(args);
+			free(args[i++]);
+		free(args);
 	}
 }
 
@@ -40,8 +40,8 @@ void	free_tokens(t_token *tokens)
 	{
 		next = tokens->next;
 		if (tokens->string)
-			ft_free(tokens->string);
-		ft_free(tokens);
+			free(tokens->string);
+		free(tokens);
 		tokens = next;
 	}
 }
@@ -54,8 +54,8 @@ void	free_file(t_file *file)
 	{
 		next = file->next;
 		if (file->path)
-			ft_free(file->path);
-		ft_free(file);
+			free(file->path);
+		free(file);
 		file = next;
 	}
 }
@@ -67,5 +67,5 @@ void	free_cmd(t_cmd *cmd)
 	free_array(cmd->args);
 	free_file(cmd->program);
 	free_file(cmd->redirects);
-	ft_free(cmd);
+	free(cmd);
 }

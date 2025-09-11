@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/10 10:47:59 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/11 13:29:42 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,11 +90,11 @@ static void	close_here_doc(t_file *redirects)
 
 // 	under_score = find_existing_envp("_", envp);
 // 	under_score->value = ft_strdup(value);
-// 	ft_free(under_score->line);
+// 	free(under_score->line);
 // 	under_score->line = ft_strjoin(under_score->name, "=");
 // 	tmp = under_score->line;
 // 	under_score->line = ft_strjoin(tmp, value);
-// 	ft_free(tmp);
+// 	free(tmp);
 // }
 
 // static void	handle_underscore(t_minishell *minishell)
@@ -128,5 +128,7 @@ void	exec(t_minishell *minishell)
 		free_and_set_to_next_commands(&minishell->cmds);
 		minishell->i++;
 	}
-	ft_free(minishell->pipe_fds);
+	if (minishell->pipe_fds)
+		free(minishell->pipe_fds);
+	minishell->pipe_fds = NULL;
 }

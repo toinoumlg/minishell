@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:32:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/10 06:53:36 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/11 12:43:39 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,28 +16,25 @@
 #include "token_list.h"
 #include "token_utils.h"
 
-t_enum_token	get_operator_type(char **line)
+t_enum_token	get_operator_type(char *line)
 {
-	char	*ptr;
-
-	ptr = *line;
-	if (*ptr && *(ptr + 1))
+	if (line && line + 1)
 	{
-		if (*ptr == '>')
+		if (*line == '>')
 		{
-			if (!is_operator(*(ptr + 1)))
+			if (!is_operator(*(line + 1)))
 				return (output);
-			if (*(ptr + 1) == '>' && !is_operator(*(ptr + 2)))
+			if (*(line + 1) == '>' && !is_operator(*(line + 2)))
 				return (append_file);
 		}
-		if (*ptr == '<')
+		if (*line == '<')
 		{
-			if (!is_operator(*(ptr + 1)))
+			if (!is_operator(*(line + 1)))
 				return (input);
-			if (*(ptr + 1) == '<' && !is_operator(*(ptr + 2)))
+			if (*(line + 1) == '<' && !is_operator(*(line + 2)))
 				return (here_doc);
 		}
-		if (*ptr == '|' && *(ptr + 1) != '|')
+		if (*line == '|' && *(line + 1) != '|')
 			return (is_pipe);
 	}
 	return (0);
@@ -67,7 +64,7 @@ int	add_operator_token(char **read_line, t_minishell *minishell, int *was_space)
 	t_token	*new_token;
 
 	new_token = set_new_token(minishell);
-	new_token->type = get_operator_type(read_line);
+	new_token->type = get_operator_type(*read_line);
 	if (!new_token->type)
 		return (1);
 	set_operator_string(read_line, minishell, new_token);

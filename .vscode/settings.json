@@ -63,6 +63,7 @@
 		"envp_utils.h": "c",
 		"wait.h": "c",
 		"signals.h": "c",
-		"init_envp.h": "c"
+		"init_envp.h": "c",
+		"commands_redirect_utils.h": "c"
 	}
 }

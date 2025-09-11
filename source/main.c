@@ -6,20 +6,16 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 08:14:08 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/11 13:52:25 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
-#include "free.h"
-#include "free_utils.h"
 #include "init_envp.h"
 #include "parse_read_line.h"
 #include "signals.h"
-#include <readline/history.h>
 #include <readline/readline.h>
 #include <stdlib.h>
-#include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
@@ -49,6 +45,8 @@ void	wait_for_childrens(t_minishell *minishell)
 	int	status;
 
 	i = 0;
+	if (!minishell->i)
+		return ;
 	while (i < minishell->size)
 	{
 		if (minishell->pids[i] >= 0)
@@ -58,15 +56,16 @@ void	wait_for_childrens(t_minishell *minishell)
 	}
 	set_last_status(status, &minishell->last_status);
 	if (minishell->pids)
-		ft_free(minishell->pids);
+		free(minishell->pids);
+	minishell->pids = NULL;
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	minishell;
 
-	if (!isatty(0) || !isatty(1))
-		return (1);
+	// if (!isatty(0) || !isatty(1))
+	// 	return (1);
 	init_envp(&minishell, envp);
 	while (argv && argc)
 	{

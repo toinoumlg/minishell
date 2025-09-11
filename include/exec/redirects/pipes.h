@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 17:04:34 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/03 19:06:59 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/11 13:45:13 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "minishell.h"
 
 void	close_pipes(int (*pipe_fds)[2], int size, int i);
-void	dup2_pipes(int (*pipe_fds)[2], int size, int i);
+void	dup2_pipes(int (*pipe_fds)[2], int size, int i, t_minishell *minishell);
 void	do_pipe(t_minishell *minishell);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:50:43 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/10 06:53:36 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/11 13:42:26 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int	dup2_infile(t_file *infile)
+void	dup2_infile(t_file *infile, t_minishell *minishell)
 {
 	if (!infile->read)
 	{
@@ -24,15 +24,13 @@ int	dup2_infile(t_file *infile)
 		if (infile->fd > 0)
 		{
 			if (dup2(infile->fd, STDIN_FILENO))
-				return (1);
+				exit_perror(minishell, "dup2 ");
 			close(infile->fd);
-			return (0);
 		}
 	}
-	return (0);
 }
 
-int	dup2_outfile(t_file *outfile)
+void	dup2_outfile(t_file *outfile, t_minishell *minishell)
 {
 	if (outfile->exist || !outfile->write)
 	{
@@ -40,15 +38,13 @@ int	dup2_outfile(t_file *outfile)
 		if (outfile->fd > 0)
 		{
 			if (dup2(outfile->fd, STDOUT_FILENO) == -1)
-				return (1);
+				exit_perror(minishell, "dup2 ");
 			close(outfile->fd);
-			return (0);
 		}
 	}
-	return (0);
 }
 
-int	dup2_append_file(t_file *append_file)
+void	dup2_append_file(t_file *append_file, t_minishell *minishell)
 {
 	if (append_file->exist || !append_file->write)
 	{
@@ -57,30 +53,15 @@ int	dup2_append_file(t_file *append_file)
 		if (append_file->fd > 0)
 		{
 			if (dup2(append_file->fd, STDOUT_FILENO) == -1)
-				return (1);
+				exit_perror(minishell, "dup2 ");
 			close(append_file->fd);
-			return (0);
 		}
 	}
-	return (0);
 }
 
-int	contains_type(t_file *redirects, t_enum_token type)
+void	dup2_here_doc(t_file *here_doc_file, t_minishell *minishell)
 {
-	if (!redirects)
-		return (0);
-	while (redirects)
-	{
-		if (redirects->type == type)
-			return (1);
-		redirects = redirects->next;
-	}
-	return (0);
-}
-
-void	exit_set_files_in_child(t_minishell *minishell)
-{
-	free_minishell(minishell);
-	perror("set_file");
-	exit(1);
+	if (dup2(here_doc_file->fd, STDIN_FILENO))
+		exit_perror(minishell, "dup2 ");
+	close(here_doc_file->fd);
 }

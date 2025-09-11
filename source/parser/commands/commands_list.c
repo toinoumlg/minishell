@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:45:35 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/10 06:53:36 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/11 15:02:50 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_cmd	*set_new_command(t_minishell *minishell)
 
 	new = malloc(sizeof(t_cmd));
 	if (!new)
-		exit(free_minishell(minishell));
+		exit_perror(minishell, "malloc ");
 	memset(new, 0, sizeof(t_cmd));
 	return (new);
 }

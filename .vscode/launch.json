@@ -7,7 +7,7 @@
       "request": "launch",
       "args": [],
       "stopAtEntry": false,
-      "externalConsole": true,
+      "externalConsole": false,
       "cwd": "${workspaceFolder}",
       "program": "${workspaceFolder}/minishell",
       "MIMode": "gdb",

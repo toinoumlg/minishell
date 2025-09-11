@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   commands_redirect.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yalaatik <yalaatik@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 12:15:26 by amalangu          #+#    #+#             */
-/*   Updated: 2025/08/09 16:38:56 by yalaatik         ###   ########lyon.fr   */
+/*   Updated: 2025/09/11 15:47:54 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "commands_redirect_utils.h"
-#include "parser/tokens/token_utils.h"
-#include "parser/tokens/token_free.h"
+#include "free.h"
+#include "token_free.h"
+#include "token_utils.h"
 
 static void	append_redirects(t_file **redirects, t_file *new_redirect)
 {
@@ -36,8 +37,14 @@ static void	set_redirect(t_cmd *new_cmd, t_minishell *minishell, int j)
 {
 	t_file	*new_redirect;
 
-	new_redirect = set_file(minishell, new_cmd, j);
+	new_redirect = set_file(minishell, j);
 	append_redirects(&new_cmd->redirects, new_redirect);
+}
+
+int	is_a_file(t_enum_token type)
+{
+	return (type == output || type == append_file || type == input
+		|| type == here_doc);
 }
 
 void	pick_redirects(t_cmd *new_cmd, t_minishell *minishell)
@@ -49,12 +56,9 @@ void	pick_redirects(t_cmd *new_cmd, t_minishell *minishell)
 	j = 0;
 	while (!is_end_of_command(tokens))
 	{
-		if (tokens->type == output || tokens->type == append_file
-			|| tokens->type == input || tokens->type == here_doc)
-		{
-			set_redirect(new_cmd, minishell, j);
-			return (pick_redirects(new_cmd, minishell));
-		}
+		if (is_a_file(tokens->type))
+			return (set_redirect(new_cmd, minishell, j), pick_redirects(new_cmd,
+					minishell));
 		j++;
 		tokens = tokens->next;
 	}

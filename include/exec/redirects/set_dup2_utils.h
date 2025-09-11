@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:52:37 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/03 19:10:02 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/11 13:41:48 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,9 @@
 
 # include "minishell.h"
 
-int		dup2_infile(t_file *infile);
-int		dup2_outfile(t_file *outfile);
-int		dup2_append_file(t_file *append_file);
-int		contains_type(t_file *redirects, t_enum_token type);
-void	exit_set_files_in_child(t_minishell *minishell);
+void	dup2_infile(t_file *infile, t_minishell *minishell);
+void	dup2_outfile(t_file *outfile, t_minishell *minishell);
+void	dup2_append_file(t_file *append_file, t_minishell *minishell);
+void	dup2_here_doc(t_file *here_doc_file, t_minishell *minishell);
 
 #endif

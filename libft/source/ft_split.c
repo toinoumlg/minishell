@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 13:02:28 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/07 15:50:45 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/11 15:21:51 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	free_split(char **split)
 	int	i;
 
 	i = 0;
-	while (split)
+	if (split)
 	{
 		while (split[i])
 			free(split[i++]);
@@ -46,7 +46,7 @@ int	word_count(char const *s, char c)
 	return (count);
 }
 
-char	*fill_word(char const *s, char c)
+char	*fill_word(char const *s, char c, int *index)
 {
 	int		i;
 	char	*str;
@@ -54,6 +54,8 @@ char	*fill_word(char const *s, char c)
 	i = 0;
 	while (s[i] != c && s[i])
 		i++;
+	if (i < 0)
+		return (NULL);
 	str = malloc(sizeof(char) * (i + 1));
 	if (!str)
 		return (NULL);
@@ -64,6 +66,7 @@ char	*fill_word(char const *s, char c)
 		i++;
 	}
 	str[i] = 0;
+	*index += i;
 	return (str);
 }
 
@@ -87,11 +90,9 @@ char	**ft_split(char const *s, char c)
 	{
 		if (s[i] != c)
 		{
-			split[j] = fill_word(s + i, c);
+			split[j] = fill_word(s + i, c, &i);
 			if (!split[j])
 				return (free_split(split), NULL);
-			while (s[i] != c && s[i])
-				i++;
 			j++;
 		}
 		else

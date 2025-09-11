@@ -6,10 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 16:14:42 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/10 08:38:27 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/11 17:07:58 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "free.h"
 #include "libft.h"
 #include "minishell.h"
 #include "token_free.h"
@@ -53,108 +54,106 @@ static int	is_var_char(char c)
 	return (0);
 }
 
-static void	strjoin_inplace(char **dst, const char *src)
+static void	strjoin_inplace(char **dst, const char *src, t_minishell *minishell)
 {
 	char	*tmp;
 
 	tmp = *dst;
-	if (src)
-		*dst = ft_strjoin(*dst, src);
-	else
-		*dst = ft_strjoin(*dst, "");
+	if (!*dst && src)
+	{
+		*dst = ft_strdup(src);
+		if (!*dst)
+			exit_perror(minishell, "malloc ");
+	}
+	else if (*dst && src)
+	{
+		*dst = ft_strjoin(tmp, src);
+		if (!*dst)
+			exit_perror(minishell, "malloc ");
+	}
 	free(tmp);
 }
 
-static void	expand_token_inline(t_token *t, t_minishell *m)
+static void	expand_last_status(t_minishell *minishell, int *i, char **out)
 {
-	char	*s;
+	char	*value;
+
+	value = ft_itoa(minishell->last_status);
+	strjoin_inplace(out, value, minishell);
+	free(value);
+	(*i)++;
+}
+
+static void	expand_env(int *i, t_minishell *minishell, char *str, char **out)
+{
+	int		j;
+	char	*value;
+	char	saved;
+
+	j = *i;
+	while (str[j] && is_var_char(str[j]))
+		j++;
+	saved = str[j];
+	str[j] = 0;
+	
+	value = env_lookup_dup(str + *i, minishell);
+	strjoin_inplace(out, value, minishell);
+	if (value)
+		free(value);
+	str[j] = saved;
+	*i = j;
+}
+
+void	handle_expand(int *i, char *str, char **out, t_minishell *minishell)
+{
+	(*i)++;
+	if (!str[*i])
+		strjoin_inplace(out, "$", minishell);
+	else if (str[*i] == '?')
+		expand_last_status(minishell, i, out);
+	else if (is_var_start(str[*i]))
+		expand_env(i, minishell, str, out);
+	else if (!is_var_char(str[*i]))
+		strjoin_inplace(out, "$", minishell);
+}
+
+static void	expand_token_inline(t_token *token, t_minishell *minishell)
+{
+	char	*str;
 	char	*out;
 	int		i;
-	int		j;
-	char	saved;
-	char	*val;
 	char	buf[2];
 
-	s = t->string;
-	out = ft_strdup("");
+	str = token->string;
+	out = NULL;
 	i = 0;
-	j = 0;
-	saved = 0;
-	val = NULL;
-	buf[0] = 0;
-	buf[1] = 0;
-	while (s[i])
+	while (str[i])
 	{
-		if (s[i] == '$')
-		{
-			i++;
-			if (!s[i])
-			{
-				strjoin_inplace(&out, "$");
-				break ;
-			}
-			if (s[i] == '?')
-			{
-				val = ft_itoa(m->last_status);
-				strjoin_inplace(&out, val);
-				free(val);
-				i++;
-				continue ;
-			}
-			if (is_var_start(s[i]))
-			{
-				j = i;
-				while (s[j] && is_var_char(s[j]))
-					j++;
-				saved = s[j];
-				s[j] = '\0';
-				val = env_lookup_dup(&s[i], m);
-				strjoin_inplace(&out, val);
-				if (val)
-					free(val);
-				s[j] = saved;
-				i = j;
-				continue ;
-			}
-			strjoin_inplace(&out, "$");
-			continue ;
-		}
-		buf[0] = s[i];
+		if (str[i] == '$')
+			handle_expand(&i, str, &out, minishell);
+		buf[0] = str[i];
 		buf[1] = '\0';
-		strjoin_inplace(&out, buf);
+		strjoin_inplace(&out, buf, minishell);
 		i++;
 	}
-	free(t->string);
-	t->string = out;
+	free(token->string);
+	token->string = out;
 }
 
-t_token	*free_empty_tokens(t_token *tokens)
+void	expand_tokens(t_minishell *minishell)
 {
-	t_token	*head;
-	int		i;
+	t_token	*tokens;
 
-	head = tokens;
-	i = 0;
+	tokens = minishell->tokens;
+	if (minishell->read_line)
+	{
+		free(minishell->read_line);
+		minishell->read_line = NULL;
+	}
 	while (tokens)
 	{
-		if (!ft_strlen(tokens->string))
-			free_i_token(&head, i);
-		i++;
+		if (tokens->type == word || tokens->type == double_quote)
+			expand_token_inline(tokens, minishell);
 		tokens = tokens->next;
 	}
-	return (head);
-}
-
-void	expand_tokens(t_minishell *m)
-{
-	t_token	*t;
-
-	t = m->tokens;
-	while (t)
-	{
-		if (t->type == word || t->type == double_quote)
-			expand_token_inline(t, m);
-		t = t->next;
-	}
-	// m->tokens = free_empty_tokens(m->tokens);
 }
