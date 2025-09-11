@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/10 10:47:39 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/11 08:14:08 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ void	wait_for_childrens(t_minishell *minishell)
 	int	i;
 	int	status;
 
-	if (!minishell->cmds)
-		return ;
 	i = 0;
 	while (i < minishell->size)
 	{

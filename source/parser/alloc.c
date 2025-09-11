@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 19:03:01 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/10 10:59:06 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/11 08:09:47 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,36 +14,39 @@
 #include <stdlib.h>
 #include <string.h>
 
-void	alloc_pipe_fds(t_minishell *minishell)
+void	*alloc_pipe_fds(t_minishell *minishell)
 {
+	int	**pipe_fds;
+
 	if (!minishell->cmds->next)
-	{
-		minishell->pipe_fds = NULL;
-		return ;
-	}
-	minishell->pipe_fds = malloc(sizeof(int[2]) * (minishell->size - 1));
-	if (!minishell->pipe_fds)
-		exit_perror(minishell, "malloc :");
-	memset(minishell->pipe_fds, 0, sizeof(int[2]) * (minishell->size - 1));
+		return (NULL);
+	pipe_fds = malloc(sizeof(int[2]) * (minishell->size - 1));
+	if (!pipe_fds)
+		exit_perror(minishell, "malloc ");
+	memset(pipe_fds, 0, sizeof(int[2]) * (minishell->size - 1));
+	return (pipe_fds);
 }
 
-void	alloc_pids(t_minishell *minishell)
+void	*alloc_pids(t_minishell *minishell)
 {
-	minishell->pids = malloc(sizeof(int) * minishell->size);
-	if (!minishell->pids)
-		exit_perror(minishell, "malloc :");
-	memset(minishell->pids, 0, sizeof(int) * minishell->size);
+	int	*pid;
+
+	pid = malloc(sizeof(int) * minishell->size);
+	if (!pid)
+		exit_perror(minishell, "malloc ");
+	memset(pid, 0, sizeof(int) * minishell->size);
+	return (pid);
 }
 
-void	set_size(t_minishell *minishell)
+int	set_size(t_cmd *cmds)
 {
-	t_cmd	*cmds;
+	int	i;
 
-	cmds = minishell->cmds;
-	minishell->size = 0;
+	i = 0;
 	while (cmds)
 	{
-		minishell->size++;
+		i++;
 		cmds = cmds->next;
 	}
+	return (i);
 }

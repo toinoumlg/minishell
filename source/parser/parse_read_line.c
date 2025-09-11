@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/10 11:00:38 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/11 08:11:15 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,9 +107,9 @@ void	pre_parsing(t_minishell *minishell)
 void	post_parsing(t_minishell *minishell)
 {
 	try_access(minishell->cmds, minishell->env);
-	set_size(minishell);
-	alloc_pipe_fds(minishell);
-	alloc_pids(minishell);
+	minishell->size = set_size(minishell->cmds);
+	minishell->pipe_fds = alloc_pipe_fds(minishell);
+	minishell->pids = alloc_pids(minishell);
 }
 
 int	need_merge(t_token *cur, t_token *next)
