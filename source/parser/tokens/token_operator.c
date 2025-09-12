@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:32:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 12:43:39 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/11 19:37:56 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 t_enum_token	get_operator_type(char *line)
 {
-	if (line && line + 1)
+	if (*line && *(line + 1))
 	{
 		if (*line == '>')
 		{

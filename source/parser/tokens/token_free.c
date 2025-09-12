@@ -6,13 +6,12 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:51:29 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 17:38:28 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/12 09:54:52 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "parser/tokens/token_free.h"
-#include "parser/tokens/token_utils.h"
+#include "token_utils.h"
 #include <stdlib.h>
 
 static void	free_first_token(t_token **tokens)

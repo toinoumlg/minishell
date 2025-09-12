@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 16:14:42 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 17:38:05 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/11 20:33:04 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "minishell.h"
 #include "token_expand_utils.h"
 #include "token_free.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 static void	expand_last_status(t_minishell *minishell, int *i, char **out)

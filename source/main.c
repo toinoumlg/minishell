@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 17:48:21 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/12 08:52:38 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,12 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	minishell;
 
-	if (!isatty(0) || !isatty(1))
+	if (!isatty(0) || !isatty(1) || !isatty(2))
 		return (1);
 	init_envp(&minishell, envp);
+	set_signals();
 	while (argv && argc)
 	{
-		set_signals();
 		minishell.read_line = readline("minishell> ");
 		parse_read_line(&minishell);
 		exec(&minishell);

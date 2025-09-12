@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:56:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 16:47:27 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/12 09:52:46 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,48 @@
 #include "parser/tokens/token_utils.h"
 #include "token_list.h"
 #include <stdlib.h>
+
+static int	get_word_size(char **p)
+{
+	int		n;
+	char	*ptr;
+
+	n = 0;
+	ptr = *p;
+	while (*ptr && !is_space(*ptr) && !is_operator(*ptr) && !is_quote(*ptr))
+	{
+		if (*ptr == ';' || *ptr == '\\')
+		{
+			*p = ptr;
+			return (-1);
+		}
+		ptr++;
+		n++;
+	}
+	*p = ptr;
+	return (n);
+}
+
+static int	get_quoted_string_size(char quote, char **line)
+{
+	int		len;
+	char	*ptr;
+
+	len = 0;
+	ptr = *line;
+	while (*ptr && *ptr != quote)
+	{
+		len++;
+		ptr++;
+	}
+	if (*ptr == quote)
+	{
+		ptr++;
+		*line = ptr;
+		return (len);
+	}
+	return (-1);
+}
 
 int	extract_quoted_string(char **read_line, char quote, t_minishell *minishell,
 		int *was_space)

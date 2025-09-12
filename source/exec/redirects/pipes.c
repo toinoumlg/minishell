@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 17:04:13 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 13:46:45 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/12 08:53:47 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
 
 void	close_pipes(int (*pipe_fds)[2], int size, int i)
 {
@@ -64,9 +63,10 @@ static int	need_to_pipe(t_minishell *minishell)
 	return (minishell->size > 1 && minishell->i < minishell->size - 1);
 }
 
+// creates pipe if needed
 void	do_pipe(t_minishell *minishell)
 {
 	if (need_to_pipe(minishell))
 		if (pipe(minishell->pipe_fds[minishell->i]) == -1)
-			exit_perror(minishell,"pipe ");
+			exit_perror(minishell, "pipe ");
 }

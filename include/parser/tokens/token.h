@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:33:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/03 20:24:43 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/12 09:10:18 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,6 @@
 
 # include "minishell.h"
 
-int	get_tokens_list(char **read_line, t_minishell *minishell);
+void	generate_tokens(t_minishell *minishell);
 
 #endif

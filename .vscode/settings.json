@@ -64,6 +64,11 @@
 		"wait.h": "c",
 		"signals.h": "c",
 		"init_envp.h": "c",
-		"commands_redirect_utils.h": "c"
+		"commands_redirect_utils.h": "c",
+		"builtsin.h": "c",
+		"create_files.h": "c",
+		"pre_parsing.h": "c",
+		"alloc.h": "c",
+		"commands.h": "c"
 	}
 }

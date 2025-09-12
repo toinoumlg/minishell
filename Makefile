@@ -19,7 +19,7 @@ OBJ_DIR = build
 EXEC_FILES = exec/exec exec/exec_utils exec/print_error \
 	exec/redirects/here_doc exec/redirects/here_doc_utils \
 	exec/redirects/set_dup2 exec/redirects/set_dup2_utils \
-	exec/redirects/pipes
+	exec/redirects/pipes exec/redirects/create_files
 
 BUILTSIN = exec/builtsin/builtsin  \
 	exec/builtsin/parent/cd exec/builtsin/parent/exit \
@@ -29,7 +29,8 @@ BUILTSIN = exec/builtsin/builtsin  \
 
 PARSER_FILES = parser/parse_read_line parser/alloc \
 	parser/access_program parser/access \
-	parser/parse_error \
+	parser/parse_error parser/pre_parsing \
+	parser/parsing_utils \
 	parser/tokens/token parser/tokens/token_expand_utils \
 	parser/tokens/token_list parser/tokens/token_operator \
 	parser/tokens/token_string parser/tokens/token_utils \
@@ -65,6 +66,9 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
+
+norme:
+	@norminette source include
 
 valgrind: all
 	valgrind --leak-check=full --trace-children=yes --track-fds=yes ./minishell

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 19:03:01 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 08:09:47 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/12 09:35:18 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ void	*alloc_pipe_fds(t_minishell *minishell)
 
 	if (!minishell->cmds->next)
 		return (NULL);
-	pipe_fds = malloc(sizeof(int[2]) * (minishell->size - 1));
+	pipe_fds = malloc(sizeof(int [2]) * (minishell->size - 1));
 	if (!pipe_fds)
 		exit_perror(minishell, "malloc ");
-	memset(pipe_fds, 0, sizeof(int[2]) * (minishell->size - 1));
+	memset(pipe_fds, 0, sizeof(int [2]) * (minishell->size - 1));
 	return (pipe_fds);
 }
 

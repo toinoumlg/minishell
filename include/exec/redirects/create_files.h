@@ -1,29 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_read_line.h                                  :+:      :+:    :+:   */
+/*   create_files.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/27 15:10:45 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/12 09:44:46 by amalangu         ###   ########.fr       */
+/*   Created: 2025/09/11 20:29:42 by amalangu          #+#    #+#             */
+/*   Updated: 2025/09/11 20:30:17 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSE_READ_LINE_H
-# define PARSE_READ_LINE_H
+#ifndef CREATE_FILES_H
+# define CREATE_FILES_H
 
-# include "access.h"
-# include "alloc.h"
-# include "commands.h"
-# include "free.h"
 # include "minishell.h"
-# include "pre_parsing.h"
-# include "token.h"
-# include <readline/history.h>
-# include <stdlib.h>
-# include <unistd.h>
 
-void	parse_read_line(t_minishell *minishell);
+void	create_files(t_minishell *minishell);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/09 20:13:48 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/11 20:04:24 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static void	write_here_doc(int fd, char *lim)
 	set_signals_heredoc();
 	while (1)
 	{
-		read_line = readline(">");
+		read_line = readline("> ");
 		if (!read_line)
 			return (exit_on_eof(lim));
 		if (!ft_strncmp(read_line, lim, ft_strlen(lim) + 1))

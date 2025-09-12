@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:09 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 15:08:14 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/11 19:37:25 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,29 +44,23 @@ static char	**set_array(int size, t_minishell *minishell)
 
 void	set_args(t_cmd *new_cmd, t_minishell *minishell)
 {
-	t_token	*tmp;
 	int		i;
+	t_token	*tokens;
 
-	tmp = minishell->tokens;
 	if (!minishell->tokens || minishell->tokens->type == is_pipe)
 		return ;
 	new_cmd->args = set_array(get_args_size(minishell->tokens), minishell);
 	if (!new_cmd->args)
-	{
-		free_cmd(new_cmd);
 		exit_perror(minishell, "malloc ");
-	}
 	i = 0;
-	while (!is_end_of_command(tmp))
+	tokens = minishell->tokens;
+	while (!is_end_of_command(tokens))
 	{
-		new_cmd->args[i] = ft_strdup(tmp->string);
+		new_cmd->args[i] = ft_strdup(tokens->string);
 		if (!new_cmd->args[i])
-		{
-			free_cmd(new_cmd);
 			exit_perror(minishell, "malloc ");
-		}
 		i++;
-		tmp = tmp->next;
+		tokens = tokens->next;
 	}
 	new_cmd->args[i] = NULL;
 	free_tokens_from_args(&minishell->tokens);

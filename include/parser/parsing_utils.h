@@ -1,29 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_read_line.h                                  :+:      :+:    :+:   */
+/*   parsing_utils.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/27 15:10:45 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/12 09:44:46 by amalangu         ###   ########.fr       */
+/*   Created: 2025/09/12 09:43:59 by amalangu          #+#    #+#             */
+/*   Updated: 2025/09/12 09:46:32 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSE_READ_LINE_H
-# define PARSE_READ_LINE_H
+#ifndef PARSING_UTILS_H
+# define PARSING_UTILS_H
 
-# include "access.h"
-# include "alloc.h"
-# include "commands.h"
-# include "free.h"
 # include "minishell.h"
-# include "pre_parsing.h"
-# include "token.h"
-# include <readline/history.h>
-# include <stdlib.h>
-# include <unistd.h>
 
-void	parse_read_line(t_minishell *minishell);
+int		get_envp_size(t_envp *envp);
+char	**get_env(char *full_path);
+void	dup_envp_array(t_minishell *minishell);
+void	dup_env_array(t_minishell *minishell);
 
 #endif
