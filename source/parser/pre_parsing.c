@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 09:02:17 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/12 09:47:28 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/13 12:56:05 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,5 @@ void	set_env_array(t_minishell *minishell)
 	minishell->env = get_env(path->value);
 	if (!minishell->env)
 		exit_perror(minishell, "malloc ");
+	dup_env_array(minishell);
 }
