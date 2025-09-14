@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:56:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/12 09:52:46 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/14 10:21:38 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,8 @@ int	pick_word(char **read_line, t_minishell *minishell, int *was_space)
 	int		i;
 
 	start = *read_line;
-	if (!**read_line)
+	if (!**read_line || is_space(**read_line) || is_operator(**read_line)
+		|| is_quote(**read_line))
 		return (0);
 	i = get_word_size(read_line);
 	if (i <= 0)

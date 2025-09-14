@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:25:17 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/12 09:16:36 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/14 10:09:22 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static int	get_tokens_list(char **parse_error, t_minishell *minishell)
 		else if (is_operator(**parse_error) && add_operator_token(parse_error,
 				minishell, &was_space))
 			return (1);
-		else if (**parse_error == ' ')
+		if (**parse_error == ' ')
 		{
 			while (**parse_error == ' ')
 				(*parse_error)++;

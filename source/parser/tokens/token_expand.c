@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 16:14:42 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 20:33:04 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/14 10:07:43 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ static void	expand_token_inline(t_token *token, t_minishell *minishell)
 	{
 		if (str[i] == '$')
 			handle_expand(&i, str, &out, minishell);
+		if (!str[i])
+			break ;
 		buf[0] = str[i];
 		buf[1] = '\0';
 		if (strjoin_inplace(&out, buf))

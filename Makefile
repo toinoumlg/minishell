@@ -17,15 +17,17 @@ SRC_DIR = source
 OBJ_DIR = build
 
 EXEC_FILES = exec/exec exec/exec_utils exec/print_error \
-	exec/redirects/here_doc exec/redirects/here_doc_utils \
-	exec/redirects/set_dup2 exec/redirects/set_dup2_utils \
-	exec/redirects/pipes exec/redirects/create_files
+	
 
-BUILTSIN = exec/builtsin/builtsin  \
-	exec/builtsin/parent/cd exec/builtsin/parent/exit \
-	exec/builtsin/parent/export exec/builtsin/parent/unset \
-	exec/builtsin/child/echo exec/builtsin/child/env \
-	exec/builtsin/child/pwd
+BUILTSIN = builtsin/builtsin  \
+	builtsin/parent/cd builtsin/parent/exit \
+	builtsin/parent/export builtsin/parent/unset \
+	builtsin/child/echo builtsin/child/env \
+	builtsin/child/pwd
+
+REDIRECT = redirects/here_doc redirects/here_doc_utils \
+	redirects/set_dup2 redirects/set_dup2_utils \
+	redirects/pipes redirects/create_files
 
 PARSER_FILES = parser/parse_read_line parser/alloc \
 	parser/access_program parser/access \
@@ -43,7 +45,7 @@ ENV_FILES = env/init_envp env/envp_utils
 
 MAIN_FILES = main utils free free_utils signals
 
-ALL_SRC_FILES = $(MAIN_FILES) $(EXEC_FILES) $(PARSER_FILES) $(ENV_FILES) $(BUILTSIN)
+ALL_SRC_FILES = $(MAIN_FILES) $(EXEC_FILES) $(PARSER_FILES) $(ENV_FILES) $(BUILTSIN) $(REDIRECT)
 
 SRC = $(addprefix $(SRC_DIR)/, $(addsuffix .c, $(ALL_SRC_FILES)))
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

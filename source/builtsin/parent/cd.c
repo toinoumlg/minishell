@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/10 09:14:35 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/14 10:37:00 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,5 +191,5 @@ void	cd(t_minishell *minishell)
 		return ;
 	}
 	return (cd_error(path, &minishell->pids[minishell->i]), ft_putstr_fd(": ",
-			1), perror(""));
+			2), perror(""));
 }

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 11:12:45 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 19:32:39 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/14 10:31:46 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,23 @@
 
 void	print_error_no_file_or_dir(char *path)
 {
-	ft_putstr_fd("minishell: no such file or directory: ", 2);
+	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(path, 2);
-	ft_putstr_fd("\n", 2);
+	ft_putstr_fd(": No such file or directory\n", 2);
 }
 
 void	print_error_no_permission(char *path)
 {
-	ft_putstr_fd("minishell: permission denied: ", 2);
+	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(path, 2);
-	ft_putstr_fd("\n", 2);
+	ft_putstr_fd(": Permission denied\n", 2);
 }
 
 void	print_error_is_a_directory(char *path)
 {
-	ft_putstr_fd("minishell: is a directory: ", 2);
+	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(path, 2);
-	ft_putstr_fd("\n", 2);
+	ft_putstr_fd(": Is a directory\n", 2);
 }
 
 void	print_error_file(t_file *error)
