@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/12 09:28:48 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/14 11:51:32 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ typedef struct s_token
 {
 	char			*string;
 	t_enum_token	type;
-	int separated_by_space; // NOUVEAU CHAMP
+	int				separated_by_space;
 	struct s_token	*next;
 }					t_token;
 
@@ -60,6 +60,7 @@ typedef struct s_envp
 	char			*line;
 	char			*name;
 	char			*value;
+	int				contains_sign;
 	struct s_envp	*next;
 }					t_envp;
 

@@ -6,13 +6,13 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:25 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/10 09:14:41 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/14 13:47:05 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "init_envp.h"
 #include "envp_utils.h"
 #include "free.h"
+#include "init_envp.h"
 #include "libft.h"
 #include <stdio.h>
 #include <string.h>
@@ -37,11 +37,30 @@ void	swap_string(char **array, int i, int j)
 	array[j] = tmp;
 }
 
+void	write_envp_with_quote(char *str)
+{
+	int	i;
+
+	i = 0;
+	ft_putstr_fd("export ", 1);
+	while (str[i])
+	{
+		if (str[i] == '=')
+		{
+			ft_putchar_fd(str[i++], 1);
+			ft_putchar_fd('\"', 1);
+		}
+		ft_putchar_fd(str[i++], 1);
+	}
+	ft_putstr_fd("\"\n", 1);
+}
+
 void	sort_envp(char **envp)
 {
 	char	**envp_sorted;
 	int		i;
 	int		j;
+	char	*tmp;
 
 	envp_sorted = envp;
 	i = 0;
@@ -62,8 +81,14 @@ void	sort_envp(char **envp)
 	i = 0;
 	while (envp_sorted[i])
 	{
-		if (ft_strncmp(envp_sorted[i], "_=", 2))
-			printf("declare -x %s\n", envp_sorted[i]);
+		tmp = NULL;
+		tmp = ft_strchr(envp_sorted[i], '=');
+		if (tmp && !*(tmp + 1))
+			printf("export %s\"\"\n", envp_sorted[i]);
+		else if (tmp)
+			write_envp_with_quote(envp_sorted[i]);
+		else
+			printf("export %s\n", envp_sorted[i]);
 		i++;
 	}
 	return ;
@@ -72,91 +97,136 @@ void	sort_envp(char **envp)
 void	print_sorted_envp(t_minishell *minishell)
 {
 	sort_envp(minishell->envp_array);
-	minishell->pids[minishell->i] = -1;
+	if (minishell->size > 1)
+	{
+		free_minishell(minishell);
+		exit(0);
+	}
+	else
+		minishell->last_status = 0;
 }
 
-static char	*set_name_export(char *envp_line)
+int	set_name_export(t_envp *new_export, t_minishell *minishell)
 {
 	char	*name;
 	int		i;
 
 	i = -1;
-	name = ft_strdup(envp_line);
+	name = ft_strdup(new_export->line);
 	if (!name)
-		return (NULL);
-	while (envp_line[++i])
+		exit_perror(minishell, "malloc");
+	while (name[++i])
 	{
-		if (envp_line[i] == '=')
+		if (name[i] == '=')
 		{
 			name[i] = 0;
-			return (name);
+			new_export->name = name;
+			return (1);
 		}
 	}
-	return (name);
+	new_export->name = name;
+	return (0);
 }
 
-static char	*set_value_export(char *envp_line)
+void	set_value_export(t_envp *new_export, t_minishell *minishell)
 {
 	char	*value;
 
-	value = ft_strchr(envp_line, '=');
-	printf("%s\n", value);
+	value = NULL;
+	if (new_export->contains_sign)
+		value = ft_strchr(new_export->line, '=');
 	if (value)
 	{
-		value = ft_strdup(value);
+		value = ft_strdup(value + 1);
 		if (!value)
-			return (NULL);
-		return (value);
+			exit_perror(minishell, "malloc");
+		new_export->value = value;
 	}
-	else
-		return (NULL);
 }
 
-// to reworks (leaks)
-static t_envp	*set_new_envp_export(char *envp_line)
+static t_envp	*set_new_export(char *envp_line, t_minishell *minishell)
 {
-	t_envp	*new_envp;
+	t_envp	*new_export;
 
-	new_envp = malloc(sizeof(t_envp));
-	if (!new_envp)
-		return (NULL);
-	memset(new_envp, 0, sizeof(t_envp));
-	new_envp->line = ft_strdup(envp_line);
-	if (!new_envp->line)
-		return (NULL);
-	new_envp->name = set_name_export(envp_line);
-	if (!new_envp->name)
-		return (NULL);
-	new_envp->value = set_value_export(envp_line);
-	if (!new_envp->value)
-		return (NULL);
-	return (new_envp);
+	new_export = malloc(sizeof(t_envp));
+	if (!new_export)
+		exit_perror(minishell, "malloc");
+	memset(new_export, 0, sizeof(t_envp));
+	new_export->line = ft_strdup(envp_line);
+	if (!new_export->line)
+	{
+		free(new_export);
+		exit_perror(minishell, "malloc");
+	}
+	new_export->contains_sign = set_name_export(new_export, minishell);
+	set_value_export(new_export, minishell);
+	return (new_export);
+}
+
+static int	valid_export(char *line)
+{
+	int	i;
+
+	if (!line)
+		return (0);
+	i = 0;
+	if (!ft_isalpha(line[i]) && line[i] != '_')
+		return (0);
+	while (line[i] && line[i] != '=')
+	{
+		if (!ft_isalnum(line[i]) && line[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	export_arguments(t_minishell *minishell)
+{
+	int		status;
+	t_envp	*new_export;
+	t_envp	*existing;
+	int		i;
+
+	status = 0;
+	i = 0;
+	while (minishell->cmds->args[i])
+	{
+		if (valid_export(minishell->cmds->args[i]))
+		{
+			new_export = set_new_export(minishell->cmds->args[i], minishell);
+			existing = find_existing_envp(new_export->name, minishell->envp);
+			if (existing)
+				update_values(existing, new_export);
+			else
+				append_new_envp(&minishell->envp, new_export);
+			if (status != 1)
+				status = 0;
+		}
+		else
+		{
+			ft_putstr_fd("minishell: export: `", 2);
+			ft_putstr_fd(minishell->cmds->args[i], 2);
+			ft_putstr_fd("': not a valid identifier\n", 2);
+			status = 1;
+		}
+		i++;
+	}
+	return (status);
 }
 
 void	my_export(t_minishell *minishell)
 {
-	t_envp	*new_envp;
-	t_envp	*existing;
-	int		i;
+	int	status;
 
-	i = 1;
 	if (!minishell->cmds->args[1])
 		return (print_sorted_envp(minishell));
-	if (!minishell->envp)
+	status = export_arguments(minishell);
+	if (minishell->size > 1)
 	{
-		minishell->pids[minishell->i] = -2;
-		return ;
+		free_minishell(minishell);
+		exit(status);
 	}
-	while (minishell->cmds->args[i])
-	{
-		new_envp = set_new_envp_export(minishell->cmds->args[i++]);
-		if (new_envp)
-		{
-			existing = find_existing_envp(new_envp->name, minishell->envp);
-			if (existing)
-				update_values(existing, new_envp);
-			else
-				append_new_envp(&minishell->envp, new_envp);
-		}
-	}
+	else
+		minishell->last_status = status;
 }

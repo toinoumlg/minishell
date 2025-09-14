@@ -6,12 +6,13 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 10:37:00 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/14 13:48:19 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "init_envp.h"
 #include "envp_utils.h"
+#include "free.h"
+#include "init_envp.h"
 #include "libft.h"
 #include "minishell.h"
 #include <stdio.h>
@@ -156,10 +157,10 @@ void	cd_error(char *str, int *status)
 {
 	ft_putstr_fd("minishell: cd: ", 2);
 	ft_putstr_fd(str, 2);
-	*status = -2;
+	*status = 1;
 }
 
-void	cd_home(t_minishell *minishell)
+void	cd_home(t_minishell *minishell, int *status)
 {
 	char	*home_path;
 
@@ -168,28 +169,33 @@ void	cd_home(t_minishell *minishell)
 	{
 		chdir(home_path);
 		update_pwd(minishell->envp);
-		minishell->pids[minishell->i] = -1;
+		*status = 0;
 	}
 	else
-		cd_error("HOME not set\n", &minishell->pids[minishell->i]);
+		cd_error("HOME not set\n", status);
 }
 
 void	cd(t_minishell *minishell)
 {
 	char	*path;
+	int		status;
 
 	path = minishell->cmds->args[1];
 	if (!path)
-		return (cd_home(minishell));
-	if (minishell->cmds->args[2])
-		return (cd_error("too many arguments\n",
-				&minishell->pids[minishell->i]));
-	if (!chdir(path))
+		cd_home(minishell, &status);
+	else if (minishell->cmds->args[2])
+		cd_error("too many arguments\n", &status);
+	else if (!chdir(path))
 	{
-		minishell->pids[minishell->i] = -1;
+		status = 0;
 		update_pwd(minishell->envp);
-		return ;
 	}
-	return (cd_error(path, &minishell->pids[minishell->i]), ft_putstr_fd(": ",
-			2), perror(""));
+	else
+		cd_error(path, &status), ft_putstr_fd(": ", 2), perror("");
+	if (minishell->size > 1)
+	{
+		free_minishell(minishell);
+		exit(status);
+	}
+	minishell->last_status = status;
 }

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:18 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/10 10:37:59 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/14 11:43:34 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,10 @@ static void	pwd_error(t_minishell *minishell)
 	args = minishell->cmds->args;
 	ft_putstr_fd(args[0], 2);
 	ft_putstr_fd(": ", 2);
-	if (args[1][0] == '-')
-	{
-		if (!args[1][1])
-			return ;
-		ft_putstr_fd("bad option: ", 2);
-		ft_putchar_fd(args[1][0], 2);
-		ft_putchar_fd(args[1][1], 2);
-		ft_putstr_fd("\n", 2);
-	}
-	else
-	{
-		ft_putstr_fd(args[0], 2);
-		ft_putstr_fd(" too many arguments\n", 2);
-	}
+	ft_putstr_fd("bad option: ", 2);
+	ft_putchar_fd(args[1][0], 2);
+	ft_putchar_fd(args[1][1], 2);
+	ft_putstr_fd("\n", 2);
 	free_minishell(minishell);
 	exit(1);
 }
@@ -56,7 +46,7 @@ void	pwd(t_minishell *minishell)
 	int		to_free;
 
 	to_free = 0;
-	if (minishell->cmds->args[1])
+	if (minishell->cmds->args[1] && minishell->cmds->args[1][0] == '-')
 		pwd_error(minishell);
 	path = get_env_value("PWD", minishell->envp);
 	if (!path)

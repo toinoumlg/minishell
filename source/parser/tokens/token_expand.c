@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 16:14:42 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 10:07:43 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/14 11:03:28 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,23 @@ static void	expand_token_inline(t_token *token, t_minishell *minishell)
 	token->string = out;
 }
 
+t_token	*free_empty_tokens(t_token *tokens)
+{
+	t_token	*head;
+	int		i;
+
+	head = tokens;
+	i = 0;
+	while (tokens)
+	{
+		if (!ft_strlen(tokens->string) && tokens->type == word)
+			free_i_token(&head, i);
+		i++;
+		tokens = tokens->next;
+	}
+	return (head);
+}
+
 void	expand_tokens(t_minishell *minishell)
 {
 	t_token	*tokens;
@@ -110,4 +127,5 @@ void	expand_tokens(t_minishell *minishell)
 			expand_token_inline(tokens, minishell);
 		tokens = tokens->next;
 	}
+	minishell->tokens = free_empty_tokens(minishell->tokens);
 }

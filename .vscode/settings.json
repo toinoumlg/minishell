@@ -69,6 +69,7 @@
 		"create_files.h": "c",
 		"pre_parsing.h": "c",
 		"alloc.h": "c",
-		"commands.h": "c"
+		"commands.h": "c",
+		"regex": "c"
 	}
 }

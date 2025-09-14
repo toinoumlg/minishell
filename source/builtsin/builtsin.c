@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:41:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/03 19:10:25 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/14 13:11:18 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,14 @@ void	exec_builtsin_in_child(t_minishell *minishell)
 		echo(minishell);
 	if (!ft_strncmp(minishell->cmds->args[0], "env", 4))
 		env(minishell);
+	if (!ft_strncmp(minishell->cmds->args[0], "cd", 3))
+		cd(minishell);
+	if (!ft_strncmp(minishell->cmds->args[0], "exit", 5))
+		my_exit(minishell);
+	if (!ft_strncmp(minishell->cmds->args[0], "export", 7))
+		my_export(minishell);
+	if (!ft_strncmp(minishell->cmds->args[0], "unset", 6))
+		unset(minishell);
 }
 
 void	exec_builtsin_in_parent(t_minishell *minishell)

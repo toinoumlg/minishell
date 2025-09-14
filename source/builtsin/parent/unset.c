@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:27 by amalangu          #+#    #+#             */
-/*   Updated: 2025/07/03 19:12:21 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/14 13:48:51 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,20 +64,24 @@ static int	index_in_envp(char *name, t_envp *envp)
 void	unset(t_minishell *minishell)
 {
 	int	i;
+	int	status;
 	int	envp_index;
 
 	i = 1;
 	if (!minishell->envp || !minishell->cmds->args[1])
-	{
-		minishell->pids[minishell->i] = -1;
-		return ;
-	}
+		status = 0;
+	else
+		status = 0;
 	while (minishell->cmds->args[i])
 	{
-		envp_index = index_in_envp(minishell->cmds->args[i++],
-				minishell->envp);
+		envp_index = index_in_envp(minishell->cmds->args[i++], minishell->envp);
 		if (envp_index >= 0)
 			delete_i_envp(envp_index, &minishell->envp);
 	}
-	minishell->pids[minishell->i] = -1;
+	if (minishell->i > 1)
+	{
+		free_minishell(minishell);
+		exit(status);
+	}
+	minishell->last_status = status;
 }

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 09:43:20 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/14 13:45:37 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,26 +18,6 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
-
-void	set_last_status(int status, int *last_status)
-{
-	if (status >= 0)
-		*last_status = WEXITSTATUS(status);
-	else
-	{
-		if (status == -4)
-		{
-			if (*last_status == 0)
-				*last_status = 1;
-			else
-				return ;
-		}
-		if (status == -2)
-			*last_status = 1;
-		if (status == -1)
-			*last_status = 0;
-	}
-}
 
 void	wait_for_childrens(t_minishell *minishell)
 {
@@ -54,7 +34,7 @@ void	wait_for_childrens(t_minishell *minishell)
 		else
 			status = minishell->pids[i++];
 	}
-	set_last_status(status, &minishell->last_status);
+	minishell->last_status = WEXITSTATUS(status);
 	if (minishell->pids)
 		free(minishell->pids);
 	minishell->pids = NULL;

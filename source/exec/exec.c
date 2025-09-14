@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 09:49:19 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/14 13:26:52 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	child_process(t_minishell *minishell)
 		exec_builtsin_in_child(minishell);
 		execve(cmd->program->path, cmd->args, minishell->envp_array);
 	}
-	exit_child_no_execve(minishell);
+	exit_child(minishell);
 }
 
 void	exec_in_child(t_minishell *minishell)
@@ -66,18 +66,17 @@ void	try_exec(t_minishell *minishell)
 {
 	if (!minishell->cmds->args && minishell->cmds->redirects)
 		return (create_files(minishell));
-	else if (!minishell->cmds->args)
+	if (!minishell->cmds->args)
 		return ;
-	if (is_builtin_to_exec_in_parent(minishell->cmds->args[0]))
-		exec_builtsin_in_parent(minishell);
-	else
-		exec_in_child(minishell);
+	exec_in_child(minishell);
 }
 
 void	exec(t_minishell *minishell)
 {
 	if (!minishell->cmds)
 		return ;
+	if (is_builtin_to_exec_in_parent(minishell))
+		return (exec_builtsin_in_parent(minishell));
 	while (minishell->cmds)
 	{
 		do_pipe(minishell);

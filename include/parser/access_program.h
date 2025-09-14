@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:46:33 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 12:50:14 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/14 11:09:35 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,6 @@
 
 # include "minishell.h"
 
-char	*access_program(t_file *program, char **env);
+void	access_program(t_minishell *minishell, t_file *program);
 
 #endif

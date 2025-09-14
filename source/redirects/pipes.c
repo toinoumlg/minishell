@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 17:04:13 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/12 08:53:47 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/14 12:59:10 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,22 +37,22 @@ void	dup2_pipes(int (*pipe_fds)[2], int size, int i, t_minishell *minishell)
 	{
 		close(pipe_fds[i][0]);
 		if (dup2(pipe_fds[i][1], STDOUT_FILENO) == -1)
-			exit_perror(minishell, "dup2 ");
+			exit_perror(minishell, "dup2");
 		close(pipe_fds[i][1]);
 	}
 	else if (i == size - 1)
 	{
 		if (dup2(pipe_fds[i - 1][0], STDIN_FILENO) == -1)
-			exit_perror(minishell, "dup2 ");
+			exit_perror(minishell, "dup2");
 		close(pipe_fds[i - 1][0]);
 	}
 	else
 	{
 		close(pipe_fds[i][0]);
 		if (dup2(pipe_fds[i - 1][0], STDIN_FILENO) == -1)
-			exit_perror(minishell, "dup2 ");
+			exit_perror(minishell, "dup2");
 		if (dup2(pipe_fds[i][1], STDOUT_FILENO) == -1)
-			exit_perror(minishell, "dup2 ");
+			exit_perror(minishell, "dup2");
 		close(pipe_fds[i][1]);
 		close(pipe_fds[i - 1][0]);
 	}
@@ -68,5 +68,5 @@ void	do_pipe(t_minishell *minishell)
 {
 	if (need_to_pipe(minishell))
 		if (pipe(minishell->pipe_fds[minishell->i]) == -1)
-			exit_perror(minishell, "pipe ");
+			exit_perror(minishell, "pipe");
 }

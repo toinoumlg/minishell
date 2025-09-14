@@ -6,53 +6,65 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 12:47:29 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 11:25:59 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/14 11:36:15 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "free.h"
 #include "free_utils.h"
 #include "libft.h"
 #include "minishell.h"
+#include <fcntl.h>
 #include <stdio.h>
 
 static void	set_access(t_file *file, char *path)
 {
+	int	fd;
+
+	fd = open(file->path, __O_DIRECTORY);
+	if (fd > 0)
+	{
+		close(fd);
+		file->is_dir = 1;
+	}
 	file->exist = access(path, F_OK);
 	file->read = access(path, R_OK);
 	file->write = access(path, W_OK);
 	file->exec = access(path, X_OK);
 }
 
-static char	*parse_env(char **env, t_file *program)
+static void	parse_env(t_minishell *minishell, t_file *program)
 {
 	char	*tmp;
+	int		i;
 
+	i = 0;
 	if (!*program->path)
-		return (set_access(program, program->path), program->path);
-	if (!env)
-		return (NULL);
-	while (*env)
+		return (set_access(program, program->path));
+	if (!minishell->env)
+		return ;
+	while (minishell->env[i])
 	{
-		tmp = ft_strjoin(*env, program->path);
+		tmp = ft_strjoin(minishell->env[i], program->path);
 		if (!tmp)
-			return (ft_free(program->path), NULL);
+			exit_perror(minishell, "malloc");
 		if (!access(tmp, F_OK))
 		{
+			free(program->path);
 			set_access(program, tmp);
-			return (ft_free(program->path), tmp);
+			program->path = tmp;
+			return ;
 		}
-		ft_free(tmp);
-		env++;
+		free(tmp);
+		i++;
 	}
 	program->exec = -1;
 	program->exist = -1;
-	return (program->path);
 }
 
-char	*access_program(t_file *program, char **env)
+void	access_program(t_minishell *minishell, t_file *program)
 {
-	if (ft_strncmp("/", program->path, 1))
-		return (parse_env(env, program));
-	else
-		return (set_access(program, program->path), program->path);
+	if (!ft_strchr(program->path, '/'))
+		return (parse_env(minishell, program));
+	set_access(program, program->path);
 }

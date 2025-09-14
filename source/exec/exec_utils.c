@@ -6,22 +6,27 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 21:15:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/12 10:08:46 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/14 13:26:52 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "free.h"
+#include "libft.h"
 #include "minishell.h"
 #include "print_error.h"
 
-int	is_builtin_to_exec_in_parent(char *cmd)
+int	is_builtin_to_exec_in_parent(t_minishell *minishell)
 {
-	return (!ft_strncmp(cmd, "cd", 3) || !ft_strncmp(cmd, "export", 7)
-		|| !ft_strncmp(cmd, "unset", 6) || !ft_strncmp(cmd, "exit", 5));
+	t_cmd	*cmd;
+
+	cmd = minishell->cmds;
+	return (!cmd->next && (!ft_strncmp(cmd->args[0], "cd", 3)
+			|| !ft_strncmp(cmd->args[0], "export", 7)
+			|| !ft_strncmp(cmd->args[0], "unset", 6)
+			|| !ft_strncmp(cmd->args[0], "exit", 5)));
 }
 
-void	exit_child_no_execve(t_minishell *minishell)
+void	exit_child(t_minishell *minishell)
 {
 	int		exit_value;
 	t_cmd	*cmd;
