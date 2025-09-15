@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 20:04:24 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/15 18:58:48 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,20 @@ static void	exit_on_eof(char *lim)
 static void	write_here_doc(int fd, char *lim)
 {
 	char	*read_line;
+	char	*line;
 
 	set_signals_heredoc();
 	while (1)
 	{
-		read_line = readline("> ");
+		// for testing
+		if (isatty(fileno(stdin)))
+			read_line = readline("minishell> ");
+		else
+		{
+			line = get_next_line(fileno(stdin));
+			read_line = ft_strtrim(line, "\n");
+			free(line);
+		}
 		if (!read_line)
 			return (exit_on_eof(lim));
 		if (!ft_strncmp(read_line, lim, ft_strlen(lim) + 1))

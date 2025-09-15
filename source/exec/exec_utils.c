@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 21:15:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 13:26:52 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/15 18:14:51 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int	is_builtin_to_exec_in_parent(t_minishell *minishell)
 	t_cmd	*cmd;
 
 	cmd = minishell->cmds;
+	if (!cmd->args)
+		return (0);
 	return (!cmd->next && (!ft_strncmp(cmd->args[0], "cd", 3)
 			|| !ft_strncmp(cmd->args[0], "export", 7)
 			|| !ft_strncmp(cmd->args[0], "unset", 6)

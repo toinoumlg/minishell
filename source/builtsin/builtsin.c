@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:41:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 13:11:18 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/15 16:55:15 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,14 @@
 #include "libft.h"
 #include "pwd.h"
 #include "unset.h"
+
+int	is_a_builtin(char *str)
+{
+	return (!ft_strncmp(str, "pwd", 4) || !ft_strncmp(str, "echo", 5)
+		|| !ft_strncmp(str, "env", 4) || !ft_strncmp(str, "cd", 3)
+		|| !ft_strncmp(str, "exit", 5) || !ft_strncmp(str, "export", 7)
+		|| !ft_strncmp(str, "unset", 6));
+}
 
 void	exec_builtsin_in_child(t_minishell *minishell)
 {

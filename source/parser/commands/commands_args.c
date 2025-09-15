@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:09 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/15 12:29:12 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/15 16:39:29 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,18 +51,17 @@ void	set_args(t_cmd *new_cmd, t_minishell *minishell)
 		return ;
 	new_cmd->args = set_array(get_args_size(minishell->tokens), minishell);
 	if (!new_cmd->args)
-		exit_perror(minishell, "malloc ");
+		exit_perror(minishell, "malloc");
 	i = 0;
 	tokens = minishell->tokens;
 	while (!is_end_of_command(tokens))
 	{
 		new_cmd->args[i] = ft_strdup(tokens->string);
 		if (!new_cmd->args[i] && ft_strlen(tokens->string))
-			exit_perror(minishell, "malloc ");
+			exit_perror(minishell, "malloc");
 		i++;
 		tokens = tokens->next;
 	}
 	new_cmd->args[i] = NULL;
 	free_tokens_from_args(&minishell->tokens);
-	return ;
 }

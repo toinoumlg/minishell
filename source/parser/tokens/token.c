@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:25:17 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/15 15:49:18 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/15 16:42:03 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "libft.h"
 #include "parse_error.h"
 #include "token_expand.h"
+#include "token_free.h"
 #include "token_list.h"
 #include "token_operator.h"
 #include "token_string.h"
@@ -125,72 +126,21 @@ static int	get_tokens_list(char **parse_error, t_minishell *minishell)
 	return (0);
 }
 
-void	remove_first(t_token **to_remove, t_token **head)
-{
-	t_token	*tmp;
-
-	tmp = *head;
-	tmp->next->prev = NULL;
-	*head = tmp->next;
-	*to_remove = tmp->next;
-	if (tmp->string)
-		free(tmp->string);
-	free(tmp);
-}
-
-void	remove_last(t_token **to_remove, t_token **head)
-{
-	t_token	*tmp;
-	t_token	*head_ptr;
-
-	head_ptr = *head;
-	tmp = head_ptr;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->prev->next = NULL;
-	*head = head_ptr;
-	*to_remove = NULL;
-	if (tmp->string)
-		free(tmp->string);
-	free(tmp);
-}
-
-void	remove_token_from_list(t_token **to_remove, t_token **head)
-{
-	t_token	*tmp;
-	t_token	*head_ptr;
-
-	if (!*head || !*to_remove)
-		return ;
-	head_ptr = *head;
-	tmp = *head;
-	while (tmp && tmp != *to_remove)
-		tmp = tmp->next;
-	if (!tmp->prev)
-		return (remove_first(to_remove, head));
-	if (!tmp->next)
-		return (remove_last(to_remove, head));
-	tmp->next->prev = tmp->prev;
-	tmp->prev->next = tmp->next;
-	*head = head_ptr;
-	*to_remove = tmp->next;
-	if (tmp->string)
-		free(tmp->string);
-	free(tmp);
-}
-
 void	remove_tokens(t_minishell *minishell)
 {
 	t_token	*tokens;
+	int		i;
 
+	i = 0;
 	tokens = minishell->tokens;
 	while (tokens)
 	{
 		if (tokens->type == space || (tokens->type == word
 				&& !ft_strlen(tokens->string)))
-			remove_token_from_list(&tokens, &minishell->tokens);
-		else
-			tokens = tokens->next;
+			return (free_i_token(&minishell->tokens, i),
+				remove_tokens(minishell));
+		i++;
+		tokens = tokens->next;
 	}
 }
 

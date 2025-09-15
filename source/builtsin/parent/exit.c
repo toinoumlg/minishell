@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/15 14:08:05 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:56:54 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static int	ft_strlen_array(char **array)
 
 int	exit_alpha(t_minishell *minishell)
 {
-	ft_putstr_fd("exit\n", 1);
+	// ft_putstr_fd("exit\n", 1);
 	ft_putstr_fd("minishell: exit: ", 2);
 	ft_putstr_fd(minishell->cmds->args[1], 2);
 	ft_putstr_fd(": numeric argument required\n", 2);
@@ -64,7 +64,7 @@ void	my_exit(t_minishell *minishell)
 		exit(exit_alpha(minishell));
 	else if (args_size > 2)
 	{
-		ft_putstr_fd("exit\n", 1);
+		// ft_putstr_fd("exit\n", 1);
 		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 		if (minishell->size > 1)
 		{
@@ -78,7 +78,7 @@ void	my_exit(t_minishell *minishell)
 		result = ft_atoi(minishell->cmds->args[1]);
 	else
 		result = minishell->last_status;
-	ft_putstr_fd("exit\n", 1);
+	// ft_putstr_fd("exit\n", 1);
 	close_pipes(minishell->pipe_fds, minishell->size, minishell->i);
 	free_minishell(minishell);
 	exit(result % 256);

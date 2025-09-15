@@ -6,11 +6,12 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:06 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 11:08:46 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/15 16:56:08 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "access_program.h"
+#include "builtsin.h"
 #include "here_doc.h"
 #include "libft.h"
 #include "minishell.h"
@@ -73,7 +74,7 @@ void	try_access(t_minishell *minishell)
 	cmds = minishell->cmds;
 	while (cmds)
 	{
-		if (cmds->program)
+		if (cmds->program && !is_a_builtin(cmds->program->path))
 			access_program(minishell, cmds->program);
 		redirects = cmds->redirects;
 		while (redirects)
