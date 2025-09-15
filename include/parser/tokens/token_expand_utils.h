@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 17:35:41 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 17:37:26 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/15 12:38:31 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,6 @@
 
 int	is_var_start(char c);
 int	is_var_char(char c);
-int	strjoin_inplace(char **dst, const char *src);
+// int	strjoin_inplace(char **dst, const char *src);
 
 #endif

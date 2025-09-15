@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:27:41 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/12 09:55:39 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/15 11:39:26 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 #include "token_list.h"
 #include "token_utils.h"
 #include <stdlib.h>
-
-/* helpers de base */
 
 int	is_end_of_command(t_token *token)
 {
@@ -45,5 +43,3 @@ int	is_operator(char c)
 		return (1);
 	return (0);
 }
-
-/* parsing mots / quotes / opérateurs */

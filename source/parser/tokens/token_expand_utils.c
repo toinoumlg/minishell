@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 17:34:14 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 17:36:38 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/15 12:38:35 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,23 +27,23 @@ int	is_var_char(char c)
 	return (0);
 }
 
-int	strjoin_inplace(char **dst, const char *src)
-{
-	char	*tmp;
+// int	strjoin_inplace(char **dst, const char *src)
+// {
+// 	char	*tmp;
 
-	tmp = *dst;
-	if (!*dst && src)
-	{
-		*dst = ft_strdup(src);
-		if (!*dst)
-			return (1);
-	}
-	else if (*dst && src)
-	{
-		*dst = ft_strjoin(tmp, src);
-		if (!*dst)
-			return (1);
-	}
-	free(tmp);
-	return (0);
-}
+// 	tmp = *dst;
+// 	if (!*dst && src)
+// 	{
+// 		*dst = ft_strdup(src);
+// 		if (!*dst)
+// 			return (1);
+// 	}
+// 	else if (*dst && src)
+// 	{
+// 		*dst = ft_strjoin(tmp, src);
+// 		if (!*dst)
+// 			return (1);
+// 	}
+// 	free(tmp);
+// 	return (0);
+// }

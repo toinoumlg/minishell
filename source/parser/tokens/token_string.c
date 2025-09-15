@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:56:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 10:21:38 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/15 12:12:02 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,7 @@ static int	get_quoted_string_size(char quote, char **line)
 	return (-1);
 }
 
-int	extract_quoted_string(char **read_line, char quote, t_minishell *minishell,
-		int *was_space)
+int	extract_quoted_string(char **read_line, char quote, t_minishell *minishell)
 {
 	t_token	*new_token;
 	char	*start;
@@ -72,19 +71,17 @@ int	extract_quoted_string(char **read_line, char quote, t_minishell *minishell,
 		return (1);
 	new_token = set_new_token(minishell);
 	if (!new_token)
-		exit(free_minishell(minishell));
+		exit_perror(minishell, "malloc");
 	add_string_to_token(start, i, new_token, minishell);
 	if (quote == '\'')
 		new_token->type = simple_quote;
 	else if (quote == '"')
 		new_token->type = double_quote;
-	new_token->separated_by_space = *was_space;
-	*was_space = 0;
 	append_new_token(&minishell->tokens, new_token);
 	return (0);
 }
 
-int	pick_word(char **read_line, t_minishell *minishell, int *was_space)
+int	pick_word(char **read_line, t_minishell *minishell)
 {
 	t_token	*new_token;
 	char	*start;
@@ -100,8 +97,6 @@ int	pick_word(char **read_line, t_minishell *minishell, int *was_space)
 	new_token = set_new_token(minishell);
 	add_string_to_token(start, i, new_token, minishell);
 	new_token->type = word;
-	new_token->separated_by_space = *was_space;
-	*was_space = 0;
 	append_new_token(&minishell->tokens, new_token);
 	return (0);
 }

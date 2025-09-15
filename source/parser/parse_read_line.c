@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 11:14:37 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/15 13:31:13 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	parse_read_line(t_minishell *minishell)
 	if (!minishell->read_line)
 	{
 		free_minishell(minishell);
-		// write(2, "exit\n", 5);
+		write(1, "exit\n", 5);
 		exit(0);
 	}
 	add_history(minishell->read_line);

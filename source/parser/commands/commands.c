@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 17:03:22 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 15:47:35 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/15 12:30:22 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	set_program(t_cmd *new_cmd, t_minishell *minishell)
 		exit_perror(minishell, "malloc ");
 	memset(new_cmd->program, 0, sizeof(t_file));
 	new_cmd->program->path = ft_strdup(new_cmd->args[0]);
-	if (!new_cmd->program->path)
+	if (!new_cmd->program->path && ft_strlen(new_cmd->args[0]))
 		exit_perror(minishell, "malloc ");
 }
 

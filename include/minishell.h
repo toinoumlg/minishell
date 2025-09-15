@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 11:51:32 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/15 12:57:51 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ typedef enum s_enum_token
 	here_doc,
 	append_file,
 	double_quote,
-	simple_quote
+	simple_quote,
+	space
 }					t_enum_token;
 
 typedef struct s_file
@@ -51,8 +52,8 @@ typedef struct s_token
 {
 	char			*string;
 	t_enum_token	type;
-	int				separated_by_space;
 	struct s_token	*next;
+	struct s_token	*prev;
 }					t_token;
 
 typedef struct s_envp
@@ -69,7 +70,7 @@ typedef struct s_minishell
 	t_cmd			*cmds;
 	int				i;
 	int				size;
-	int				(*pipe_fds)[2];
+	int (*pipe_fds)[2];
 	int				*pids;
 	char			**env;
 	char			**envp_array;

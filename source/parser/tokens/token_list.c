@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 09:28:24 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/12 09:28:25 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/15 11:41:16 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ t_token	*append_new_token(t_token **tokens, t_token *new_token)
 		while (tmp->next)
 			tmp = tmp->next;
 		tmp->next = new_token;
+		new_token->prev = tmp;
 	}
 	return (new_token);
 }

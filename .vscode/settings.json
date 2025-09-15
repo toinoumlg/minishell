@@ -70,6 +70,10 @@
 		"pre_parsing.h": "c",
 		"alloc.h": "c",
 		"commands.h": "c",
-		"regex": "c"
+		"regex": "c",
+		"token_quote.h": "c",
+		"bitset": "c",
+		"algorithm": "c",
+		"sstream": "c"
 	}
 }
