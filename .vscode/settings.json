@@ -74,6 +74,9 @@
 		"token_quote.h": "c",
 		"bitset": "c",
 		"algorithm": "c",
-		"sstream": "c"
+		"sstream": "c",
+		"span": "c",
+		"token_expand_string.h": "c",
+		"token_expand_utils.h": "c"
 	}
 }

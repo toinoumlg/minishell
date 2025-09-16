@@ -6,73 +6,73 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 17:34:14 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/15 17:48:09 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/16 19:43:44 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "envp_utils.h"
-#include "minishell.h"
 #include "free.h"
+#include "libft.h"
+#include "minishell.h"
+#include "token_list.h"
+#include <stdio.h>
 
-int	expand_last_value(char *str, t_token *token, t_minishell *minishell)
+
+
+void	insert_space_token(char *str, t_token *token, t_minishell *minishell)
 {
-	char	*nbr_str;
-	char	*tmp;
-	int		size;
+	t_token	*space_token;
 
-	nbr_str = ft_itoa(minishell->last_status);
-	if (!nbr_str)
+	space_token = malloc(sizeof(t_token));
+	if (!space_token)
 	{
 		free(str);
 		exit_perror(minishell, "malloc");
 	}
-	size = ft_strlen(nbr_str);
-	tmp = token->string;
-	token->string = ft_strjoin(tmp, nbr_str);
-	free(nbr_str);
-	free(tmp);
-	str++;
-	tmp = token->string;
-	token->string = ft_strjoin(tmp, str);
-	free(tmp);
-	return (size);
-}
-
-int	expand_env(char *str, t_token *token, t_minishell *minishell)
-{
-	t_envp	*expand;
-	int		i;
-	char	*tmp;
-	char	c;
-	int		size;
-
-	i = 0;
-	while (str[i] && str[i] != '$' && (ft_isalnum(str[i]) || str[i] == '_'))
-		i++;
-	c = str[i];
-	str[i] = 0;
-	expand = find_existing_envp(str, minishell->envp);
-	str[i] = c;
-	if (expand)
-	{
-		tmp = token->string;
-		size = ft_strlen(expand->value) - 1;
-		token->string = ft_strjoin(tmp, expand->value);
-		free(tmp);
-		tmp = token->string;
-		token->string = ft_strjoin(tmp, str + i);
-		free(tmp);
-	}
+	space_token->string = NULL;
+	space_token->type = space_expanded;
+	if (token->next)
+		space_token->next = token->next;
 	else
-	{
-		tmp = token->string;
-		token->string = ft_strjoin(tmp, str + i);
-		free(tmp);
-		size = -1;
-	}
-	return (size);
+		space_token->next = NULL;
+	token->next = space_token;
 }
+
+
+void	insert_word_token(char *str, t_token *token, t_minishell *minishell,
+		char *value)
+{
+	t_token	*word_token;
+	t_token	*tmp;
+
+	if (!value)
+		return ;
+	word_token = malloc(sizeof(t_token));
+	word_token->next = NULL;
+	tmp = token;
+	if (!word_token)
+	{
+		free(str);
+		exit_perror(minishell, "malloc");
+	}
+	word_token->string = ft_strdup(value);
+	if (!word_token->string)
+	{
+		free(str);
+		exit_perror(minishell, "malloc");
+	}
+	word_token->type = word_expanded;
+	while (tmp->next && (tmp->next->type == word_expanded
+			|| tmp->next->type == space_expanded))
+		tmp = tmp->next;
+	if (tmp->next)
+		word_token->next = tmp->next;
+	else
+		word_token->next = NULL;
+	tmp->next = word_token;
+}
+
+
 
 int	expand_pid(char *str, t_token *token, t_minishell *minishell)
 {

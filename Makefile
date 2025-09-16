@@ -37,6 +37,7 @@ PARSER_FILES = parser/parse_read_line parser/alloc \
 	parser/tokens/token_list parser/tokens/token_operator \
 	parser/tokens/token_string parser/tokens/token_utils \
 	parser/tokens/token_expand parser/tokens/token_free \
+	parser/tokens/token_expand_string \
 	parser/commands/commands parser/commands/commands_args \
 	parser/commands/commands_list parser/commands/commands_redirect \
 	parser/commands/commands_redirect_utils \

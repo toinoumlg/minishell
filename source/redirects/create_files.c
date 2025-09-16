@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 20:23:14 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 20:31:14 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/16 11:57:28 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ void	handle_error(t_file *error, t_minishell *minishell)
 	if (error)
 	{
 		print_error_file(error);
-		minishell->pids[minishell->i] = -2;
+		minishell->last_status = 1;
 	}
 	else
-		minishell->pids[minishell->i] = -1;
+		minishell->last_status = 0;
 }
 
 void	create_append_files(t_file *append_file, t_minishell *minishell)

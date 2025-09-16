@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 16:14:42 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/15 18:56:50 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/16 20:23:56 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,71 +14,100 @@
 #include "free.h"
 #include "libft.h"
 #include "minishell.h"
-#include "token_expand_utils.h"
+#include "token_expand_string.h"
 #include "token_free.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-void	expand(int *i, t_token *token, t_minishell *minishell)
+void	insert_token(char *start, t_token *token, t_minishell *minishell,
+		t_enum_token type)
 {
-	char	*str;
+	t_token	*new;
 
-	str = ft_strdup(token->string + *i + 1);
-	token->string[*i] = 0;
-	if (!str)
+	new = malloc(sizeof(t_token));
+	if (!new)
 		exit_perror(minishell, "malloc");
-	else if (!*str && token->next && (token->next->type == simple_quote
-			|| token->next->type == double_quote))
-		return (free(str));
-	else if (!*str || *str == ' ')
+	memset(new, 0, sizeof(t_token));
+	if (type == word_expanded)
 	{
-		token->string[*i] = '$';
-		(*i)++;
+		new->string = ft_strdup(start);
+		if (!new->string)
+			return (free(new), exit_perror(minishell, "malloc"));
 	}
-	else if (*str == '$')
-		*i += expand_pid(str, token, minishell);
-	else if (*str == '?')
-		*i += expand_last_value(str, token, minishell);
-	else
-		*i += expand_env(str, token, minishell);
-	free(str);
+	new->type = type;
+	while (token->next && (token->next->type == word_expanded
+			|| token->next->type == space_expanded))
+		token = token->next;
+	if (token->next)
+		new->next = token->next;
+	token->next = new;
 }
 
-t_token	*get_next_token(t_token *token)
+void	expand_tokens(t_token *token, t_minishell *minishell)
 {
-	if (!token->next || !token->next->next)
-		return (NULL);
-	token = token->next;
-	while (token->type == space)
-		token = token->next;
-	token = token->next;
-	while (token && (token->type != is_pipe || token->type != space))
-		token = token->next;
-	return (token);
+	int		i;
+	char	c;
+	char	*start;
+
+	i = 0;
+	while (token->string[i])
+	{
+		if (token->string[i] == ' ' || token->string[i] == '\t')
+		{
+			while (token->string[i] == ' ' || token->string[i] == '\t')
+				i++;
+			insert_token(NULL, token, minishell, space_expanded);
+		}
+		start = &token->string[i];
+		while (token->string[i] && token->string[i] != ' '
+			&& token->string[i] != '\t')
+			i++;
+		c = token->string[i];
+		token->string[i] = 0;
+		insert_token(start, token, minishell, word_expanded);
+		token->string[i] = c;
+	}
+	*token->string = 0;
 }
 
-void	expand_tokens(t_minishell *minishell)
+// skips the expand when it's a here-doc delimiter
+t_token	*get_next_expand(t_token *tokens)
+{
+	int	was_here_doc;
+
+	was_here_doc = 0;
+	while (tokens)
+	{
+		while (tokens && tokens->type != word && tokens->type != double_quote)
+		{
+			if (tokens->type == here_doc)
+				was_here_doc = 1;
+			tokens = tokens->next;
+		}
+		if (was_here_doc)
+		{
+			tokens = tokens->next;
+			was_here_doc = 0;
+		}
+		else
+			return (tokens);
+	}
+	return (NULL);
+}
+
+void	expand(t_minishell *minishell)
 {
 	t_token	*tokens;
-	int		i;
 
 	tokens = minishell->tokens;
 	while (tokens)
 	{
-		if (tokens->type == here_doc)
-			tokens = get_next_token(tokens);
+		tokens = get_next_expand(tokens);
 		if (!tokens)
 			break ;
-		if (tokens->type == word || tokens->type == double_quote)
-		{
-			i = 0;
-			while (tokens->string[i])
-			{
-				if (tokens->string[i] == '$')
-					expand(&i, tokens, minishell);
-				i++;
-			}
-		}
+		if (expand_string(tokens, minishell) && tokens->type == word)
+			expand_tokens(tokens, minishell);
 		tokens = tokens->next;
 	}
 }

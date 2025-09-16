@@ -6,14 +6,14 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:05:22 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/15 19:21:21 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/16 14:05:58 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "free.h"
 #include "libft.h"
 
-int	is_only_c(char *str, char c)
+int	is_only_n(char *str)
 {
 	int	i;
 
@@ -24,7 +24,7 @@ int	is_only_c(char *str, char c)
 		return (1);
 	while (str[i])
 	{
-		if (str[i] != c)
+		if (str[i] != 'n')
 			return (1);
 		i++;
 	}
@@ -42,7 +42,7 @@ void	echo(t_minishell *minishell)
 		free_minishell(minishell);
 		exit(0);
 	}
-	while (!is_only_c(minishell->cmds->args[i], 'n'))
+	while (!is_only_n(minishell->cmds->args[i]))
 		i++;
 	while (minishell->cmds->args[i])
 	{
@@ -50,7 +50,7 @@ void	echo(t_minishell *minishell)
 		if (minishell->cmds->args[i])
 			ft_putstr_fd(" ", 1);
 	}
-	if (is_only_c(minishell->cmds->args[1], 'n'))
+	if (is_only_n(minishell->cmds->args[1]))
 		ft_putstr_fd("\n", 1);
 	free_minishell(minishell);
 	exit(0);

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:25:17 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/15 16:42:03 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/16 20:27:02 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,9 @@ static void	free_empty_prompt(t_minishell *minishell)
 
 static int	need_merge(t_token *cur, t_token *next)
 {
-	return ((cur->type == word || cur->type == simple_quote
-			|| cur->type == double_quote) && (next->type == word
+	return ((cur->type == word || cur->type == word_expanded
+			|| cur->type == simple_quote || cur->type == double_quote)
+		&& (next->type == word || next->type == word_expanded
 			|| next->type == simple_quote || next->type == double_quote));
 }
 
@@ -101,6 +102,55 @@ void	add_space_token(t_minishell *minishell)
 	append_new_token(&minishell->tokens, new_token);
 }
 
+static int	is_a_redirect(t_enum_token type)
+{
+	return (type == here_doc || type == append_file || type == output
+		|| type == input);
+}
+
+int	check_valid_pipes(t_token *tokens)
+{
+	while (tokens)
+	{
+		while (tokens->type == space)
+			tokens = tokens->next;
+		if (!tokens)
+			return (0);
+		if (is_a_redirect(tokens->type))
+		{
+			tokens = tokens->next;
+			while (tokens && tokens->type == space)
+				tokens = tokens->next;
+			if (!tokens || tokens->type == is_pipe)
+				return (1);
+		}
+		tokens = tokens->next;
+	}
+	return (0);
+}
+
+int	check_valid_redirects(t_token *tokens)
+{
+	while (tokens)
+	{
+		while (tokens->type == space)
+			tokens = tokens->next;
+		if (!tokens)
+			return (0);
+		if (is_a_redirect(tokens->type))
+		{
+			tokens = tokens->next;
+			while (tokens && tokens->type == space)
+				tokens = tokens->next;
+			if (!tokens || (tokens->type != double_quote
+				&& tokens->type != simple_quote && tokens->type != word))
+				return (1);
+		}
+		tokens = tokens->next;
+	}
+	return (0);
+}
+
 static int	get_tokens_list(char **parse_error, t_minishell *minishell)
 {
 	memset(&minishell->tokens, 0, sizeof(t_token *));
@@ -123,7 +173,8 @@ static int	get_tokens_list(char **parse_error, t_minishell *minishell)
 		else if (pick_word(parse_error, minishell))
 			return (1);
 	}
-	return (0);
+	return (check_valid_redirects(minishell->tokens)
+		+ check_valid_pipes(minishell->tokens));
 }
 
 void	remove_tokens(t_minishell *minishell)
@@ -135,7 +186,8 @@ void	remove_tokens(t_minishell *minishell)
 	tokens = minishell->tokens;
 	while (tokens)
 	{
-		if (tokens->type == space || (tokens->type == word
+		if (tokens->type == space || tokens->type == space_expanded
+			|| ((tokens->type == word || tokens->type == word_expanded)
 				&& !ft_strlen(tokens->string)))
 			return (free_i_token(&minishell->tokens, i),
 				remove_tokens(minishell));
@@ -153,7 +205,7 @@ void	generate_tokens(t_minishell *minishell)
 		return (parsing_error(parse_error, minishell));
 	if (!minishell->tokens)
 		return (free_empty_prompt(minishell));
-	expand_tokens(minishell);
+	expand(minishell);
 	merge_adjacent_tokens(minishell);
 	remove_tokens(minishell);
 	if (minishell->read_line)

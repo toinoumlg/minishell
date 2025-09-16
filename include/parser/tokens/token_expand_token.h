@@ -1,20 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_expand.h                                     :+:      :+:    :+:   */
+/*   token_expand_token.h                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/01 16:16:09 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/16 18:30:14 by amalangu         ###   ########.fr       */
+/*   Created: 2025/09/16 18:39:56 by amalangu          #+#    #+#             */
+/*   Updated: 2025/09/16 19:14:56 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TOKEN_EXPAND_H
-# define TOKEN_EXPAND_H
+#ifndef TOKEN_EXPAND_TOKEN_H
+#define TOKEN_EXPAND_TOKEN_H
 
-# include "minishell.h"
 
-void	expand(t_minishell *minishell);
 
-#endif
+#endif 

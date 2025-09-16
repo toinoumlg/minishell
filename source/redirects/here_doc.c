@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/15 18:58:48 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/16 19:59:06 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	write_here_doc(int fd, char *lim)
 	{
 		// for testing
 		if (isatty(fileno(stdin)))
-			read_line = readline("minishell> ");
+			read_line = readline("> ");
 		else
 		{
 			line = get_next_line(fileno(stdin));

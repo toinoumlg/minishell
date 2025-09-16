@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 13:26:52 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/16 20:38:37 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ void	exec(t_minishell *minishell)
 	if (!minishell->cmds)
 		return ;
 	if (is_builtin_to_exec_in_parent(minishell))
-		return (exec_builtsin_in_parent(minishell));
+		return (exec_builtsin_in_parent(minishell),
+			free_and_set_to_next_commands(&minishell->cmds));
 	while (minishell->cmds)
 	{
 		do_pipe(minishell);
