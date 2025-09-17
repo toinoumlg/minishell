@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 20:04:24 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/17 23:35:00 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,48 +17,119 @@
 #include "token_list.h"
 #include <fcntl.h>
 #include <readline/readline.h>
-#include <wait.h>
+#include <sys/wait.h>
+#include <termios.h>
+#include <signal.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
 
+/* -------------------------------------------------------------------------- */
+/*  Warning affiché quand EOF (Ctrl-D) arrive avant le délimiteur             */
+/* -------------------------------------------------------------------------- */
 static void	exit_on_eof(char *lim)
 {
-	write(2,
-		"minishell: warning: here-document delimited by end-of-file (wanted `",
-		68);
+	write(2, "minishell: warning: here-document delimited by end-of-file (wanted `", 68);
 	write(2, lim, ft_strlen(lim));
 	write(2, "')\n", 3);
 }
 
-static void	write_here_doc(int fd, char *lim)
+/* -------------------------------------------------------------------------- */
+/*  ENFANT : lit le heredoc et écrit dans fd_write                             */
+/*  - Ctrl-C  (SIGINT)  : comportement par défaut -> tue l'enfant              */
+/*  - Ctrl-\\ (SIGQUIT) : IGNORÉ -> ne doit PAS quitter le heredoc             */
+/* -------------------------------------------------------------------------- */
+static void	collect_heredoc_child(int fd_write, char *lim)
 {
-	char	*read_line;
+	struct sigaction	sa_int;
+	struct sigaction	sa_quit;
+	char				*line;
 
-	set_signals_heredoc();
+	/* SIGINT: défaut */
+	sigemptyset(&sa_int.sa_mask);
+	sa_int.sa_flags = 0;
+	sa_int.sa_handler = SIG_DFL;
+	sigaction(SIGINT, &sa_int, NULL);
+
+	/* SIGQUIT: ignoré */
+	sigemptyset(&sa_quit.sa_mask);
+	sa_quit.sa_flags = 0;
+	sa_quit.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa_quit, NULL);
+
 	while (1)
 	{
-		read_line = readline("> ");
-		if (!read_line)
-			return (exit_on_eof(lim));
-		if (!ft_strncmp(read_line, lim, ft_strlen(lim) + 1))
+		line = readline("> ");
+		if (!line)
 		{
-			free(read_line);
-			return ;
+			/* Ctrl-D : EOF -> warning puis fin normale */
+			exit_on_eof(lim);
+			break ;
 		}
-		write(fd, read_line, ft_strlen(read_line));
-		write(fd, "\n", 1);
-		free(read_line);
+		if (!ft_strncmp(line, lim, ft_strlen(lim) + 1))
+		{
+			free(line);
+			break ;
+		}
+		write(fd_write, line, ft_strlen(line));
+		write(fd_write, "\n", 1);
+		free(line);
 	}
+	_exit(0);
 }
 
-// fd[1] is for writing file
-// fd[0] is for reading file
+/* -------------------------------------------------------------------------- */
+/*  API                                                                        */
+/* -------------------------------------------------------------------------- */
+/* fd[1] is for writing file                                                   */
+/* fd[0] is for reading file                                                   */
 void	set_here_doc(t_file *here_doc_file)
 {
-	int	fd[2];
+	int		fd_wr;
+	int		fd_rd;
+	pid_t	pid;
+	int		status;
 
-	fd[1] = open("/tmp/here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0600);
-	write_here_doc(fd[1], here_doc_file->path);
-	close(fd[1]);
-	fd[0] = open("/tmp/here_doc", O_RDONLY);
-	here_doc_file->fd = fd[0];
+	/* Écrit le contenu saisi dans un fichier temporaire simple */
+	fd_wr = open("/tmp/here_doc", O_CREAT | O_TRUNC | O_WRONLY, 0600);
+	if (fd_wr < 0)
+	{
+		here_doc_file->fd = -1;
+		return ;
+	}
+	pid = fork();
+	if (pid < 0)
+	{
+		close(fd_wr);
+		here_doc_file->fd = -1;
+		return ;
+	}
+	if (pid == 0)
+	{
+		/* ENFANT heredoc : collecte (Ctrl-\ ignoré, Ctrl-C tue l’enfant) */
+		collect_heredoc_child(fd_wr, here_doc_file->path);
+		/* no return */
+	}
+	/* PARENT */
+	close(fd_wr);
+
+	if (waitpid(pid, &status, 0) < 0)
+		status = 1;
+
+	/* NOTE: on NE fait PAS appel à restore_after_heredoc() pour éviter
+	   l'undefined reference. On laisse la restauration globale aux
+	   chemins déjà en place dans ton shell (prompt/loop). */
+
+	/* Si interrompu par Ctrl-C : neutraliser le heredoc côté exécution */
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	{
+		here_doc_file->fd = open("/dev/null", O_RDONLY);
+		unlink("/tmp/here_doc");
+		return ;
+	}
+
+	/* Fin normale (délimiteur) ou EOF (warning déjà imprimé côté enfant) */
+	fd_rd = open("/tmp/here_doc", O_RDONLY);
+	here_doc_file->fd = fd_rd;
 	unlink("/tmp/here_doc");
 }
