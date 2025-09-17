@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/17 23:35:00 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/18 02:32:00 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,13 @@ static void	collect_heredoc_child(int fd_write, char *lim)
 /* fd[0] is for reading file                                                   */
 void	set_here_doc(t_file *here_doc_file)
 {
-	int		fd_wr;
-	int		fd_rd;
-	pid_t	pid;
-	int		status;
+	int					fd_wr;
+	int					fd_rd;
+	pid_t				pid;
+	int					status;
+	struct sigaction	sa_ign;
+	struct sigaction	old_int;
+	struct sigaction	old_quit;
 
 	/* Écrit le contenu saisi dans un fichier temporaire simple */
 	fd_wr = open("/tmp/here_doc", O_CREAT | O_TRUNC | O_WRONLY, 0600);
@@ -108,17 +111,27 @@ void	set_here_doc(t_file *here_doc_file)
 	{
 		/* ENFANT heredoc : collecte (Ctrl-\ ignoré, Ctrl-C tue l’enfant) */
 		collect_heredoc_child(fd_wr, here_doc_file->path);
-		/* no return */
 	}
 	/* PARENT */
 	close(fd_wr);
 
+	/* Ignorer SIGINT/SIGQUIT pendant l'attente pour éviter le doublon d'affichage */
+	sigemptyset(&sa_ign.sa_mask);
+	sa_ign.sa_flags = 0;
+	sa_ign.sa_handler = SIG_IGN;
+	sigaction(SIGINT, &sa_ign, &old_int);
+	sigaction(SIGQUIT, &sa_ign, &old_quit);
+
 	if (waitpid(pid, &status, 0) < 0)
 		status = 1;
 
-	/* NOTE: on NE fait PAS appel à restore_after_heredoc() pour éviter
-	   l'undefined reference. On laisse la restauration globale aux
-	   chemins déjà en place dans ton shell (prompt/loop). */
+	/* Restaurer les handlers du parent tels qu'ils étaient avant l'attente */
+	sigaction(SIGINT, &old_int, NULL);
+	sigaction(SIGQUIT, &old_quit, NULL);
+
+	/* Affichage propre si interrompu: évite "minishell> > " résiduel */
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		write(STDOUT_FILENO, "\n", 1);
 
 	/* Si interrompu par Ctrl-C : neutraliser le heredoc côté exécution */
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
