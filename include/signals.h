@@ -5,64 +5,31 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/18 01:00:00 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/18 01:00:00 by amalangu         ###   ########.fr       */
+/*   Created: 2025/09/19 15:10:00 by amalangu          #+#    #+#             */
+/*   Updated: 2025/09/19 17:05:00 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SIGNALS_H
 # define SIGNALS_H
 
-# include <sys/types.h> /* pid_t */
+# include "minishell.h"
 
-/* -------------------------------------------------------------------------- */
-/* Gestion du terminal (TTY)                                                  */
-/* -------------------------------------------------------------------------- */
+/*
+** Tout l'état vit dans minishell->sigctx (défini dans minishell.h).
+** On lie le contexte courant avec signals_bind_minishell(&minishell).
+*/
 
-/* Sauvegarde l'état initial du TTY (à appeler une seule fois au démarrage) */
+void	signals_bind_minishell(t_minishell *ms);
+
 void	tty_save_initial_state(void);
-
-/* Restaure l'état initial du TTY (avant chaque readline, après enfants) */
 void	tty_restore_initial_state(void);
 
-/* -------------------------------------------------------------------------- */
-/* Handlers signaux du shell (prompt)                                         */
-/* -------------------------------------------------------------------------- */
+void	set_signals(void);         /* handlers du prompt (parent prêt à lire) */
+void	set_signals_child(void);   /* enfant normal (avant execve) */
+void	set_signals_heredoc(void); /* enfant heredoc */
 
-/* Pose les handlers du prompt :
-   - SIGINT : imprime une NL + reset la ligne (ne quitte pas)
-   - SIGQUIT : ignoré */
-void	set_signals(void);
-
-/* -------------------------------------------------------------------------- */
-/* Handlers signaux enfants                                                    */
-/* -------------------------------------------------------------------------- */
-
-/* Pour les enfants exécutés par execve :
-   - SIGINT / SIGQUIT : comportement par défaut (SIG_DFL) */
-void	set_signals_child(void);
-
-/* Pour un enfant heredoc :
-   - SIGINT : tue l’enfant (exit 130)
-   - SIGQUIT : ignoré */
-void	set_signals_heredoc(void);
-
-/* -------------------------------------------------------------------------- */
-/* Utilitaires heredoc                                                         */
-/* -------------------------------------------------------------------------- */
-
-/* A appeler dans le parent après un waitpid heredoc pour restaurer proprement
-   les handlers prompt et mémoriser si SIGINT est arrivé. */
-void	restore_after_heredoc(int status);
-
-/* Renvoie vrai si le dernier heredoc a été interrompu par SIGINT. */
+void	restore_after_heredoc(int status); /* parent, après waitpid du heredoc */
 int		heredoc_was_interrupted(void);
-
-/* -------------------------------------------------------------------------- */
-/* Wrapper readline personnalisé                                              */
-/* -------------------------------------------------------------------------- */
-
-/* Appel à readline qui restaure le TTY et réinstalle les handlers avant prompt */
-char	*ms_readline(const char *prompt);
 
 #endif

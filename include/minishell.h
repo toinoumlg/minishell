@@ -13,6 +13,16 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+#include <termios.h>
+#include <signal.h>
+
+typedef struct s_sigctx
+{
+	struct termios			tty_saved;
+	int						tty_saved_ok;
+	volatile sig_atomic_t	hd_interrupted;
+}	t_sigctx;
+
 typedef enum s_enum_token
 {
 	word = 1,
@@ -77,6 +87,7 @@ typedef struct s_minishell
 	t_token			*tokens;
 	int				last_status;
 	char			*read_line;
+	t_sigctx		sigctx;
 }					t_minishell;
 
 #endif

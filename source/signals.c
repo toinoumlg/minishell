@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/18 01:10:00 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/18 01:10:00 by amalangu         ###   ########.fr       */
+/*   Created: 2025/09/19 15:10:00 by amalangu          #+#    #+#             */
+/*   Updated: 2025/09/19 19:25:00 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,135 +14,169 @@
 
 #include <readline/readline.h>
 #include <readline/history.h>
-#include <signal.h>
 #include <termios.h>
-#include <unistd.h>
-#include <string.h>
+#include <signal.h>
 #include <sys/wait.h>
+#include <unistd.h>
+
+/* Pointeur global interne vers le minishell courant (utilisé par les handlers) */
+static t_minishell	*g_ms = NULL;
 
 /* -------------------------------------------------------------------------- */
-/* État TTY initial sauvegardé au démarrage                                   */
+/* Binding                                                                    */
 /* -------------------------------------------------------------------------- */
-
-static struct termios	g_tty_saved;
-static int				g_tty_saved_ok = 0;
-
-/* Flag: dernier heredoc interrompu par SIGINT ? */
-static volatile sig_atomic_t	g_hd_interrupted = 0;
-
-/* -------------------------------------------------------------------------- */
-/* Helpers locaux                                                              */
-/* -------------------------------------------------------------------------- */
-
-static void	set_sa(struct sigaction *sa, void (*handler)(int), int flags)
+void	signals_bind_minishell(t_minishell *ms)
 {
-	sigemptyset(&sa->sa_mask);
-	sa->sa_flags = flags;
-	sa->sa_handler = handler;
-}
-
-/* Handler SIGINT au prompt: imprime une NL et redessine un prompt propre */
-static void	sigint_handler_prompt(int signo)
-{
-	(void)signo;
-	write(STDOUT_FILENO, "\n", 1);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-}
-
-/* Handler SIGINT dans l'enfant heredoc: sortir tout de suite avec 130 */
-static void	sigint_handler_heredoc(int signo)
-{
-	(void)signo;
-	write(STDOUT_FILENO, "\n", 1);
-	/* Indiquer au parent que c'était une interruption */
-	/* (Le parent peut aussi déduire via waitpid + WTERMSIG == SIGINT) */
-	_exit(130);
+	g_ms = ms;
 }
 
 /* -------------------------------------------------------------------------- */
-/* API publique                                                                */
+/* Helpers TTY                                                                */
 /* -------------------------------------------------------------------------- */
-
-void	tty_save_initial_state(void)
+static void	tty_force_sane(void)
 {
-	struct termios t;
+	struct termios	t;
 
 	if (tcgetattr(STDIN_FILENO, &t) == 0)
 	{
-		g_tty_saved = t;
-		g_tty_saved_ok = 1;
+		/* réactive echo, mode canonique et signaux */
+		t.c_lflag |= ECHO;
+		t.c_lflag |= ICANON;
+		t.c_lflag |= ISIG;
+		tcsetattr(STDIN_FILENO, TCSANOW, &t);
 	}
+}
+
+void	tty_save_initial_state(void)
+{
+	if (g_ms == NULL)
+		return ;
+	if (tcgetattr(STDIN_FILENO, &g_ms->sigctx.tty_saved) == 0)
+		g_ms->sigctx.tty_saved_ok = 1;
 }
 
 void	tty_restore_initial_state(void)
 {
-	if (g_tty_saved_ok)
-		tcsetattr(STDIN_FILENO, TCSANOW, &g_tty_saved);
+	if (g_ms == NULL)
+		return ;
+	if (g_ms->sigctx.tty_saved_ok != 0)
+	{
+		tcsetattr(STDIN_FILENO, TCSANOW, &g_ms->sigctx.tty_saved);
+		/* au cas où l’état sauvegardé aurait été appliqué en plein milieu
+		   d’un cycle readline interrompu : garantis un TTY “sain” */
+		tty_force_sane();
+	}
 }
 
+/* -------------------------------------------------------------------------- */
+/* Handlers                                                                    */
+/* -------------------------------------------------------------------------- */
+static void	sigint_handler_prompt(int signo)
+{
+	(void)signo;
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	write(STDOUT_FILENO, "\n", 1);
+	rl_redisplay();
+}
+
+static void	sigquit_handler_ignored(int signo)
+{
+	(void)signo;
+}
+
+/* enfant heredoc: renvoie 130 */
+static void	sigint_handler_heredoc(int signo)
+{
+	(void)signo;
+	_exit(130);
+}
+
+/* -------------------------------------------------------------------------- */
+/* set_signals : handlers du prompt (parent prêt à lire)                      */
+/* -------------------------------------------------------------------------- */
 void	set_signals(void)
 {
 	struct sigaction	sa;
 
-	/* Prompt: Ctrl-C -> NL + ligne vide, Ctrl-\ ignoré */
-	set_sa(&sa, sigint_handler_prompt, 0);
+	if (g_ms != NULL)
+		g_ms->sigctx.hd_interrupted = 0;
+	rl_catch_signals = 0;
+
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_RESTART;
+
+	sa.sa_handler = sigint_handler_prompt;
 	sigaction(SIGINT, &sa, NULL);
 
-	set_sa(&sa, SIG_IGN, 0);
+	sa.sa_handler = sigquit_handler_ignored;
 	sigaction(SIGQUIT, &sa, NULL);
+
+	/* assure un TTY propre au moment d’afficher le prompt */
+	tty_force_sane();
 }
 
+/* -------------------------------------------------------------------------- */
+/* Enfant normal (avant execve)                                               */
+/* -------------------------------------------------------------------------- */
 void	set_signals_child(void)
 {
 	struct sigaction	sa;
 
-	/* Enfant classique: comportements par défaut */
-	set_sa(&sa, SIG_DFL, 0);
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sa.sa_handler = SIG_DFL;
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
 }
 
+/* -------------------------------------------------------------------------- */
+/* Enfant heredoc                                                             */
+/* -------------------------------------------------------------------------- */
 void	set_signals_heredoc(void)
 {
 	struct sigaction	sa;
 
-	/* Enfant heredoc: Ctrl-C -> stop immédiat avec 130 */
-	set_sa(&sa, sigint_handler_heredoc, 0);
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_RESTART;
+
+	sa.sa_handler = sigint_handler_heredoc;
 	sigaction(SIGINT, &sa, NULL);
 
-	/* Ctrl-\ ignoré pendant la saisie heredoc */
-	set_sa(&sa, SIG_IGN, 0);
+	sa.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sa, NULL);
 }
 
+/* -------------------------------------------------------------------------- */
+/* Post-heredoc (parent)                                                      */
+/* -------------------------------------------------------------------------- */
 void	restore_after_heredoc(int status)
 {
-	/* Remet un TTY sain (au cas où) */
+	if (g_ms != NULL)
+		g_ms->sigctx.hd_interrupted = 0;
+	if (WIFSIGNALED(status) != 0)
+	{
+		if (WTERMSIG(status) == SIGINT)
+		{
+			if (g_ms != NULL)
+				g_ms->sigctx.hd_interrupted = 1;
+			/* clean affichage readline côté parent */
+			rl_replace_line("", 0);
+			rl_on_new_line();
+			write(STDOUT_FILENO, "\n", 1);
+			rl_redisplay();
+		}
+	}
+	/* restaure l’état enregistré ET s’assure de l’echo/canonique */
 	tty_restore_initial_state();
-
-	/* Marque l'interruption si besoin */
-	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-		g_hd_interrupted = 1;
-	else if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
-		g_hd_interrupted = 1;
-	else
-		g_hd_interrupted = 0;
-
-	/* Nettoie l'état de readline pour éviter un prompt sale */
-	rl_replace_line("", 0);
-	rl_on_new_line();
-
-	/* Réinstalle les handlers du prompt */
-	set_signals();
+	tty_force_sane();
 }
 
 int	heredoc_was_interrupted(void)
 {
-	int	was;
-
-	was = (int)g_hd_interrupted;
-	g_hd_interrupted = 0;
-	return (was);
+	if (g_ms == NULL)
+		return (0);
+	if (g_ms->sigctx.hd_interrupted != 0)
+		return (1);
+	return (0);
 }
