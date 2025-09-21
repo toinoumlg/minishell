@@ -6,12 +6,12 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/16 12:03:26 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/19 19:50:13 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "envp.h"
 #include "exec.h"
-#include "init_envp.h"
 #include "libft.h"
 #include "parse_read_line.h"
 #include "signals.h"
@@ -29,12 +29,7 @@ void	wait_for_childrens(t_minishell *minishell)
 	if (!minishell->i)
 		return ;
 	while (i < minishell->size)
-	{
-		if (minishell->pids[i] >= 0)
-			waitpid(minishell->pids[i++], &status, 0);
-		else
-			status = minishell->pids[i++];
-	}
+		waitpid(minishell->pids[i++], &status, 0);
 	minishell->last_status = WEXITSTATUS(status);
 	if (minishell->pids)
 		free(minishell->pids);

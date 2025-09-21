@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:50:43 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 20:15:05 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/19 14:15:23 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ void	dup2_infile(t_file *infile, t_minishell *minishell)
 	if (infile->fd > 0)
 	{
 		if (dup2(infile->fd, STDIN_FILENO))
-			exit_perror(minishell, "dup2 ");
+			exit_perror(minishell, "dup2");
 		close(infile->fd);
 	}
 	else
-		exit_perror(minishell, "open ");
+		exit_perror(minishell, "open");
 }
 
 void	dup2_outfile(t_file *outfile, t_minishell *minishell)
@@ -35,11 +35,11 @@ void	dup2_outfile(t_file *outfile, t_minishell *minishell)
 	if (outfile->fd > 0)
 	{
 		if (dup2(outfile->fd, STDOUT_FILENO) == -1)
-			exit_perror(minishell, "dup2 ");
+			exit_perror(minishell, "dup2");
 		close(outfile->fd);
 	}
 	else
-		exit_perror(minishell, "open ");
+		exit_perror(minishell, "open");
 }
 
 void	dup2_append_file(t_file *append_file, t_minishell *minishell)
@@ -49,16 +49,16 @@ void	dup2_append_file(t_file *append_file, t_minishell *minishell)
 	if (append_file->fd > 0)
 	{
 		if (dup2(append_file->fd, STDOUT_FILENO) == -1)
-			exit_perror(minishell, "dup2 ");
+			exit_perror(minishell, "dup2");
 		close(append_file->fd);
 	}
 	else
-		exit_perror(minishell, "open ");
+		exit_perror(minishell, "open");
 }
 
 void	dup2_here_doc(t_file *here_doc_file, t_minishell *minishell)
 {
 	if (dup2(here_doc_file->fd, STDIN_FILENO))
-		exit_perror(minishell, "dup2 ");
+		exit_perror(minishell, "dup2");
 	close(here_doc_file->fd);
 }

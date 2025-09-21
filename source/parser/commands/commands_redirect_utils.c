@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 12:15:26 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 15:04:50 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/21 08:43:38 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,15 @@ t_file	*set_file(t_minishell *minishell, int j)
 		free(new);
 		exit_perror(minishell, "malloc ");
 	}
-	new->type = tmp->type;
+	if (tmp->type == here_doc)
+	{
+		if (tmp->next->type == word)
+			new->type = here_doc_word;
+		else
+			new->type = here_doc_quote;
+	}
+	else
+		new->type = tmp->type;
 	free_i_token(&minishell->tokens, j);
 	free_i_token(&minishell->tokens, j);
 	return (new);

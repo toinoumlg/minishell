@@ -77,6 +77,9 @@
 		"sstream": "c",
 		"span": "c",
 		"token_expand_string.h": "c",
-		"token_expand_utils.h": "c"
+		"token_expand_utils.h": "c",
+		"unset.h": "c",
+		"pwd.h": "c",
+		"redirects.h": "c"
 	}
 }

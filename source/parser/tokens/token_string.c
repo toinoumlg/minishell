@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:56:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/15 12:12:02 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/19 13:10:16 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int	extract_quoted_string(char **read_line, char quote, t_minishell *minishell)
 	t_token	*new_token;
 	char	*start;
 	int		i;
+	char	c;
 
 	(*read_line)++;
 	start = *read_line;
@@ -70,14 +71,15 @@ int	extract_quoted_string(char **read_line, char quote, t_minishell *minishell)
 	if (i < 0)
 		return (1);
 	new_token = set_new_token(minishell);
-	if (!new_token)
-		exit_perror(minishell, "malloc");
-	add_string_to_token(start, i, new_token, minishell);
+	append_new_token(&minishell->tokens, new_token);
+	c = start[i];
+	start[i] = 0;
+	add_string_to_token(start, new_token, minishell);
+	start[i] = c;
 	if (quote == '\'')
 		new_token->type = simple_quote;
 	else if (quote == '"')
 		new_token->type = double_quote;
-	append_new_token(&minishell->tokens, new_token);
 	return (0);
 }
 
@@ -86,6 +88,7 @@ int	pick_word(char **read_line, t_minishell *minishell)
 	t_token	*new_token;
 	char	*start;
 	int		i;
+	char	c;
 
 	start = *read_line;
 	if (!**read_line || is_space(**read_line) || is_operator(**read_line)
@@ -95,8 +98,11 @@ int	pick_word(char **read_line, t_minishell *minishell)
 	if (i <= 0)
 		return (1);
 	new_token = set_new_token(minishell);
-	add_string_to_token(start, i, new_token, minishell);
-	new_token->type = word;
 	append_new_token(&minishell->tokens, new_token);
+	c = start[i];
+	start[i] = 0;
+	add_string_to_token(start, new_token, minishell);
+	start[i] = c;
+	new_token->type = word;
 	return (0);
 }

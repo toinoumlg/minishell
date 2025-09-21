@@ -6,12 +6,14 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/16 14:13:22 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/21 15:53:35 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+# include "libft.h"
 
 typedef enum s_enum_token
 {
@@ -20,12 +22,15 @@ typedef enum s_enum_token
 	input,
 	output,
 	here_doc,
+	here_doc_word,
+	here_doc_quote,
 	append_file,
 	double_quote,
 	simple_quote,
 	space,
 	word_expanded,
-	space_expanded
+	space_expanded,
+	merged
 }					t_enum_token;
 
 typedef struct s_file
@@ -68,6 +73,8 @@ typedef struct s_envp
 
 typedef struct s_minishell
 {
+	
+
 	t_cmd			*cmds;
 	int				i;
 	int				size;

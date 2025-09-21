@@ -6,11 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 16:14:42 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/16 20:23:56 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/21 06:46:20 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "envp_utils.h"
+#include "envp.h"
 #include "free.h"
 #include "libft.h"
 #include "minishell.h"
@@ -87,6 +87,8 @@ t_token	*get_next_expand(t_token *tokens)
 		}
 		if (was_here_doc)
 		{
+			if (!tokens)
+				return (NULL);
 			tokens = tokens->next;
 			was_here_doc = 0;
 		}

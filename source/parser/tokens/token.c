@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:25:17 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/16 20:27:02 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/21 16:01:30 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,24 +45,16 @@ char	*merge_token(char *s1, char *s2, t_minishell *minishell)
 	int		i;
 	int		j;
 
-	i = 0;
+	i = -1;
 	size = ft_strlen(s1) + ft_strlen(s2) + 1;
 	merged = malloc(sizeof(char) * size);
-	if (size > 0 && !merged)
+	if (!merged)
 		exit_perror(minishell, "malloc");
-	if (!size && !merged)
-		return (NULL);
-	while (s1[i])
-	{
+	while (s1 && s1[++i])
 		merged[i] = s1[i];
-		i++;
-	}
-	j = 0;
-	while (s2[j])
-	{
+	j = -1;
+	while (s2 && s2[++j])
 		merged[i + j] = s2[j];
-		j++;
-	}
 	merged[i + j] = 0;
 	if (s1)
 		free(s1);
@@ -73,21 +65,23 @@ char	*merge_token(char *s1, char *s2, t_minishell *minishell)
 
 static void	merge_adjacent_tokens(t_minishell *minishell)
 {
-	t_token	*cur;
+	t_token	*tokens;
 	t_token	*next;
 
-	cur = minishell->tokens;
-	while (cur && cur->next)
+	tokens = minishell->tokens;
+	while (tokens && tokens->next)
 	{
-		next = cur->next;
-		if (need_merge(cur, next))
+		next = tokens->next;
+		if (need_merge(tokens, next))
 		{
-			cur->string = merge_token(cur->string, next->string, minishell);
-			cur->next = next->next;
+			tokens->string = merge_token(tokens->string, next->string,
+					minishell);
+			tokens->type = next->type;
+			tokens->next = next->next;
 			free(next);
 		}
 		else
-			cur = cur->next;
+			tokens = tokens->next;
 	}
 }
 
@@ -96,54 +90,27 @@ void	add_space_token(t_minishell *minishell)
 	t_token	*new_token;
 
 	new_token = set_new_token(minishell);
-	if (!new_token)
-		exit_perror(minishell, "malloc");
 	new_token->type = space;
 	append_new_token(&minishell->tokens, new_token);
 }
 
-static int	is_a_redirect(t_enum_token type)
-{
-	return (type == here_doc || type == append_file || type == output
-		|| type == input);
-}
-
-int	check_valid_pipes(t_token *tokens)
+int	check_redirects(t_token *tokens)
 {
 	while (tokens)
 	{
-		while (tokens->type == space)
+		if (tokens && tokens->type == space)
 			tokens = tokens->next;
 		if (!tokens)
-			return (0);
+			return (1);
 		if (is_a_redirect(tokens->type))
 		{
 			tokens = tokens->next;
-			while (tokens && tokens->type == space)
-				tokens = tokens->next;
-			if (!tokens || tokens->type == is_pipe)
+			if (!tokens)
 				return (1);
-		}
-		tokens = tokens->next;
-	}
-	return (0);
-}
-
-int	check_valid_redirects(t_token *tokens)
-{
-	while (tokens)
-	{
-		while (tokens->type == space)
-			tokens = tokens->next;
-		if (!tokens)
-			return (0);
-		if (is_a_redirect(tokens->type))
-		{
-			tokens = tokens->next;
-			while (tokens && tokens->type == space)
+			if (tokens->type == space)
 				tokens = tokens->next;
 			if (!tokens || (tokens->type != double_quote
-				&& tokens->type != simple_quote && tokens->type != word))
+					&& tokens->type != simple_quote && tokens->type != word))
 				return (1);
 		}
 		tokens = tokens->next;
@@ -164,17 +131,16 @@ static int	get_tokens_list(char **parse_error, t_minishell *minishell)
 		else if (is_operator(**parse_error) && add_operator_token(parse_error,
 				minishell))
 			return (1);
-		else if (**parse_error == ' ' || **parse_error == '\t')
+		else if (is_space(**parse_error))
 		{
-			while (**parse_error == ' ' || **parse_error == '\t')
+			while (is_space(**parse_error))
 				(*parse_error)++;
 			add_space_token(minishell);
 		}
 		else if (pick_word(parse_error, minishell))
 			return (1);
 	}
-	return (check_valid_redirects(minishell->tokens)
-		+ check_valid_pipes(minishell->tokens));
+	return (check_redirects(minishell->tokens));
 }
 
 void	remove_tokens(t_minishell *minishell)

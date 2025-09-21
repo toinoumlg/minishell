@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:05:22 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/16 14:05:58 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/19 16:03:50 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	is_only_n(char *str)
 	return (0);
 }
 
-void	echo(t_minishell *minishell)
+int	echo(t_minishell *minishell)
 {
 	int	i;
 
@@ -39,8 +39,7 @@ void	echo(t_minishell *minishell)
 	if (!minishell->cmds->args[i])
 	{
 		ft_putstr_fd("\n", 1);
-		free_minishell(minishell);
-		exit(0);
+		return (0);
 	}
 	while (!is_only_n(minishell->cmds->args[i]))
 		i++;
@@ -52,6 +51,5 @@ void	echo(t_minishell *minishell)
 	}
 	if (is_only_n(minishell->cmds->args[1]))
 		ft_putstr_fd("\n", 1);
-	free_minishell(minishell);
-	exit(0);
+	return (0);
 }

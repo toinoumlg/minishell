@@ -6,13 +6,12 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:25 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 13:47:05 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/19 19:58:52 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "envp_utils.h"
+#include "envp.h"
 #include "free.h"
-#include "init_envp.h"
 #include "libft.h"
 #include <stdio.h>
 #include <string.h>
@@ -93,19 +92,6 @@ void	sort_envp(char **envp)
 	}
 	return ;
 }
-
-void	print_sorted_envp(t_minishell *minishell)
-{
-	sort_envp(minishell->envp_array);
-	if (minishell->size > 1)
-	{
-		free_minishell(minishell);
-		exit(0);
-	}
-	else
-		minishell->last_status = 0;
-}
-
 int	set_name_export(t_envp *new_export, t_minishell *minishell)
 {
 	char	*name;
@@ -215,18 +201,9 @@ int	export_arguments(t_minishell *minishell)
 	return (status);
 }
 
-void	my_export(t_minishell *minishell)
+int	my_export(t_minishell *minishell)
 {
-	int	status;
-
 	if (!minishell->cmds->args[1])
-		return (print_sorted_envp(minishell));
-	status = export_arguments(minishell);
-	if (minishell->size > 1)
-	{
-		free_minishell(minishell);
-		exit(status);
-	}
-	else
-		minishell->last_status = status;
+		return (sort_envp(minishell->envp_array), 0);
+	return (export_arguments(minishell));
 }

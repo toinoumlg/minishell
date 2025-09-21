@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/15 11:12:45 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 11:24:52 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/19 14:27:58 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,20 @@ void	print_error_file(t_file *error)
 		return ;
 	if (error->type == input)
 	{
-		if (error->exist)
+		if (error->exist || error->is_dir == 2)
 			print_error_no_file_or_dir(error->path);
 		if (!error->exist && error->read)
 			print_error_no_permission(error->path);
-		if (error->is_dir)
+		if (error->is_dir == 1)
 			print_error_is_a_directory(error->path);
 	}
 	if (error->type == output || error->type == append_file)
 	{
+		if (error->is_dir == 2)
+			print_error_no_file_or_dir(error->path);
 		if (error->write)
 			print_error_no_permission(error->path);
-		if (error->is_dir)
+		if (error->is_dir == 1)
 			print_error_is_a_directory(error->path);
 	}
 }

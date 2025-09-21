@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:27:41 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/15 11:39:26 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/21 16:00:04 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,12 @@
 #include "token_list.h"
 #include "token_utils.h"
 #include <stdlib.h>
+
+int	is_a_redirect(t_enum_token type)
+{
+	return (type == here_doc || type == append_file || type == output
+		|| type == input);
+}
 
 int	is_end_of_command(t_token *token)
 {
@@ -25,7 +31,7 @@ int	is_end_of_command(t_token *token)
 
 int	is_space(char c)
 {
-	if (c == ' ' || c == '\t')
+	if (c == ' ' || c == '\t' || c == '\n')
 		return (1);
 	return (0);
 }

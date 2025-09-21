@@ -4,7 +4,6 @@ CFLAGS = -Wall -Wextra -Werror
 #CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g
 INCLUDE = -I./include -I./include/exec -I./include/parser \
 	-I./include/exec/redirects -I./include/exec/builtsin \
-	-I./include/exec/builtsin/parent -I./include/exec/builtsin/child \
 	-I./include/parser/commands -I./include/parser/tokens \
 	-I./include/env -I./libft/include
 #INCLUDE = -I./include -I./libft/include -lft -fsanitize=address
@@ -23,9 +22,9 @@ BUILTSIN = builtsin/builtsin  \
 	builtsin/parent/cd builtsin/parent/exit \
 	builtsin/parent/export builtsin/parent/unset \
 	builtsin/child/echo builtsin/child/env \
-	builtsin/child/pwd
+	builtsin/child/pwd builtsin/parent/cd_update
 
-REDIRECT = redirects/here_doc redirects/here_doc_utils \
+REDIRECT = redirects/here_doc redirects/here_doc_expand \
 	redirects/set_dup2 redirects/set_dup2_utils \
 	redirects/pipes redirects/create_files
 
@@ -33,7 +32,7 @@ PARSER_FILES = parser/parse_read_line parser/alloc \
 	parser/access_program parser/access \
 	parser/parse_error parser/pre_parsing \
 	parser/parsing_utils \
-	parser/tokens/token parser/tokens/token_expand_utils \
+	parser/tokens/token \
 	parser/tokens/token_list parser/tokens/token_operator \
 	parser/tokens/token_string parser/tokens/token_utils \
 	parser/tokens/token_expand parser/tokens/token_free \
@@ -44,7 +43,7 @@ PARSER_FILES = parser/parse_read_line parser/alloc \
 
 ENV_FILES = env/init_envp env/envp_utils
 
-MAIN_FILES = main utils free free_utils signals
+MAIN_FILES = main free free_utils signals
 
 ALL_SRC_FILES = $(MAIN_FILES) $(EXEC_FILES) $(PARSER_FILES) $(ENV_FILES) $(BUILTSIN) $(REDIRECT)
 

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 07:41:40 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 13:12:46 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/19 13:37:32 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	free_parsing(t_minishell *minishell)
 
 void	parsing_error(char *parse_error, t_minishell *minishell)
 {
+	minishell->last_status = 2;
 	ft_putstr_fd("minishell: syntax error near unexpected token '", 2);
 	if (!*parse_error)
 	{

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:58:46 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 12:49:51 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/21 15:52:38 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,15 @@
 #include <readline/history.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+t_token	*tail(t_token *tokens)
+{
+	if (!tokens)
+		return (NULL);
+	while (tokens->next)
+		tokens = tokens->next;
+	return (tokens);
+}
 
 void	free_cmds(t_cmd *cmds)
 {
@@ -90,7 +99,7 @@ int	free_minishell(t_minishell *minishell)
 		free_tokens(minishell->tokens);
 	set_minishell_to_null(minishell);
 	clear_history();
-	return (1);
+	return (minishell->last_status);
 }
 
 int	exit_perror(t_minishell *minishell, char *str)

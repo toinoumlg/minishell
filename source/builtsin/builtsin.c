@@ -6,18 +6,13 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:41:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/16 20:38:46 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/19 20:09:09 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cd.h"
-#include "echo.h"
-#include "env.h"
-#include "exit.h"
-#include "export.h"
+#include "builtsin.h"
+#include "free.h"
 #include "libft.h"
-#include "pwd.h"
-#include "unset.h"
 
 int	is_a_builtin(char *str)
 {
@@ -29,33 +24,46 @@ int	is_a_builtin(char *str)
 
 void	exec_builtsin_in_child(t_minishell *minishell)
 {
-	t_cmd	*cmd;
+	char	*cmd;
 
-	cmd = minishell->cmds;
-	if (!ft_strncmp(cmd->args[0], "pwd", 4))
-		pwd(minishell);
-	if (!ft_strncmp(cmd->args[0], "echo", 5))
-		echo(minishell);
-	if (!ft_strncmp(minishell->cmds->args[0], "env", 4))
-		env(minishell);
-	if (!ft_strncmp(minishell->cmds->args[0], "cd", 3))
-		cd(minishell);
-	if (!ft_strncmp(minishell->cmds->args[0], "exit", 5))
-		my_exit(minishell);
-	if (!ft_strncmp(minishell->cmds->args[0], "export", 7))
-		my_export(minishell);
-	if (!ft_strncmp(minishell->cmds->args[0], "unset", 6))
-		unset(minishell);
+	minishell->last_status = -1;
+	cmd = minishell->cmds->args[0];
+	if (!ft_strncmp(cmd, PWD, 4))
+		minishell->last_status = pwd(minishell);
+	if (!ft_strncmp(cmd, ECHO, 5))
+		minishell->last_status = echo(minishell);
+	if (!ft_strncmp(cmd, ENV, 4))
+		minishell->last_status = env(minishell);
+	if (!ft_strncmp(cmd, CD, 3))
+		minishell->last_status = cd(minishell);
+	if (!ft_strncmp(cmd, EXIT, 5))
+		minishell->last_status = my_exit(minishell);
+	if (!ft_strncmp(cmd, EXPORT, 7))
+		minishell->last_status = my_export(minishell);
+	if (!ft_strncmp(cmd, UNSET, 6))
+		minishell->last_status = unset(minishell);
+	if (minishell->last_status != -1)
+	{
+		free_minishell(minishell);
+		exit(minishell->last_status);
+	}
 }
 
 void	exec_builtsin_in_parent(t_minishell *minishell)
 {
-	if (!ft_strncmp(minishell->cmds->args[0], "cd", 3))
-		cd(minishell);
-	if (!ft_strncmp(minishell->cmds->args[0], "exit", 5))
-		my_exit(minishell);
-	if (!ft_strncmp(minishell->cmds->args[0], "export", 7))
-		my_export(minishell);
-	if (!ft_strncmp(minishell->cmds->args[0], "unset", 6))
-		unset(minishell);
+	char	*cmd;
+
+	cmd = minishell->cmds->args[0];
+	if (!ft_strncmp(cmd, CD, 3))
+		minishell->last_status = cd(minishell);
+	if (!ft_strncmp(cmd, EXIT, 5))
+		minishell->last_status = my_exit(minishell);
+	if (!ft_strncmp(cmd, EXPORT, 7))
+		minishell->last_status = my_export(minishell);
+	if (!ft_strncmp(cmd, UNSET, 6))
+		minishell->last_status = unset(minishell);
+	free_and_set_to_next_commands(&minishell->cmds);
+	if (minishell->pids)
+		free(minishell->pids);
+	minishell->pids = NULL;
 }

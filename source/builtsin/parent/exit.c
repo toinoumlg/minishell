@@ -6,22 +6,23 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/15 17:56:54 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/19 19:58:45 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "envp_utils.h"
+#include "envp.h"
 #include "free.h"
-#include "libft.h"
-#include "pipes.h"
+#include "redirects.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 static int	is_nbr(char *str)
 {
+	if (*str == '+' || *str == '-')
+		str++;
 	while (str && *str != 0)
 	{
-		if (ft_isdigit(*str) || *str == '+' || *str == '-')
+		if (ft_isdigit(*str))
 			str++;
 		else
 			return (0);
@@ -53,7 +54,7 @@ int	exit_alpha(t_minishell *minishell)
 	return (2);
 }
 
-void	my_exit(t_minishell *minishell)
+int	my_exit(t_minishell *minishell)
 {
 	int	result;
 	int	args_size;
@@ -66,13 +67,7 @@ void	my_exit(t_minishell *minishell)
 	{
 		// ft_putstr_fd("exit\n", 1);
 		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-		if (minishell->size > 1)
-		{
-			free_minishell(minishell);
-			exit(1);
-		}
-		minishell->last_status = 1;
-		return ;
+		return (1);
 	}
 	else if (args_size == 2)
 		result = ft_atoi(minishell->cmds->args[1]);
