@@ -6,11 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:06 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/21 07:50:55 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 19:51:58 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "access_program.h"
+#include "parser/access_program.h"
 #include "builtsin.h"
 #include "libft.h"
 #include "redirects.h"

@@ -6,12 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 12:47:29 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 11:36:15 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 18:57:02 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "free.h"
-#include "free_utils.h"
 #include "libft.h"
 #include "minishell.h"
 #include <fcntl.h>
@@ -41,11 +40,11 @@ static void	parse_env(t_minishell *minishell, t_file *program)
 	i = 0;
 	if (!*program->path)
 		return (set_access(program, program->path));
-	if (!minishell->env)
+	if (!minishell->paths)
 		return ;
-	while (minishell->env[i])
+	while (minishell->paths[i])
 	{
-		tmp = ft_strjoin(minishell->env[i], program->path);
+		tmp = ft_strjoin(minishell->paths[i], program->path);
 		if (!tmp)
 			exit_perror(minishell, "malloc");
 		if (!access(tmp, F_OK))

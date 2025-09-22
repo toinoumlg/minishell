@@ -6,15 +6,12 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:50:43 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/19 14:15:23 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 16:02:19 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "free.h"
 #include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 
 void	dup2_infile(t_file *infile, t_minishell *minishell)
 {

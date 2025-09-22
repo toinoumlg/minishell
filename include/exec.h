@@ -1,20 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_error.h                                      :+:      :+:    :+:   */
+/*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/15 11:40:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/06/29 06:08:53 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/13 19:33:35 by amalangu          #+#    #+#             */
+/*   Updated: 2025/09/22 19:57:55 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PRINT_ERROR_H
-# define PRINT_ERROR_H
+#ifndef EXEC_H
+# define EXEC_H
 
 # include "minishell.h"
 
+void	exec(t_minishell *minishell);
+int		is_builtin_to_exec_in_parent(t_minishell *minishell);
+
+void	exit_child(t_minishell *minishell);
 int		print_command_error(t_file *program, t_file *error);
 void	print_error_file(t_file *error);
 

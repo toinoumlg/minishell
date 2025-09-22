@@ -1,20 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_expand_string.c                              :+:      :+:    :+:   */
+/*   expand_string.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 14:56:56 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/21 15:55:50 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 19:56:05 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "envp.h"
 #include "free.h"
-#include "libft.h"
-#include "minishell.h"
-#include "token_expand_utils.h"
+#include "parser/token.h"
 
 int	expand_pid(char *str, t_token *token, t_minishell *minishell)
 {
@@ -125,7 +123,7 @@ static int	expand_env(char *str, t_token *token, t_minishell *minishell)
 	return (size);
 }
 
-void	handle_dollard_expansion(int *i, t_token *token, t_minishell *minishell)
+void	handle_expansion(int *i, t_token *token, t_minishell *minishell)
 {
 	char	*str;
 
@@ -147,22 +145,3 @@ void	handle_dollard_expansion(int *i, t_token *token, t_minishell *minishell)
 	free(str);
 }
 
-int	expand_string(t_token *token, t_minishell *minishell)
-{
-	int	i;
-	int	expanded;
-
-	i = 0;
-	expanded = 0;
-	while (token->string[i])
-	{
-		if (token->string[i] == '$')
-		{
-			token->string[i] = 0;
-			handle_dollard_expansion(&i, token, minishell);
-			expanded++;
-		}
-		i++;
-	}
-	return (expanded);
-}

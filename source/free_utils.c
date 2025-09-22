@@ -6,18 +6,12 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 19:01:50 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 11:27:55 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 20:07:38 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdlib.h>
-
-void	ft_free(void *ptr)
-{
-	free(ptr);
-	ptr = NULL;
-}
 
 void	free_array(char **args)
 {
@@ -60,12 +54,17 @@ void	free_file(t_file *file)
 	}
 }
 
-void	free_cmd(t_cmd *cmd)
+void	free_cmds(t_cmd *cmds)
 {
-	if (!cmd)
-		return ;
-	free_array(cmd->args);
-	free_file(cmd->program);
-	free_file(cmd->redirects);
-	free(cmd);
+	t_cmd	*next;
+
+	while (cmds)
+	{
+		next = cmds->next;
+		free_array(cmds->args);
+		free_file(cmds->program);
+		free_file(cmds->redirects);
+		free(cmds);
+		cmds = next;
+	}
 }

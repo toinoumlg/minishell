@@ -6,14 +6,14 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 20:23:14 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/16 11:57:28 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 19:58:49 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "exec.h"
 #include "free.h"
 #include "libft.h"
 #include "minishell.h"
-#include "print_error.h"
 #include <fcntl.h>
 
 void	handle_error(t_file *error, t_minishell *minishell)

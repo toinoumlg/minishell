@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:25 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/19 19:58:52 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 16:29:58 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ int	export_arguments(t_minishell *minishell)
 	int		i;
 
 	status = 0;
-	i = 0;
+	i = 1;
 	while (minishell->cmds->args[i])
 	{
 		if (valid_export(minishell->cmds->args[i]))

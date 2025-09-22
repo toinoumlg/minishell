@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/21 08:25:14 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 19:53:16 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 #include "libft.h"
 #include "redirects.h"
 #include "signals.h"
-#include "token_expand_string.h"
-#include "token_list.h"
+#include "parser/token.h"
 #include <fcntl.h>
 #include <readline/readline.h>
 #include <wait.h>
@@ -67,7 +66,7 @@ static void	expand_here_doc(char **read_line, t_minishell *minishell)
 	}
 }
 
-static void	write_here_doc(int fd, char *lim, t_enum_token type,
+static void	write_here_doc(int fd, char *lim, t_token_type type,
 		t_minishell *minishell)
 {
 	char	*read_line;

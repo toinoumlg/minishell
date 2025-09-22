@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/21 07:21:39 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 20:20:13 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "envp.h"
 #include "exec.h"
 #include "free.h"
-#include "free_utils.h"
 #include "libft.h"
 #include "redirects.h"
 #include "signals.h"
@@ -33,6 +32,9 @@ static void	close_here_doc(t_file *redirects)
 	}
 }
 
+/*	Child process execution: sets up signals and redirects,
+	Attempts builtin execution then tries execve
+	If not exited after execve will print associated error	*/
 void	child_process(t_minishell *minishell)
 {
 	t_cmd	*cmd;
@@ -48,6 +50,7 @@ void	child_process(t_minishell *minishell)
 	exit_child(minishell);
 }
 
+/*	Forks and check for any error	*/
 void	exec_in_child(t_minishell *minishell)
 {
 	int	i;
@@ -60,7 +63,8 @@ void	exec_in_child(t_minishell *minishell)
 		child_process(minishell);
 }
 
-// if the command have no args but redirect
+/*	Exec in child if the command has arguments
+	If empty prompty with only redirects only create files	*/
 void	try_exec(t_minishell *minishell)
 {
 	if (!minishell->cmds->args && minishell->cmds->redirects)

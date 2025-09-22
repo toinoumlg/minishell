@@ -1,22 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_operator.c                                   :+:      :+:    :+:   */
+/*   operator.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:32:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/21 16:00:11 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 20:02:55 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "free.h"
 #include "libft.h"
 #include "minishell.h"
-#include "token_list.h"
-#include "token_utils.h"
+#include "parser/token.h"
 
-t_enum_token	get_operator_type(char *line)
+t_token_type	get_operator_type(char *line)
 {
 	if (*line && *(line + 1))
 	{
@@ -40,25 +39,25 @@ t_enum_token	get_operator_type(char *line)
 	return (0);
 }
 
-void	set_operator_string(char **read_line, t_minishell *minishell,
+static void	set_operator_string(char **parse_error, t_minishell *minishell,
 		t_token *new)
 {
 	int		size;
 	char	*str;
 	char	c;
 
-	str = *read_line;
+	str = *parse_error;
 	if (new->type == append_file || new->type == here_doc)
 		size = 2;
 	else
 		size = 1;
 	c = str[size];
 	str[size] = 0;
-	new->string = ft_strdup(*read_line);
+	new->string = ft_strdup(str);
 	if (!new->string)
 		exit(free_minishell(minishell));
 	str[size] = c;
-	*read_line = *read_line + size;
+	*parse_error = *parse_error + size;
 }
 
 int	check_valid_redirects(t_token *tokens, t_token *new)
@@ -112,18 +111,18 @@ static int	check_for_valid_pipe(t_token *tokens, t_token *new)
 	return (0);
 }
 
-int	add_operator_token(char **read_line, t_minishell *minishell)
+int	add_operator(char **parse_error, t_minishell *minishell)
 {
 	t_token	*new_token;
 
 	new_token = set_new_token(minishell);
 	append_new_token(&minishell->tokens, new_token);
-	new_token->type = get_operator_type(*read_line);
+	new_token->type = get_operator_type(*parse_error);
 	if (!new_token->type)
 		return (1);
-	set_operator_string(read_line, minishell, new_token);
 	if (check_for_valid_pipe(minishell->tokens, new_token)
 		|| check_valid_redirects(minishell->tokens, new_token))
 		return (1);
+	set_operator_string(parse_error, minishell, new_token);
 	return (0);
 }

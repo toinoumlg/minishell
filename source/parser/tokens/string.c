@@ -1,80 +1,92 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_string.c                                     :+:      :+:    :+:   */
+/*   string.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:56:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/19 13:10:16 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 20:03:22 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "free.h"
-#include "parse_error.h"
-#include "parser/tokens/token_utils.h"
-#include "token_list.h"
+#include "parser/token.h"
 #include <stdlib.h>
 
-static int	get_word_size(char **p)
+void	add_space(char **parse_error, t_minishell *minishell)
 {
-	int		n;
-	char	*ptr;
+	t_token	*new_token;
 
-	n = 0;
-	ptr = *p;
-	while (*ptr && !is_space(*ptr) && !is_operator(*ptr) && !is_quote(*ptr))
-	{
-		if (*ptr == ';' || *ptr == '\\')
-		{
-			*p = ptr;
-			return (-1);
-		}
-		ptr++;
-		n++;
-	}
-	*p = ptr;
-	return (n);
+	new_token = set_new_token(minishell);
+	new_token->type = space;
+	append_new_token(&minishell->tokens, new_token);
+	while (is_space(**parse_error))
+		(*parse_error)++;
 }
 
-static int	get_quoted_string_size(char quote, char **line)
+static int	get_word_size(char **parse_error)
+{
+	int		i;
+	char	*str;
+
+	i = 0;
+	str = *parse_error;
+	while (str[i] && !is_space(str[i]) && !is_operator(str[i])
+		&& !is_quote(str[i]))
+	{
+		if (str[i] == ';' || str[i] == '\\')
+		{
+			*parse_error = str + i;
+			return (-1);
+		}
+		i++;
+	}
+	*parse_error = str + i;
+	return (i);
+}
+
+static int	get_quoted_string_size(char **parse_error, char quote)
 {
 	int		len;
 	char	*ptr;
 
 	len = 0;
-	ptr = *line;
+	ptr = *parse_error;
 	while (*ptr && *ptr != quote)
 	{
 		len++;
 		ptr++;
 	}
+	*parse_error = ptr;
 	if (*ptr == quote)
 	{
 		ptr++;
-		*line = ptr;
+		*parse_error = ptr;
 		return (len);
 	}
 	return (-1);
 }
 
-int	extract_quoted_string(char **read_line, char quote, t_minishell *minishell)
+int	add_quoted_string(char **parse_error, char quote, t_minishell *minishell)
 {
 	t_token	*new_token;
 	char	*start;
 	int		i;
 	char	c;
 
-	(*read_line)++;
-	start = *read_line;
-	i = get_quoted_string_size(quote, read_line);
+	(*parse_error)++;
+	start = *parse_error;
+	i = get_quoted_string_size(parse_error, quote);
 	if (i < 0)
 		return (1);
 	new_token = set_new_token(minishell);
 	append_new_token(&minishell->tokens, new_token);
 	c = start[i];
 	start[i] = 0;
-	add_string_to_token(start, new_token, minishell);
+	new_token->string = ft_strdup(start);
+	if (!new_token->string)
+		exit_perror(minishell, "malloc");
 	start[i] = c;
 	if (quote == '\'')
 		new_token->type = simple_quote;
@@ -83,25 +95,27 @@ int	extract_quoted_string(char **read_line, char quote, t_minishell *minishell)
 	return (0);
 }
 
-int	pick_word(char **read_line, t_minishell *minishell)
+int	add_word(char **parse_error, t_minishell *minishell)
 {
 	t_token	*new_token;
 	char	*start;
 	int		i;
 	char	c;
 
-	start = *read_line;
-	if (!**read_line || is_space(**read_line) || is_operator(**read_line)
-		|| is_quote(**read_line))
+	start = *parse_error;
+	if (!**parse_error || is_space(**parse_error) || is_operator(**parse_error)
+		|| is_quote(**parse_error))
 		return (0);
-	i = get_word_size(read_line);
+	i = get_word_size(parse_error);
 	if (i <= 0)
 		return (1);
 	new_token = set_new_token(minishell);
 	append_new_token(&minishell->tokens, new_token);
 	c = start[i];
 	start[i] = 0;
-	add_string_to_token(start, new_token, minishell);
+	new_token->string = ft_strdup(start);
+	if (!new_token->string)
+		exit_perror(minishell, "malloc");
 	start[i] = c;
 	new_token->type = word;
 	return (0);

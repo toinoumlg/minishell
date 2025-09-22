@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:18 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/19 19:34:08 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 20:22:23 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	pwd(t_minishell *minishell)
 	path = getcwd(NULL, 0);
 	if (!path)
 	{
-		perror("pwd:");
+		perror("pwd");
 		return (1);
 	}
 	printf("%s\n", path);

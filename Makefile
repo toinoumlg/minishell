@@ -2,10 +2,7 @@ NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 #CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g
-INCLUDE = -I./include -I./include/exec -I./include/parser \
-	-I./include/exec/redirects -I./include/exec/builtsin \
-	-I./include/parser/commands -I./include/parser/tokens \
-	-I./include/env -I./libft/include
+INCLUDE = -I./include -I./libft/include
 #INCLUDE = -I./include -I./libft/include -lft -fsanitize=address
 LIBS = -lreadline -L./libft -lft
 
@@ -30,18 +27,16 @@ REDIRECT = redirects/here_doc redirects/here_doc_expand \
 
 PARSER_FILES = parser/parse_read_line parser/alloc \
 	parser/access_program parser/access \
-	parser/parse_error parser/pre_parsing \
-	parser/parsing_utils \
-	parser/tokens/token \
-	parser/tokens/token_list parser/tokens/token_operator \
-	parser/tokens/token_string parser/tokens/token_utils \
-	parser/tokens/token_expand parser/tokens/token_free \
-	parser/tokens/token_expand_string \
-	parser/commands/commands parser/commands/commands_args \
-	parser/commands/commands_list parser/commands/commands_redirect \
-	parser/commands/commands_redirect_utils \
+	parser/pre_parsing \
+	parser/tokens/token parser/tokens/merge \
+	parser/tokens/list parser/tokens/operator \
+	parser/tokens/string parser/tokens/utils \
+	parser/tokens/expand parser/tokens/free \
+	parser/tokens/expand_string \
+	parser/commands/commands parser/commands/args \
+	parser/commands/redirect \
 
-ENV_FILES = env/init_envp env/envp_utils
+ENV_FILES = env/envp env/utils
 
 MAIN_FILES = main free free_utils signals
 

@@ -1,26 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_list.c                                       :+:      :+:    :+:   */
+/*   list.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 09:28:24 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/19 13:03:18 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 18:43:31 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "free.h"
 #include "libft.h"
 #include <string.h>
-
-void	add_string_to_token(char *start, t_token *new_token,
-		t_minishell *minishell)
-{
-	new_token->string = ft_strdup(start);
-	if (!new_token->string)
-		exit(free_minishell(minishell));
-}
 
 t_token	*set_new_token(t_minishell *minishell)
 {

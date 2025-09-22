@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_expand.c                                     :+:      :+:    :+:   */
+/*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 16:14:42 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/21 06:46:20 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 19:55:51 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,16 @@
 #include "free.h"
 #include "libft.h"
 #include "minishell.h"
-#include "token_expand_string.h"
-#include "token_free.h"
+#include "parser/token.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+/*	Create and insert a new_token with provided type and string
+	Marked as word_expanded or space_expand
+	Inserted after existing expanded tokens	*/
 void	insert_token(char *start, t_token *token, t_minishell *minishell,
-		t_enum_token type)
+		t_token_type type)
 {
 	t_token	*new;
 
@@ -44,6 +46,9 @@ void	insert_token(char *start, t_token *token, t_minishell *minishell,
 	token->next = new;
 }
 
+/*	Parse the string created in expand_string and splits it into new tokens
+	New_tokens are inserted after the token itself
+	Token string is set to 0 to get removed after	*/
 void	expand_tokens(t_token *token, t_minishell *minishell)
 {
 	int		i;
@@ -71,7 +76,8 @@ void	expand_tokens(t_token *token, t_minishell *minishell)
 	*token->string = 0;
 }
 
-// skips the expand when it's a here-doc delimiter
+/*	Skips all non-desired tokens for expand
+	As well as if it's a limiter for here_doc	*/
 t_token	*get_next_expand(t_token *tokens)
 {
 	int	was_here_doc;
@@ -98,6 +104,29 @@ t_token	*get_next_expand(t_token *tokens)
 	return (NULL);
 }
 
+/*	Parse token string and expands*/
+int	expand_string(t_token *token, t_minishell *minishell)
+{
+	int	i;
+	int	expanded;
+
+	i = 0;
+	expanded = 0;
+	while (token->string[i])
+	{
+		if (token->string[i] == '$')
+		{
+			token->string[i] = 0;
+			handle_expansion(&i, token, minishell);
+			expanded++;
+		}
+		i++;
+	}
+	return (expanded);
+}
+
+/*	Expand all word and double_quote tokens with variables
+	If it's a word token expand his string into new tokens after itself	*/
 void	expand(t_minishell *minishell)
 {
 	t_token	*tokens;

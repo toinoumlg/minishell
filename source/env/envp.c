@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_envp.c                                        :+:      :+:    :+:   */
+/*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 17:41:48 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/19 20:16:51 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 16:52:23 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,6 @@
 #include "minishell.h"
 #include <stdio.h>
 #include <string.h>
-
-static void	set_line(t_envp *envp, t_minishell *minishell)
-{
-	char	*tmp;
-
-	free(envp->line);
-	tmp = ft_strjoin(envp->name, "=");
-	if (!tmp)
-		exit_perror(minishell, "malloc ");
-	envp->line = ft_strjoin(tmp, envp->value);
-	if (!envp->line)
-		exit_perror(minishell, "malloc ");
-	free(tmp);
-}
 
 /// @brief HORRIBLE A REFAIRE
 /// @param minishell
@@ -49,10 +35,12 @@ static void	set_line(t_envp *envp, t_minishell *minishell)
 // 	append_new_envp(&minishell->envp, set_new_envp("_"));
 // }
 
+/*	Update shell level var in the environnment (add + 1)	*/
 void	update_shlvl(t_minishell *minishell)
 {
 	t_envp	*shlvl;
 	int		nb;
+	char	*tmp;
 
 	shlvl = find_existing_envp("SHLVL", minishell->envp);
 	if (shlvl)
@@ -63,15 +51,22 @@ void	update_shlvl(t_minishell *minishell)
 		shlvl->value = ft_itoa(nb);
 		if (!shlvl->value)
 			exit(free_minishell(minishell));
-		set_line(shlvl, minishell);
+		free(shlvl->line);
+		tmp = ft_strjoin(shlvl->name, "=");
+		if (!tmp)
+			exit_perror(minishell, "malloc ");
+		shlvl->line = ft_strjoin(tmp, shlvl->value);
+		free(tmp);
+		if (!shlvl->line)
+			exit_perror(minishell, "malloc ");
 	}
 }
 
-// Parse all the provided envp array and create a struct containing:
-// char *line = full line of the variable
-// char *name = left-side of the equal-sign
-// char *value = right-side of the equal sign
-void	init_envp(t_minishell *minishell, char **envp)
+/*	Parse all the provided envp array and create a struct containing:
+	char *line = full line of the variable
+	char *name = left-side of the equal-sign
+	char *value = right-side of the equal sign	*/
+void	set_envp(t_minishell *minishell, char **envp)
 {
 	int		i;
 	t_envp	*new_envp;
@@ -87,13 +82,11 @@ void	init_envp(t_minishell *minishell, char **envp)
 			exit_perror(minishell, "malloc ");
 		memset(new_envp, 0, sizeof(t_envp));
 		append_new_envp(&minishell->envp, new_envp);
-		new_envp->line = ft_strdup(envp[i]);
+		new_envp->line = ft_strdup(envp[i++]);
 		if (!new_envp->line)
 			exit_perror(minishell, "malloc ");
-		new_envp->name = set_name(envp[i], minishell);
-		if (!new_envp->name)
-			exit_perror(minishell, "malloc ");
-		new_envp->value = set_value(envp[i++], minishell);
+		set_name(new_envp, minishell);
+		set_value(new_envp, minishell);
 	}
 	update_shlvl(minishell);
 }

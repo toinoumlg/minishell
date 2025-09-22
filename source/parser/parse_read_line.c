@@ -6,17 +6,17 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/19 13:27:22 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 19:51:49 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parse_read_line.h"
+#include "parser/parse_read_line.h"
 
 void	pre_parsing(t_minishell *minishell)
 {
 	minishell->i = 0;
 	minishell->size = 0;
-	set_env_array(minishell);
+	set_paths(minishell);
 	set_envp_array(minishell);
 }
 

@@ -1,76 +1,81 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_free.c                                       :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:51:29 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/15 16:41:29 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 19:55:56 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "free.h"
 #include "minishell.h"
-#include "token_utils.h"
+#include "parser/token.h"
 #include <stdlib.h>
 
-static void	free_first_token(t_token **tokens)
+void	remove_first_token(t_token **tokens, t_token **to_remove_add)
 {
-	t_token	*tmp;
-	t_token	*next;
+	t_token	*to_remove;
 
-	tmp = *tokens;
-	next = tmp->next;
-	if (tmp->string)
-		free(tmp->string);
-	free(tmp);
-	*tokens = next;
+	to_remove = *to_remove_add;
+	if (to_remove->next)
+	{
+		*tokens = to_remove->next;
+		*to_remove_add = to_remove->next;
+	}
+	else
+	{
+		*tokens = NULL;
+		*to_remove_add = NULL;
+	}
+	if (to_remove->string)
+		free(to_remove->string);
+	free(to_remove);
 }
 
-void	free_i_token(t_token **tokens, int i)
+void	remove_token(t_token **tokens, t_token **to_remove_add)
 {
 	t_token	*tmp;
-	t_token	*head;
-	t_token	*previous;
-	t_token	*next;
-	int		j;
+	t_token	*to_remove;
 
+	to_remove = *to_remove_add;
 	tmp = *tokens;
-	if (!tmp)
-		return ;
-	if (i == 0)
-		return (free_first_token(tokens));
-	j = -1;
-	head = tmp;
-	while (++j < i - 1)
+	if (tmp == to_remove)
+		return (remove_first_token(tokens, to_remove_add));
+	while (tmp->next && tmp->next != to_remove)
 		tmp = tmp->next;
-	previous = tmp;
-	tmp = tmp->next;
-	next = tmp->next;
-	if (tmp->string)
-		free(tmp->string);
-	free(tmp);
-	previous->next = next;
-	*tokens = head;
+	if (to_remove->next)
+	{
+		tmp->next = to_remove->next;
+		*to_remove_add = to_remove->next;
+	}
+	else
+	{
+		tmp->next = NULL;
+		*to_remove_add = NULL;
+	}
+	if (to_remove->string)
+		free(to_remove->string);
+	free(to_remove);
 }
 
-void	free_pipe(t_token **tokens)
+void	remove_pipe(t_token **tokens)
 {
-	t_token	*next;
 	t_token	*tmp;
 
 	tmp = *tokens;
 	if (tmp && tmp->type == is_pipe)
 	{
-		next = tmp->next;
+		*tokens = tmp->next;
 		if (tmp->string)
 			free(tmp->string);
 		free(tmp);
-		*tokens = next;
 	}
 }
 
-void	free_tokens_from_args(t_token **tokens)
+void	remove_args(t_token **tokens)
 {
 	t_token	*tmp;
 	t_token	*next;

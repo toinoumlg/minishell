@@ -6,19 +6,16 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/19 19:50:13 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 19:54:50 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "envp.h"
 #include "exec.h"
-#include "libft.h"
-#include "parse_read_line.h"
+#include "parser/parse_read_line.h"
 #include "signals.h"
 #include <readline/readline.h>
-#include <stdlib.h>
 #include <sys/wait.h>
-#include <unistd.h>
 
 void	wait_for_childrens(t_minishell *minishell)
 {
@@ -43,7 +40,7 @@ int	main(int argc, char **argv, char **envp)
 
 	// if (!isatty(0) || !isatty(1) || !isatty(2))
 	// 	return (1);
-	init_envp(&minishell, envp);
+	set_envp(&minishell, envp);
 	set_signals();
 	while (argv && argc)
 	{

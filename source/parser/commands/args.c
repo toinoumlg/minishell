@@ -1,21 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   commands_args.c                                    :+:      :+:    :+:   */
+/*   args.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:09 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/15 16:39:29 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 19:52:42 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "free.h"
-#include "free_utils.h"
 #include "libft.h"
-#include "parser/tokens/token_utils.h"
-#include "token_free.h"
-#include "token_utils.h"
+#include "parser/token.h"
 #include <string.h>
 
 static int	get_args_size(t_token *tokens)
@@ -63,5 +60,5 @@ void	set_args(t_cmd *new_cmd, t_minishell *minishell)
 		tokens = tokens->next;
 	}
 	new_cmd->args[i] = NULL;
-	free_tokens_from_args(&minishell->tokens);
+	remove_args(&minishell->tokens);
 }

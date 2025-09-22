@@ -1,22 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_utils.c                                      :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:27:41 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 13:04:17 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 19:55:45 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "free.h"
-#include "minishell.h"
-#include "token_list.h"
-#include "token_utils.h"
+#include "parser/token.h"
 #include <stdlib.h>
 
-int	is_a_redirect(t_enum_token type)
+int	is_a_redirect(t_token_type type)
 {
 	return (type == here_doc || type == append_file || type == output
 		|| type == input);

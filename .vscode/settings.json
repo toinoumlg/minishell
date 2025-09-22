@@ -80,6 +80,8 @@
 		"token_expand_utils.h": "c",
 		"unset.h": "c",
 		"pwd.h": "c",
-		"redirects.h": "c"
+		"redirects.h": "c",
+		"parsing_utils.h": "c",
+		"access_program.h": "c"
 	}
 }

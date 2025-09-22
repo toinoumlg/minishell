@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/21 15:53:35 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 18:56:15 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "libft.h"
 
-typedef enum s_enum_token
+typedef enum s_token_type
 {
 	word = 1,
 	is_pipe,
@@ -29,14 +29,13 @@ typedef enum s_enum_token
 	simple_quote,
 	space,
 	word_expanded,
-	space_expanded,
-	merged
-}					t_enum_token;
+	space_expanded
+}					t_token_type;
 
 typedef struct s_file
 {
 	char			*path;
-	t_enum_token	type;
+	t_token_type	type;
 	int				fd;
 	int				is_dir;
 	int				exist;
@@ -58,7 +57,7 @@ typedef struct s_cmd
 typedef struct s_token
 {
 	char			*string;
-	t_enum_token	type;
+	t_token_type	type;
 	struct s_token	*next;
 }					t_token;
 
@@ -73,14 +72,12 @@ typedef struct s_envp
 
 typedef struct s_minishell
 {
-	
-
 	t_cmd			*cmds;
 	int				i;
 	int				size;
 	int (*pipe_fds)[2];
 	int				*pids;
-	char			**env;
+	char			**paths;
 	char			**envp_array;
 	t_envp			*envp;
 	t_token			*tokens;

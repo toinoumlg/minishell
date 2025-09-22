@@ -1,27 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   commands_redirect.c                                :+:      :+:    :+:   */
+/*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 12:15:26 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/21 07:35:43 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 19:53:06 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "commands_redirect_utils.h"
 #include "free.h"
-#include "token_free.h"
-#include "token_utils.h"
+#include "parser/commands.h"
+#include "parser/token.h"
+#include <string.h>
+
+static t_file	*new_file(t_minishell *minishell)
+{
+	t_file	*new;
+
+	new = malloc(sizeof(t_file));
+	if (!new)
+		exit_perror(minishell, "malloc ");
+	memset(new, 0, sizeof(t_file));
+	return (new);
+}
 
 static void	append_redirects(t_file **redirects, t_file *new_redirect)
 {
 	t_file	*tmp;
-	t_file	*head;
 
 	tmp = *redirects;
-	head = *redirects;
 	if (!tmp)
 	{
 		*redirects = new_redirect;
@@ -30,36 +39,43 @@ static void	append_redirects(t_file **redirects, t_file *new_redirect)
 	while (tmp->next)
 		tmp = tmp->next;
 	tmp->next = new_redirect;
-	*redirects = head;
 }
 
-static void	set_redirect(t_cmd *new_cmd, t_minishell *minishell, int j)
+static void	set_redirect(t_cmd *new_cmd, t_minishell *minishell,
+		t_token **redirect_add)
 {
 	t_file	*new_redirect;
+	t_token	*redirect;
 
-	new_redirect = set_file(minishell, j);
+	redirect = *redirect_add;
+	new_redirect = new_file(minishell);
 	append_redirects(&new_cmd->redirects, new_redirect);
-}
-
-int	is_a_file(t_enum_token type)
-{
-	return (type == output || type == append_file || type == input
-		|| type == here_doc);
+	new_redirect->path = ft_strdup(redirect->next->string);
+	if (!new_redirect->path)
+		exit_perror(minishell, "malloc ");
+	if (redirect->type == here_doc)
+	{
+		if (redirect->next->type == word)
+			new_redirect->type = here_doc_word;
+		else
+			new_redirect->type = here_doc_quote;
+	}
+	else
+		new_redirect->type = redirect->type;
+	remove_token(&minishell->tokens, redirect_add);
+	remove_token(&minishell->tokens, redirect_add);
 }
 
 void	pick_redirects(t_cmd *new_cmd, t_minishell *minishell)
 {
-	int		j;
 	t_token	*tokens;
 
 	tokens = minishell->tokens;
-	j = 0;
 	while (!is_end_of_command(tokens))
 	{
-		if (is_a_file(tokens->type))
-			return (set_redirect(new_cmd, minishell, j), pick_redirects(new_cmd,
-					minishell));
-		j++;
-		tokens = tokens->next;
+		if (is_a_redirect(tokens->type))
+			set_redirect(new_cmd, minishell, &tokens);
+		else
+			tokens = tokens->next;
 	}
 }

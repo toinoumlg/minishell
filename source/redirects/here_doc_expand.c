@@ -6,14 +6,14 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 07:48:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/21 08:25:55 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 19:53:24 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "envp.h"
 #include "free.h"
 #include "minishell.h"
-#include "token_expand_string.h"
+#include "parser/token.h"
 
 int	expand_pid_here_doc(char *str, char **read_line, t_minishell *minishell)
 {
