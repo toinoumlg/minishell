@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:25:17 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/21 16:01:30 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 13:05:13 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,9 +100,7 @@ int	check_redirects(t_token *tokens)
 	{
 		if (tokens && tokens->type == space)
 			tokens = tokens->next;
-		if (!tokens)
-			return (1);
-		if (is_a_redirect(tokens->type))
+		if (tokens && is_a_redirect(tokens->type))
 		{
 			tokens = tokens->next;
 			if (!tokens)
@@ -113,7 +111,8 @@ int	check_redirects(t_token *tokens)
 					&& tokens->type != simple_quote && tokens->type != word))
 				return (1);
 		}
-		tokens = tokens->next;
+		if (tokens)
+			tokens = tokens->next;
 	}
 	return (0);
 }
