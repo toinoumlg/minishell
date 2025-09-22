@@ -6,15 +6,15 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 19:53:16 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 20:30:18 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "free.h"
 #include "libft.h"
+#include "parser/token.h"
 #include "redirects.h"
 #include "signals.h"
-#include "parser/token.h"
 #include <fcntl.h>
 #include <readline/readline.h>
 #include <wait.h>
@@ -75,15 +75,7 @@ static void	write_here_doc(int fd, char *lim, t_token_type type,
 	set_signals_heredoc();
 	while (1)
 	{
-		// for testing
-		if (isatty(fileno(stdin)))
-			read_line = readline("> ");
-		else
-		{
-			line = get_next_line(fileno(stdin));
-			read_line = ft_strtrim(line, "\n");
-			free(line);
-		}
+		read_line = readline("> ");
 		if (!read_line)
 			return (exit_on_eof(lim));
 		if (!ft_strncmp(read_line, lim, ft_strlen(lim) + 1))

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 15:30:47 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 19:55:28 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 20:29:18 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ char	*merge_token(char *s1, char *s2, t_minishell *minishell)
 
 void	merge_adjacent(t_minishell *minishell)
 {
-	t_token *tokens;
-	t_token *next;
+	t_token	*tokens;
+	t_token	*next;
 
 	tokens = minishell->tokens;
 	while (tokens && tokens->next)

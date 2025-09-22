@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 14:56:56 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 19:56:05 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 20:31:02 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,4 +144,3 @@ void	handle_expansion(int *i, t_token *token, t_minishell *minishell)
 		*i += expand_env(str, token, minishell);
 	free(str);
 }
-

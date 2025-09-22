@@ -6,12 +6,12 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 16:41:45 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 20:05:00 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/22 20:28:54 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef INIT_ENVP_H
-# define INIT_ENVP_H
+#ifndef ENVP_H
+# define ENVP_H
 
 # include "minishell.h"
 
