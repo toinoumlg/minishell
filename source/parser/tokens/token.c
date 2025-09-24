@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:25:17 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 20:03:22 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/23 18:43:20 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,33 @@ int	check_redirects(t_token *tokens)
 	return (0);
 }
 
+static int	check_pipes(t_token *tokens)
+{
+	int	is_empty;
+	int	pipe_count;
+
+	is_empty = 1;
+	pipe_count = 0;
+	while (tokens)
+	{
+		while (!is_end_of_command(tokens))
+		{
+			if (tokens->type != space)
+				is_empty = 0;
+			tokens = tokens->next;
+		}
+		if (is_empty && pipe_count)
+			return (1);
+		else if (tokens)
+		{
+			pipe_count++;
+			is_empty = 1;
+			tokens = tokens->next;
+		}
+	}
+	return (0);
+}
+
 static int	get_tokens(char **parse_error, t_minishell *minishell)
 {
 	memset(&minishell->tokens, 0, sizeof(t_token *));
@@ -57,11 +84,19 @@ static int	get_tokens(char **parse_error, t_minishell *minishell)
 		else if (add_word(parse_error, minishell))
 			return (1);
 	}
-	return (check_redirects(minishell->tokens));
+	return (check_redirects(minishell->tokens)
+		|| check_pipes(minishell->tokens));
 }
 
-void	free_parsing(t_minishell *minishell)
+void	syntax_error(char *parse_error, t_minishell *minishell)
 {
+	minishell->last_status = 2;
+	ft_putstr_fd("minishell: syntax error near unexpected token '", 2);
+	if (!*parse_error)
+		ft_putstr_fd("newline", 2);
+	else
+		ft_putchar_fd(*parse_error, 2);
+	ft_putstr_fd("'\n", 2);
 	if (minishell->tokens)
 		free_tokens(minishell->tokens);
 	free(minishell->read_line);
@@ -73,17 +108,6 @@ void	free_parsing(t_minishell *minishell)
 	minishell->tokens = NULL;
 	minishell->envp_array = NULL;
 	minishell->paths = NULL;
-}
-
-void	syntax_error(char *parse_error, t_minishell *minishell)
-{
-	minishell->last_status = 2;
-	ft_putstr_fd("minishell: syntax error near unexpected token '", 2);
-	if (!*parse_error)
-		return (ft_putstr_fd("newline'\n", 2), free_parsing(minishell));
-	ft_putchar_fd(*parse_error, 2);
-	ft_putstr_fd("'\n", 2);
-	free_parsing(minishell);
 }
 
 /*	Creates a list of tokens from readline()

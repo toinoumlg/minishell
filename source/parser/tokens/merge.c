@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 15:30:47 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 20:29:18 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/23 18:27:12 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	need_merge(t_token *cur, t_token *next)
 			|| next->type == simple_quote || next->type == double_quote));
 }
 
-char	*merge_token(char *s1, char *s2, t_minishell *minishell)
+static char	*merge_token(char *s1, char *s2, t_minishell *minishell)
 {
 	int		size;
 	char	*merged;

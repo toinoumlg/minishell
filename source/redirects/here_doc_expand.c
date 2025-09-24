@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 07:48:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 19:53:24 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/23 17:15:09 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	expand_last_status_here_doc(char *str, char **read_line,
 }
 
 void	append_env_here_doc(char *str, char **read_line, t_minishell *minishell,
-		t_envp *expand, int i)
+		t_envp *expand)
 {
 	char	*tmp;
 
@@ -78,7 +78,7 @@ void	append_env_here_doc(char *str, char **read_line, t_minishell *minishell,
 	}
 	free(tmp);
 	tmp = *read_line;
-	*read_line = ft_strjoin(tmp, str + i);
+	*read_line = ft_strjoin(tmp, str);
 	if (!*read_line)
 	{
 		free(str);
@@ -92,21 +92,22 @@ int	expand_env_here_doc(char *str, char **read_line, t_minishell *minishell)
 	t_envp	*expand;
 	int		i;
 	char	*tmp;
-	int		size;
+	char	c;
 
 	i = 0;
-	expand = get_env_and_update_str(&i, str, minishell);
-	if (expand)
-	{
-		size = ft_strlen(expand->value) - 1;
-		append_env_here_doc(str, read_line, minishell, expand, i);
-	}
-	else
+	while (str[i] && str[i] != '$' && (ft_isalnum(str[i]) || str[i] == '_'))
+		i++;
+	c = str[i];
+	str[i] = 0;
+	expand = find_existing_envp(str, minishell->envp);
+	str[i] = c;
+	if (!expand)
 	{
 		tmp = *read_line;
-		size = -i;
 		*read_line = ft_strjoin(tmp, str + i);
 		free(tmp);
+		return (-1);
 	}
-	return (size);
+	append_env_here_doc(str + i, read_line, minishell, expand);
+	return (ft_strlen(expand->value) - 1);
 }

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/19 19:58:45 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/23 18:46:43 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	exit_alpha(t_minishell *minishell)
 	return (2);
 }
 
-int	my_exit(t_minishell *minishell)
+int	ft_exit(t_minishell *minishell)
 {
 	int	result;
 	int	args_size;

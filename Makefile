@@ -17,7 +17,8 @@ EXEC_FILES = exec/exec exec/exec_utils exec/print_error \
 
 BUILTSIN = builtsin/builtsin  \
 	builtsin/parent/cd builtsin/parent/exit \
-	builtsin/parent/export builtsin/parent/unset \
+	builtsin/parent/export builtsin/parent/export_sorted \
+	builtsin/parent/unset \
 	builtsin/child/echo builtsin/child/env \
 	builtsin/child/pwd builtsin/parent/cd_update
 
@@ -31,7 +32,7 @@ PARSER_FILES = parser/parse_read_line parser/alloc \
 	parser/tokens/token parser/tokens/merge \
 	parser/tokens/list parser/tokens/operator \
 	parser/tokens/string parser/tokens/utils \
-	parser/tokens/expand parser/tokens/free \
+	parser/tokens/expand parser/tokens/remove \
 	parser/tokens/expand_string \
 	parser/commands/commands parser/commands/args \
 	parser/commands/redirect \

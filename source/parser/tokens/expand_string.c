@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 14:56:56 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 20:31:02 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/23 18:25:03 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "free.h"
 #include "parser/token.h"
 
-int	expand_pid(char *str, t_token *token, t_minishell *minishell)
+static int	expand_pid(char *str, t_token *token, t_minishell *minishell)
 {
 	char	*pid;
 	char	*tmp;
@@ -38,7 +38,8 @@ int	expand_pid(char *str, t_token *token, t_minishell *minishell)
 	return (size);
 }
 
-int	expand_last_status(char *str, t_token *token, t_minishell *minishell)
+static int	expand_last_status(char *str, t_token *token,
+		t_minishell *minishell)
 {
 	char	*nbr_str;
 	char	*tmp;
@@ -62,8 +63,8 @@ int	expand_last_status(char *str, t_token *token, t_minishell *minishell)
 	return (size);
 }
 
-void	append_env_to_string(char *str, t_token *token, t_minishell *minishell,
-		t_envp *expand, int i)
+static void	append_env_to_string(char *str, t_token *token,
+		t_minishell *minishell, t_envp *expand)
 {
 	char	*tmp;
 
@@ -76,7 +77,7 @@ void	append_env_to_string(char *str, t_token *token, t_minishell *minishell,
 	}
 	free(tmp);
 	tmp = token->string;
-	token->string = ft_strjoin(tmp, str + i);
+	token->string = ft_strjoin(tmp, str);
 	if (!token->string)
 	{
 		free(str);
@@ -85,44 +86,35 @@ void	append_env_to_string(char *str, t_token *token, t_minishell *minishell,
 	free(tmp);
 }
 
-t_envp	*get_env_and_update_str(int *i, char *str, t_minishell *minishell)
-{
-	char	c;
-	t_envp	*expand;
-
-	while (str[*i] && str[*i] != '$' && (ft_isalnum(str[*i]) || str[*i] == '_'))
-		(*i)++;
-	c = str[*i];
-	str[*i] = 0;
-	expand = find_existing_envp(str, minishell->envp);
-	str[*i] = c;
-	return (expand);
-}
-
 static int	expand_env(char *str, t_token *token, t_minishell *minishell)
 {
 	t_envp	*expand;
 	int		i;
 	char	*tmp;
-	int		size;
+	char	c;
 
 	i = 0;
-	expand = get_env_and_update_str(&i, str, minishell);
-	if (expand)
-	{
-		size = ft_strlen(expand->value) - 1;
-		append_env_to_string(str, token, minishell, expand, i);
-	}
-	else
+	while (str[i] && str[i] != '$' && (ft_isalnum(str[i]) || str[i] == '_'))
+		i++;
+	c = str[i];
+	str[i] = 0;
+	expand = find_existing_envp(str, minishell->envp);
+	str[i] = c;
+	if (!expand)
 	{
 		tmp = token->string;
-		size = -1;
 		token->string = ft_strjoin(tmp, str + i);
 		free(tmp);
+		return (-1);
 	}
-	return (size);
+	append_env_to_string(str + i, token, minishell, expand);
+	return (ft_strlen(expand->value) - 1);
 }
 
+/*	Handle variable expansion for different '$' cases:
+	Empty after '$': skip if followed by quotes, ortherwise restore '$'
+	'$$': expands process ID, '$?': expands to last exit status
+	Other cases: attempts enviroment variable expansion	*/
 void	handle_expansion(int *i, t_token *token, t_minishell *minishell)
 {
 	char	*str;

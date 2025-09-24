@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 20:30:18 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/23 17:19:57 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,15 @@ static void	handle_here_doc_expansion(int *i, char **read_line,
 	free(str);
 }
 
+/*	Expands variable on read_line string.
+	Works like token expansion but modifies the read_line string directly	*/
 static void	expand_here_doc(char **read_line, t_minishell *minishell)
 {
-	int		i;
-	char	c;
+	int	i;
 
 	i = 0;
 	while ((*read_line)[i])
 	{
-		c = (*read_line)[i];
-		(void)c;
 		if ((*read_line)[i] == '$')
 		{
 			(*read_line)[i] = 0;
@@ -70,7 +69,6 @@ static void	write_here_doc(int fd, char *lim, t_token_type type,
 		t_minishell *minishell)
 {
 	char	*read_line;
-	char	*line;
 
 	set_signals_heredoc();
 	while (1)

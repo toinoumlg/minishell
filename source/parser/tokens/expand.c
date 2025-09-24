@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 16:14:42 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 19:55:51 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/23 18:26:38 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 /*	Create and insert a new_token with provided type and string
 	Marked as word_expanded or space_expand
 	Inserted after existing expanded tokens	*/
-void	insert_token(char *start, t_token *token, t_minishell *minishell,
+static void	insert_token(char *start, t_token *token, t_minishell *minishell,
 		t_token_type type)
 {
 	t_token	*new;
@@ -49,7 +49,7 @@ void	insert_token(char *start, t_token *token, t_minishell *minishell,
 /*	Parse the string created in expand_string and splits it into new tokens
 	New_tokens are inserted after the token itself
 	Token string is set to 0 to get removed after	*/
-void	expand_tokens(t_token *token, t_minishell *minishell)
+static void	expand_tokens(t_token *token, t_minishell *minishell)
 {
 	int		i;
 	char	c;
@@ -78,7 +78,7 @@ void	expand_tokens(t_token *token, t_minishell *minishell)
 
 /*	Skips all non-desired tokens for expand
 	As well as if it's a limiter for here_doc	*/
-t_token	*get_next_expand(t_token *tokens)
+static t_token	*get_next_expand(t_token *tokens)
 {
 	int	was_here_doc;
 
@@ -104,8 +104,9 @@ t_token	*get_next_expand(t_token *tokens)
 	return (NULL);
 }
 
-/*	Parse token string and expands*/
-int	expand_string(t_token *token, t_minishell *minishell)
+/*	Parse token string and expands when encountering '$'
+	Sets where '$' position to null for string reconstruction	*/
+static int	expand_string(t_token *token, t_minishell *minishell)
 {
 	int	i;
 	int	expanded;

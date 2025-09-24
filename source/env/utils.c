@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   envp_utils.c                                       :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 16:58:49 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 16:37:38 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/23 19:02:13 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	append_new_envp(t_envp **envp, t_envp *new)
 	tmp->next = new;
 }
 
-// t_envp	*set_new_envp(char *envp_line, t_minishell *minishell)
+// t_envp	*set_new_envp(char *line, t_minishell *minishell)
 // {
 // 	t_envp	*new_envp;
 
@@ -79,7 +79,7 @@ void	append_new_envp(t_envp **envp, t_envp *new)
 // 	if (!new_envp)
 // 		exit_perror(minishell, "malloc :");
 // 	memset(new_envp, 0, sizeof(t_envp));
-// 	new_envp->line = ft_strdup(envp_line);
+// 	new_envp->line = ft_strdup(line);
 // 	if (!new_envp->line)
 // 		exit_perror(minishell, "malloc :");
 // 	set_name(new_envp, minishell);

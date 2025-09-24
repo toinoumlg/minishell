@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 19:18:28 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/19 19:58:58 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/23 18:58:33 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,18 +27,18 @@ static char	*set_line_cd(char *getenv_line, char *name)
 	return (line);
 }
 
-static char	*set_name_cd(char *envp_line)
+static char	*set_name_cd(char *line)
 {
 	char	*name;
 	int		i;
 
 	i = -1;
-	name = ft_strdup(envp_line);
+	name = ft_strdup(line);
 	if (!name)
 		return (NULL);
-	while (envp_line[++i])
+	while (line[++i])
 	{
-		if (envp_line[i] == '=')
+		if (line[i] == '=')
 		{
 			name[i] = 0;
 			return (name);
@@ -47,11 +47,11 @@ static char	*set_name_cd(char *envp_line)
 	return (name);
 }
 
-static char	*set_value_cd(char *envp_line)
+static char	*set_value_cd(char *line)
 {
 	char	*value;
 
-	value = ft_strchr(envp_line, '=');
+	value = ft_strchr(line, '=');
 	if (value)
 	{
 		value = ft_strdup(value);
@@ -64,7 +64,7 @@ static char	*set_value_cd(char *envp_line)
 }
 
 // to reworks (leaks)
-static t_envp	*new_envp(char *envp_line)
+static t_envp	*new_envp(char *line)
 {
 	t_envp	*new_envp;
 
@@ -72,13 +72,13 @@ static t_envp	*new_envp(char *envp_line)
 	if (!new_envp)
 		return (NULL);
 	memset(new_envp, 0, sizeof(t_envp));
-	new_envp->line = ft_strdup(envp_line);
+	new_envp->line = ft_strdup(line);
 	if (!new_envp->line)
 		return (NULL);
-	new_envp->name = set_name_cd(envp_line);
+	new_envp->name = set_name_cd(line);
 	if (!new_envp->name)
 		return (NULL);
-	new_envp->value = set_value_cd(envp_line);
+	new_envp->value = set_value_cd(line);
 	if (!new_envp->value)
 		return (NULL);
 	return (new_envp);

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 17:04:13 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 12:59:10 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/23 17:50:34 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+/*	Same logic as dup2_pipes but we only close pipes for the parent	*/
 void	close_pipes(int (*pipe_fds)[2], int size, int i)
 {
 	if (!pipe_fds)
@@ -31,6 +32,10 @@ void	close_pipes(int (*pipe_fds)[2], int size, int i)
 	}
 }
 
+/*	Redirects stdin/out to appropriate pipe fd based on command position
+	First command : stdout to pipe
+	Middle command: stdin from previous pipe and stdout to current pipe
+	Last command: stdin from prevous pipe	*/
 void	dup2_pipes(int (*pipe_fds)[2], int size, int i, t_minishell *minishell)
 {
 	if (i == 0)
@@ -58,15 +63,11 @@ void	dup2_pipes(int (*pipe_fds)[2], int size, int i, t_minishell *minishell)
 	}
 }
 
-static int	need_to_pipe(t_minishell *minishell)
-{
-	return (minishell->size > 1 && minishell->i < minishell->size - 1);
-}
-
-// creates pipe if needed
+/*	Creates a pipe if there are multiple commands
+	Only creates pipes between commands, so stops at size - 1	*/
 void	do_pipe(t_minishell *minishell)
 {
-	if (need_to_pipe(minishell))
+	if (minishell->size > 1 && minishell->i < minishell->size - 1)
 		if (pipe(minishell->pipe_fds[minishell->i]) == -1)
 			exit_perror(minishell, "pipe");
 }

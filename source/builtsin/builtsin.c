@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:41:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 20:20:46 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/23 18:46:43 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@ void	exec_builtsin_in_child(t_minishell *minishell)
 	if (!ft_strncmp(cmd, CD, 3))
 		minishell->last_status = cd(minishell);
 	if (!ft_strncmp(cmd, EXIT, 5))
-		minishell->last_status = my_exit(minishell);
+		minishell->last_status = ft_exit(minishell);
 	if (!ft_strncmp(cmd, EXPORT, 7))
-		minishell->last_status = my_export(minishell);
+		minishell->last_status = ft_export(minishell);
 	if (!ft_strncmp(cmd, UNSET, 6))
 		minishell->last_status = unset(minishell);
 	if (minishell->last_status != -1)
@@ -57,9 +57,9 @@ void	exec_builtsin_in_parent(t_minishell *minishell)
 	if (!ft_strncmp(cmd, CD, 3))
 		minishell->last_status = cd(minishell);
 	if (!ft_strncmp(cmd, EXIT, 5))
-		minishell->last_status = my_exit(minishell);
+		minishell->last_status = ft_exit(minishell);
 	if (!ft_strncmp(cmd, EXPORT, 7))
-		minishell->last_status = my_export(minishell);
+		minishell->last_status = ft_export(minishell);
 	if (!ft_strncmp(cmd, UNSET, 6))
 		minishell->last_status = unset(minishell);
 	free_and_set_to_next_commands(&minishell->cmds);

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 20:31:36 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/23 17:06:29 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void	wait_for_childrens(t_minishell *minishell)
 int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	minishell;
-	char		*line;
 
 	if (!isatty(0) || !isatty(1) || !isatty(2))
 		return (1);
