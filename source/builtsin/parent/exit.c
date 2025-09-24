@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/23 18:46:43 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/24 19:38:50 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 
 static int	is_nbr(char *str)
 {
+	if (!*str)
+		return (0);
 	if (*str == '+' || *str == '-')
 		str++;
 	while (str && *str != 0)

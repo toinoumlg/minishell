@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 14:56:56 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/23 18:25:03 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/24 17:38:34 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ static int	expand_env(char *str, t_token *token, t_minishell *minishell)
 	str[i] = 0;
 	expand = find_existing_envp(str, minishell->envp);
 	str[i] = c;
-	if (!expand)
+	if (!expand || !expand->value)
 	{
 		tmp = token->string;
 		token->string = ft_strjoin(tmp, str + i);

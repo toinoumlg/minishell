@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 18:45:43 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/23 19:08:48 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/24 16:59:03 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	swap_string(char **array, int i, int j)
 	array[j] = tmp;
 }
 
-void	print_envp_with_quote(char *str)
+void	print_export_with_quote(char *str)
 {
 	int	i;
 
@@ -49,19 +49,22 @@ void	print_export_sorted(char **envp_sorted)
 	i = 0;
 	while (envp_sorted[i])
 	{
-		tmp = NULL;
-		tmp = ft_strchr(envp_sorted[i], '=');
-		if (tmp && !*(tmp + 1))
-			printf("export %s\"\"\n", envp_sorted[i]);
-		else if (tmp)
-			print_envp_with_quote(envp_sorted[i]);
-		else
-			printf("export %s\n", envp_sorted[i]);
+		if (ft_isalpha(envp_sorted[i][0]))
+		{
+			tmp = NULL;
+			tmp = ft_strchr(envp_sorted[i], '=');
+			if (tmp && !*(tmp + 1))
+				printf("export %s\"\"\n", envp_sorted[i]);
+			else if (tmp)
+				print_export_with_quote(envp_sorted[i]);
+			else
+				printf("export %s\n", envp_sorted[i]);
+		}
 		i++;
 	}
 }
 
-int	export_sorted(char **envp)
+void	export_sorted(char **envp)
 {
 	char	**envp_sorted;
 	int		i;
@@ -70,7 +73,7 @@ int	export_sorted(char **envp)
 	envp_sorted = envp;
 	i = 0;
 	if (!envp_sorted)
-		return (0);
+		return ;
 	while (envp_sorted[i])
 	{
 		j = i + 1;
@@ -83,5 +86,5 @@ int	export_sorted(char **envp)
 		}
 		i++;
 	}
-	return (print_export_sorted(envp_sorted), 0);
+	print_export_sorted(envp_sorted);
 }

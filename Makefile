@@ -20,7 +20,7 @@ BUILTSIN = builtsin/builtsin  \
 	builtsin/parent/export builtsin/parent/export_sorted \
 	builtsin/parent/unset \
 	builtsin/child/echo builtsin/child/env \
-	builtsin/child/pwd builtsin/parent/cd_update
+	builtsin/child/pwd builtsin/parent/update_pwd
 
 REDIRECT = redirects/here_doc redirects/here_doc_expand \
 	redirects/set_dup2 redirects/set_dup2_utils \

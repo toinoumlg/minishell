@@ -6,14 +6,14 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:44:58 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/23 18:46:43 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/24 18:38:15 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUILTSIN_H
 # define BUILTSIN_H
 
-# ifndef BUILTSIN_VALUE
+# ifndef BUILTSIN_CMDS
 #  define ECHO "echo"
 #  define ENV "env"
 #  define PWD "pwd"
@@ -35,11 +35,11 @@ int		echo(t_minishell *minishell);
 int		env(t_minishell *minishell);
 int		pwd(t_minishell *minishell);
 
-void	update_pwd(t_envp *envp);
+void	update_pwd(t_minishell *minishell);
 int		cd(t_minishell *minishell);
 int		ft_exit(t_minishell *minishell);
 int		ft_export(t_minishell *minishell);
-int		export_sorted(char **envp);
+void	export_sorted(char **envp);
 int		unset(t_minishell *minishell);
 
 #endif

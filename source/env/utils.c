@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 16:58:49 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/23 19:02:13 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/24 17:27:33 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,10 @@ void	set_value(t_envp *new, t_minishell *minishell)
 			new->value = ft_strdup(tmp + 1);
 			if (!new->value)
 				exit_perror(minishell, "malloc");
+			return ;
 		}
 	}
+	new->value = NULL;
 }
 
 void	append_new_envp(t_envp **envp, t_envp *new)

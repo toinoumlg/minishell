@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 09:02:17 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 19:36:28 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/24 20:01:01 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,22 +77,16 @@ void	set_envp_array(t_minishell *minishell)
 void	set_paths(t_minishell *minishell)
 {
 	t_envp	*path;
-	char	*tmp;
 
-	tmp = NULL;
 	if (minishell->paths)
 		free_array(minishell->paths);
 	path = find_existing_envp("PATH", minishell->envp);
-	if (path)
+	if (path && path->value)
 	{
-		tmp = ft_strchr(path->value, '/');
-		if (tmp)
-		{
-			minishell->paths = ft_split(tmp, ':');
-			if (!minishell->paths)
-				exit_perror(minishell, "malloc ");
-			return (join_paths(minishell));
-		}
+		minishell->paths = ft_split(path->value, ':');
+		if (!minishell->paths)
+			exit_perror(minishell, "malloc ");
+		return (join_paths(minishell));
 	}
 	minishell->paths = NULL;
 }

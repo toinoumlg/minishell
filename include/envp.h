@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 16:41:45 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 20:28:54 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/24 18:40:52 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 # define ENVP_H
 
 # include "minishell.h"
+
+# ifndef ENVP_VAR
+#  define PATH "PATH"
+#  define PWD_VAR "PWD"
+#  define OLDPWD "OLDPWD"
+# endif
 
 void	set_envp(t_minishell *minishell, char **envp);
 

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/19 19:57:30 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/24 18:47:54 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	cd_home(t_minishell *minishell)
 	if (home)
 	{
 		if (!chdir(home->value))
-			return (update_pwd(minishell->envp), 0);
+			return (update_pwd(minishell), 0);
 		else
 			return (perror("chdir"), 0);
 	}
@@ -47,7 +47,7 @@ int	cd_oldpwd(t_minishell *minishell)
 	if (oldpwd)
 	{
 		if (!chdir(oldpwd->value))
-			return (update_pwd(minishell->envp), 0);
+			return (printf("%s\n", oldpwd->value), update_pwd(minishell), 0);
 		else
 			return (perror("chdir"), 1);
 	}
@@ -61,7 +61,7 @@ int	cd_path(t_minishell *minishell)
 
 	path = minishell->cmds->args[1];
 	if (!chdir(path))
-		return ((update_pwd(minishell->envp), 0));
+		return ((update_pwd(minishell), 0));
 	else
 		return (perror("chdir"), 1);
 }

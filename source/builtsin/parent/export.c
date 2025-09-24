@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:25 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/23 20:00:02 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/24 18:57:20 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,17 @@
 static void	update_values(t_envp *existing, char *line, t_minishell *minishell)
 {
 	free(existing->line);
-	free(existing->value);
-	free(existing->name);
 	existing->line = ft_strdup(line);
 	if (!existing->line)
 		exit_perror(minishell, "malloc");
+	free(existing->name);
 	set_name(existing, minishell);
+	if (existing->value)
+		free(existing->value);
 	set_value(existing, minishell);
 }
 
-static void	set_new_export(char *line, t_minishell *minishell)
+static void	add_export(char *line, t_minishell *minishell)
 {
 	t_envp	*new_export;
 
@@ -42,7 +43,6 @@ static void	set_new_export(char *line, t_minishell *minishell)
 		exit_perror(minishell, "malloc");
 	set_name(new_export, minishell);
 	set_value(new_export, minishell);
-	return ;
 }
 
 static int	valid_export(char *line)
@@ -63,31 +63,36 @@ static int	valid_export(char *line)
 	return (1);
 }
 
-int	export_arguments(t_minishell *minishell)
+void	export_arguments(char *export, t_minishell *minishell)
 {
-	int		status;
 	t_envp	*existing;
-	int		i;
 	char	*sign;
 
+	sign = ft_strchr(export, '=');
+	if (sign)
+		*sign = 0;
+	existing = find_existing_envp(export, minishell->envp);
+	if (sign)
+		*sign = '=';
+	if (existing)
+		update_values(existing, export, minishell);
+	else
+		add_export(export, minishell);
+}
+
+int	ft_export(t_minishell *minishell)
+{
+	int	status;
+	int	i;
+
+	if (!minishell->cmds->args[1])
+		return (export_sorted(minishell->envp_array), 0);
 	status = 0;
 	i = 1;
 	while (minishell->cmds->args[i])
 	{
 		if (valid_export(minishell->cmds->args[i]))
-		{
-			sign = ft_strchr(minishell->cmds->args[i], '=');
-			if (sign)
-				*sign = 0;
-			existing = find_existing_envp(minishell->cmds->args[i],
-					minishell->envp);
-			if (sign)
-				*sign = '=';
-			if (existing)
-				update_values(existing, minishell->cmds->args[i], minishell);
-			else
-				set_new_export(minishell->cmds->args[i], minishell);
-		}
+			export_arguments(minishell->cmds->args[i], minishell);
 		else
 		{
 			ft_putstr_fd("minishell: export: `", 2);
@@ -98,11 +103,4 @@ int	export_arguments(t_minishell *minishell)
 		i++;
 	}
 	return (status);
-}
-
-int	ft_export(t_minishell *minishell)
-{
-	if (!minishell->cmds->args[1])
-		return (export_sorted(minishell->envp_array));
-	return (export_arguments(minishell));
 }

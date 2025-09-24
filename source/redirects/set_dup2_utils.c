@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:50:43 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 16:02:19 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/24 19:35:47 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	dup2_infile(t_file *infile, t_minishell *minishell)
 
 void	dup2_outfile(t_file *outfile, t_minishell *minishell)
 {
-	outfile->fd = open(outfile->path, O_CREAT | O_WRONLY | O_TRUNC, 0600);
+	outfile->fd = open(outfile->path, O_CREAT | O_WRONLY | O_TRUNC, 00664);
 	if (outfile->fd > 0)
 	{
 		if (dup2(outfile->fd, STDOUT_FILENO) == -1)
@@ -42,7 +42,7 @@ void	dup2_outfile(t_file *outfile, t_minishell *minishell)
 void	dup2_append_file(t_file *append_file, t_minishell *minishell)
 {
 	append_file->fd = open(append_file->path, O_CREAT | O_WRONLY | O_APPEND,
-			0600);
+			00664);
 	if (append_file->fd > 0)
 	{
 		if (dup2(append_file->fd, STDOUT_FILENO) == -1)

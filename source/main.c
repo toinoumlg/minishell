@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/23 17:06:29 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/24 17:16:50 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,23 @@ void	wait_for_childrens(t_minishell *minishell)
 int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	minishell;
+	char		*line;
 
-	if (!isatty(0) || !isatty(1) || !isatty(2))
-		return (1);
+	// if (!isatty(0) || !isatty(1) || !isatty(2))
+	// 	return (1);
 	set_envp(&minishell, envp);
 	set_signals();
 	while (argv && argc)
 	{
-		minishell.read_line = readline("minishell> ");
+		if (isatty(fileno(stdin)))
+			minishell.read_line = readline("minishell> ");
+		else
+		{
+			line = get_next_line(fileno(stdin));
+			minishell.read_line = ft_strtrim(line, "\n");
+			free(line);
+		}
+		// minishell.read_line = readline("minishell> ");
 		parse_read_line(&minishell);
 		exec(&minishell);
 		wait_for_childrens(&minishell);

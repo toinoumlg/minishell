@@ -82,6 +82,7 @@
 		"pwd.h": "c",
 		"redirects.h": "c",
 		"parsing_utils.h": "c",
-		"access_program.h": "c"
+		"access_program.h": "c",
+		"unordered_set": "c"
 	}
 }
