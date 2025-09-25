@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 19:18:28 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/24 18:40:58 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/25 13:36:15 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,14 @@ static void	update_line(t_envp *new, t_minishell *minishell)
 	char	*tmp;
 
 	free(new->line);
-	if (new)
-		tmp = ft_strjoin(new->name, "=");
-	if (!tmp)
-		exit_perror(minishell, "malloc");
+	if (!new->contains_sign)
+	{
+		new->line = ft_strdup(new->name);
+		if (!new->line)
+			exit_perror(minishell, "malloc");
+		return ;
+	}
+	tmp = ft_strjoin(new->name, "=");
 	if (new->value)
 	{
 		new->line = ft_strjoin(tmp, new->value);
