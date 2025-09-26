@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 20:31:51 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/26 16:06:45 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,6 @@ void	try_exec(t_minishell *minishell)
 	exec_in_child(minishell);
 }
 
-// handle_underscore(minishell);
-
 void	exec(t_minishell *minishell)
 {
 	if (!minishell->cmds)
@@ -85,6 +83,7 @@ void	exec(t_minishell *minishell)
 	while (minishell->cmds)
 	{
 		do_pipe(minishell);
+		underscore(minishell);
 		try_exec(minishell);
 		close_pipes(minishell->pipe_fds, minishell->size, minishell->i);
 		close_here_doc(minishell->cmds->redirects);

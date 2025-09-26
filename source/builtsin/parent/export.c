@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:25 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/24 18:57:20 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/26 14:46:12 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	add_export(char *line, t_minishell *minishell)
 	new_export = malloc(sizeof(t_envp));
 	if (!new_export)
 		exit_perror(minishell, "malloc");
-	memset(new_export, 0, sizeof(t_envp));
+	ft_memset(new_export, 0, sizeof(t_envp));
 	append_new_envp(&minishell->envp, new_export);
 	new_export->line = ft_strdup(line);
 	if (!new_export->line)

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 16:58:49 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/24 17:27:33 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/26 15:14:10 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,21 +73,23 @@ void	append_new_envp(t_envp **envp, t_envp *new)
 	tmp->next = new;
 }
 
-// t_envp	*set_new_envp(char *line, t_minishell *minishell)
-// {
-// 	t_envp	*new_envp;
+void	set_new_envp(char *line, t_minishell *minishell)
+{
+	t_envp	*new;
 
-// 	new_envp = malloc(sizeof(t_envp));
-// 	if (!new_envp)
-// 		exit_perror(minishell, "malloc :");
-// 	memset(new_envp, 0, sizeof(t_envp));
-// 	new_envp->line = ft_strdup(line);
-// 	if (!new_envp->line)
-// 		exit_perror(minishell, "malloc :");
-// 	set_name(new_envp, minishell);
-// 	set_value(new_envp, minishell);
-// 	return (new_envp);
-// }
+	if (!line)
+		exit_perror(minishell, "malloc");
+	new = malloc(sizeof(t_envp));
+	if (!new)
+		exit_perror(minishell, "malloc :");
+	ft_memset(new, 0, sizeof(t_envp));
+	append_new_envp(&minishell->envp, new);
+	new->line = line;
+	if (!new->line)
+		exit_perror(minishell, "malloc :");
+	set_name(new, minishell);
+	set_value(new, minishell);
+}
 
 /*	Return a pointer to envp struct that match specified name.
 	Return NULL if not in environnement.	*/

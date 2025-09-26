@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 09:28:24 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 18:43:31 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/26 14:46:12 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_token	*set_new_token(t_minishell *minishell)
 	new_token = malloc(sizeof(t_token));
 	if (!new_token)
 		exit_perror(minishell, "malloc :");
-	memset(new_token, 0, sizeof(t_token));
+	ft_memset(new_token, 0, sizeof(t_token));
 	return (new_token);
 }
 

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:25:17 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/23 18:43:20 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/26 14:46:12 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static int	check_pipes(t_token *tokens)
 
 static int	get_tokens(char **parse_error, t_minishell *minishell)
 {
-	memset(&minishell->tokens, 0, sizeof(t_token *));
+	ft_memset(&minishell->tokens, 0, sizeof(t_token *));
 	while (**parse_error)
 	{
 		if (**parse_error == ';' || **parse_error == '\\')

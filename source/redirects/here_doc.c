@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/25 13:52:02 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/26 14:34:27 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ static void	write_here_doc(int fd, char *lim, t_token_type type,
 		t_minishell *minishell)
 {
 	char	*read_line;
-	char	*line;
 
 	set_signals_heredoc();
 	while (1)

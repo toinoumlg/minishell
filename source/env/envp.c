@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 17:41:48 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 16:52:23 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/26 15:13:49 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,23 +17,25 @@
 #include <stdio.h>
 #include <string.h>
 
-/// @brief HORRIBLE A REFAIRE
-/// @param minishell
-// void	set_basic_envp(t_minishell *minishell)
-// {
-// 	char	*tmp;
-// 	char	*full_line;
+void	set_pwd(t_minishell *minishell)
+{
+	char	*tmp;
+	char	*line;
 
-// 	tmp = getcwd(NULL, 0);
-// 	full_line = ft_strjoin("PWD=", tmp);
-// 	append_new_envp(&minishell->envp, set_new_envp(full_line));
-// 	free(full_line);
-// 	full_line = ft_strjoin("OLDPWD=", tmp);
-// 	append_new_envp(&minishell->envp, set_new_envp(full_line));
-// 	free(tmp);
-// 	free(full_line);
-// 	append_new_envp(&minishell->envp, set_new_envp("_"));
-// }
+	tmp = getcwd(NULL, 0);
+	if (!tmp)
+		exit_perror(minishell, "getcwd");
+	line = ft_strjoin("PWD=", tmp);
+	free(tmp);
+	set_new_envp(line, minishell);
+}
+
+void	set_basic_envp(t_minishell *minishell)
+{
+	set_new_envp(ft_strdup("OLDPWD"), minishell);
+	set_pwd(minishell);
+	set_new_envp(ft_strdup("SHLVL=1"), minishell);
+}
 
 /*	Update shell level var in the environnment (add + 1)	*/
 void	update_shlvl(t_minishell *minishell)
@@ -54,11 +56,11 @@ void	update_shlvl(t_minishell *minishell)
 		free(shlvl->line);
 		tmp = ft_strjoin(shlvl->name, "=");
 		if (!tmp)
-			exit_perror(minishell, "malloc ");
+			exit_perror(minishell, "malloc");
 		shlvl->line = ft_strjoin(tmp, shlvl->value);
 		free(tmp);
 		if (!shlvl->line)
-			exit_perror(minishell, "malloc ");
+			exit_perror(minishell, "malloc");
 	}
 }
 
@@ -71,20 +73,20 @@ void	set_envp(t_minishell *minishell, char **envp)
 	int		i;
 	t_envp	*new_envp;
 
-	memset(minishell, 0, sizeof(t_minishell));
+	ft_memset(minishell, 0, sizeof(t_minishell));
 	i = 0;
-	// if (!envp || !envp[i])
-	// 	return (set_basic_envp(minishell));
+	if (!envp || !envp[i])
+		return (set_basic_envp(minishell));
 	while (envp[i])
 	{
 		new_envp = malloc(sizeof(t_envp));
 		if (!new_envp)
-			exit_perror(minishell, "malloc ");
-		memset(new_envp, 0, sizeof(t_envp));
+			exit_perror(minishell, "malloc");
+		ft_memset(new_envp, 0, sizeof(t_envp));
 		append_new_envp(&minishell->envp, new_envp);
 		new_envp->line = ft_strdup(envp[i++]);
 		if (!new_envp->line)
-			exit_perror(minishell, "malloc ");
+			exit_perror(minishell, "malloc");
 		set_name(new_envp, minishell);
 		set_value(new_envp, minishell);
 	}

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 16:14:42 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/23 18:26:38 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/26 14:46:12 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	insert_token(char *start, t_token *token, t_minishell *minishell,
 	new = malloc(sizeof(t_token));
 	if (!new)
 		exit_perror(minishell, "malloc");
-	memset(new, 0, sizeof(t_token));
+	ft_memset(new, 0, sizeof(t_token));
 	if (type == word_expanded)
 	{
 		new->string = ft_strdup(start);

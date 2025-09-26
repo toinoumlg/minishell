@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 12:15:26 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 19:53:06 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/26 14:46:12 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static t_file	*new_file(t_minishell *minishell)
 	new = malloc(sizeof(t_file));
 	if (!new)
 		exit_perror(minishell, "malloc ");
-	memset(new, 0, sizeof(t_file));
+	ft_memset(new, 0, sizeof(t_file));
 	return (new);
 }
 

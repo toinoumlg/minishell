@@ -12,7 +12,8 @@ LIBFT = $(LIBFT_DIR)/libft.a
 SRC_DIR = source
 OBJ_DIR = build
 
-EXEC_FILES = exec/exec exec/exec_utils exec/print_error \
+EXEC_FILES = exec/exec exec/exec_utils \
+	exec/print_error exec/underscore
 	
 
 BUILTSIN = builtsin/builtsin  \

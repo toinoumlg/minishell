@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 19:18:28 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/25 13:36:15 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/26 15:06:57 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static t_envp	*add_to_envp(char *line, t_minishell *minishell)
 	new = malloc(sizeof(t_envp));
 	if (!new)
 		exit_perror(minishell, "malloc");
-	memset(new, 0, sizeof(t_envp));
+	ft_memset(new, 0, sizeof(t_envp));
 	append_new_envp(&minishell->envp, new);
 	new->line = ft_strdup(line);
 	if (!new->line)
@@ -77,9 +77,9 @@ void	update_pwd(t_minishell *minishell)
 	t_envp	*pwd;
 
 	oldpwd = find_existing_envp(OLDPWD, minishell->envp);
-	pwd = find_existing_envp(PWD_VAR, minishell->envp);
+	pwd = find_existing_envp(_PWD, minishell->envp);
 	if (!pwd)
-		pwd = add_to_envp(PWD_VAR, minishell);
+		pwd = add_to_envp(_PWD, minishell);
 	if (!oldpwd)
 		oldpwd = add_to_envp(OLDPWD, minishell);
 	if (oldpwd->value)

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:09 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/24 17:03:41 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/26 14:46:12 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	**set_array(int size, t_minishell *minishell)
 	array = malloc(sizeof(char *) * (size + 1));
 	if (!array)
 		exit(free_minishell(minishell));
-	memset(array, 0, sizeof(char *) * (size + 1));
+	ft_memset(array, 0, sizeof(char *) * (size + 1));
 	return (array);
 }
 

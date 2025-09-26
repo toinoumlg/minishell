@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 17:03:22 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/24 17:04:27 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/26 14:46:12 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static t_cmd	*set_new_command(t_minishell *minishell)
 	new = malloc(sizeof(t_cmd));
 	if (!new)
 		exit_perror(minishell, "malloc ");
-	memset(new, 0, sizeof(t_cmd));
+	ft_memset(new, 0, sizeof(t_cmd));
 	return (new);
 }
 
@@ -52,7 +52,7 @@ static void	set_program(t_cmd *new_cmd, t_minishell *minishell)
 	new_cmd->program = malloc(sizeof(t_file));
 	if (!new_cmd->program)
 		exit_perror(minishell, "malloc ");
-	memset(new_cmd->program, 0, sizeof(t_file));
+	ft_memset(new_cmd->program, 0, sizeof(t_file));
 	new_cmd->program->path = ft_strdup(new_cmd->args[0]);
 	if (!new_cmd->program->path)
 		exit_perror(minishell, "malloc ");
