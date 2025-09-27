@@ -40,7 +40,8 @@ void	child_process(t_minishell *minishell)
 	t_cmd	*cmd;
 
 	cmd = minishell->cmds;
-	set_signals_child();
+	enable_ctrl_backslash();  // ← AJOUTEZ cette ligne
+	set_signals_child();      // SIG_DFL pour les signaux
 	set_dup2(minishell);
 	if (!cmd->error)
 	{

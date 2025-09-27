@@ -65,28 +65,43 @@ static void	expand_here_doc(char **read_line, t_minishell *minishell)
 	}
 }
 
-static void	write_here_doc(int fd, char *lim, t_token_type type,
-		t_minishell *minishell)
+static void write_here_doc(int fd, char *lim, t_token_type type, t_minishell *minishell)
 {
-	char	*read_line;
+    char *read_line;
 
-	set_signals_heredoc();
-	while (1)
-	{
-		read_line = readline("> ");
-		if (!read_line)
-			return (exit_on_eof(lim));
-		if (!ft_strncmp(read_line, lim, ft_strlen(lim) + 1))
-		{
-			free(read_line);
-			return ;
-		}
-		if (type == here_doc_word && ft_strchr(read_line, '$'))
-			expand_here_doc(&read_line, minishell);
-		write(fd, read_line, ft_strlen(read_line));
-		write(fd, "\n", 1);
-		free(read_line);
-	}
+    signal(SIGINT, heredoc_sigint_handler);  // Changement direct
+    
+    while (1) {
+        read_line = readline("> ");
+        
+        if (!read_line) {
+            if (g_heredoc_interrupted)
+                open("/dev/tty", O_RDONLY);
+            break;
+        }
+        
+        if (!ft_strncmp(read_line, lim, ft_strlen(lim) + 1)) {
+            free(read_line);
+            break;
+        }
+        
+        if (type == here_doc_word && ft_strchr(read_line, '$'))
+            expand_here_doc(&read_line, minishell);
+        write(fd, read_line, ft_strlen(read_line));
+        write(fd, "\n", 1);
+        free(read_line);
+    }
+    
+    signal(SIGINT, sigint_handler_main);  // Restauration directe
+    
+    if (g_heredoc_interrupted == 1) {
+        minishell->last_status = 130;
+        g_heredoc_interrupted = 0;
+        return;
+    }
+    
+    if (!read_line)
+        exit_on_eof(lim);
 }
 
 // fd[1] is for writing file

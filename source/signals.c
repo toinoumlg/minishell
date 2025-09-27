@@ -3,72 +3,74 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <readline/readline.h>
+#include <stdlib.h>
+#include <termios.h>
 
-// Handler pour SIGINT (Ctrl+C) dans le processus principal
+volatile sig_atomic_t g_heredoc_interrupted = 0;
+
 void sigint_handler_main(int sig)
 {
     (void)sig;
+    g_heredoc_interrupted = 2;  // ← AJOUTEZ cette ligne !
     write(STDOUT_FILENO, "\n", 1);
-    rl_on_new_line();
     rl_replace_line("", 0);
+    rl_on_new_line();
     rl_redisplay();
 }
 
-// Handler pour SIGQUIT (Ctrl+\) dans le processus principal - ignore
-void sigquit_handler_main(int sig)
+void heredoc_sigint_handler(int sig)
 {
     (void)sig;
-    // Ne rien faire - ignorer le signal
+    g_heredoc_interrupted = 1;
+    close(STDIN_FILENO);
+    rl_done = 1;
 }
 
-// Configuration des signaux pour le processus principal
 void set_signals(void)
 {
-    struct sigaction sa_int, sa_quit;
-    
-    // Configuration pour SIGINT (Ctrl+C)
-    sa_int.sa_handler = sigint_handler_main;
-    sigemptyset(&sa_int.sa_mask);
-    sa_int.sa_flags = SA_RESTART;
-    sigaction(SIGINT, &sa_int, NULL);
-    
-    // Configuration pour SIGQUIT (Ctrl+\) - ignorer
-    sa_quit.sa_handler = sigquit_handler_main;
-    sigemptyset(&sa_quit.sa_mask);
-    sa_quit.sa_flags = SA_RESTART;
-    sigaction(SIGQUIT, &sa_quit, NULL);
+    signal(SIGINT, sigint_handler_main);
+    signal(SIGQUIT, SIG_IGN);
 }
 
-// Configuration des signaux pour les processus enfants normaux
 void set_signals_child(void)
 {
-    struct sigaction sa_int, sa_quit;
-    
-    // Remettre le comportement par défaut pour les enfants
-    sa_int.sa_handler = SIG_DFL;
-    sigemptyset(&sa_int.sa_mask);
-    sa_int.sa_flags = 0;
-    sigaction(SIGINT, &sa_int, NULL);
-    
-    sa_quit.sa_handler = SIG_DFL;
-    sigemptyset(&sa_quit.sa_mask);
-    sa_quit.sa_flags = 0;
-    sigaction(SIGQUIT, &sa_quit, NULL);
+    signal(SIGINT, SIG_DFL);
+    signal(SIGQUIT, SIG_DFL);  // Comportement par défaut normal
 }
 
-// Configuration des signaux pour heredoc
+
 void set_signals_heredoc(void)
 {
-    struct sigaction sa_int, sa_quit;
+    signal(SIGINT, heredoc_sigint_handler);
+    signal(SIGQUIT, SIG_IGN);  // Ignore dans heredoc aussi
+}
+
+int is_heredoc_interrupted(void)
+{
+    return (g_heredoc_interrupted == 1);
+}
+
+void reset_heredoc_state(void)
+{
+    g_heredoc_interrupted = 0;
+}
+
+void disable_ctrl_backslash(void)
+{
+    struct termios term;
     
-    // Comportement par défaut pour heredoc
-    sa_int.sa_handler = SIG_DFL;
-    sigemptyset(&sa_int.sa_mask);
-    sa_int.sa_flags = 0;
-    sigaction(SIGINT, &sa_int, NULL);
+    if (tcgetattr(STDIN_FILENO, &term) == -1)
+        return;
+    term.c_cc[VQUIT] = _POSIX_VDISABLE;  // Désactive Ctrl+\ au niveau terminal
+    tcsetattr(STDIN_FILENO, TCSANOW, &term);
+}
+
+void enable_ctrl_backslash(void)
+{
+    struct termios term;
     
-    sa_quit.sa_handler = SIG_DFL;
-    sigemptyset(&sa_quit.sa_mask);
-    sa_quit.sa_flags = 0;
-    sigaction(SIGQUIT, &sa_quit, NULL);
+    if (tcgetattr(STDIN_FILENO, &term) == -1)
+        return;
+    term.c_cc[VQUIT] = 28;  // Restaure Ctrl+\ (ASCII 28)
+    tcsetattr(STDIN_FILENO, TCSANOW, &term);
 }
