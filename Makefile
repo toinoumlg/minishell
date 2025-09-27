@@ -25,7 +25,8 @@ BUILTSIN = builtsin/builtsin  \
 
 REDIRECT = redirects/here_doc redirects/here_doc_expand \
 	redirects/set_dup2 redirects/set_dup2_utils \
-	redirects/pipes redirects/create_files
+	redirects/pipes redirects/create_files \
+	redirects/here_doc_utils
 
 PARSER_FILES = parser/parse_read_line parser/alloc \
 	parser/access_program parser/access \
@@ -40,7 +41,7 @@ PARSER_FILES = parser/parse_read_line parser/alloc \
 
 ENV_FILES = env/envp env/utils
 
-MAIN_FILES = main free free_utils signals
+MAIN_FILES = main free free_utils signals signals_heredoc
 
 ALL_SRC_FILES = $(MAIN_FILES) $(EXEC_FILES) $(PARSER_FILES) $(ENV_FILES) $(BUILTSIN) $(REDIRECT)
 

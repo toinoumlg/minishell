@@ -33,7 +33,7 @@ int		expand_pid_here_doc(char *str, char **read_line,
 			t_minishell *minishell);
 
 void	do_pipe(t_minishell *minishell);
-
+void	exit_on_eof(char *lim);
 void	close_pipes(int (*pipe_fds)[2], int size, int i);
 
 #endif
