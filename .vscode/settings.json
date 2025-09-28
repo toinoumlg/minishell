@@ -83,6 +83,9 @@
 		"redirects.h": "c",
 		"parsing_utils.h": "c",
 		"access_program.h": "c",
-		"unordered_set": "c"
+		"unordered_set": "c",
+		"termios.h": "c",
+		"signal.h": "c",
+		"ioctl.h": "c"
 	}
 }

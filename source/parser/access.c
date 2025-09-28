@@ -6,13 +6,13 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:06 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 19:51:58 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 15:04:58 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser/access_program.h"
 #include "builtsin.h"
 #include "libft.h"
+#include "parser/access_program.h"
 #include "redirects.h"
 #include <fcntl.h>
 #include <stdio.h>
@@ -56,13 +56,14 @@ static int	check_for_directory(t_file *file)
 		return (0);
 }
 
-static void	access_file(t_file *file, t_minishell *minishell)
+static int	access_file(t_file *file, t_minishell *minishell)
 {
-	if (check_for_directory(file))
-		return ;
 	if (file->type == here_doc_quote || file->type == here_doc_word)
-		set_here_doc(file, minishell);
+		return (set_here_doc(file, minishell));
+	if (check_for_directory(file))
+		return (0);
 	set_access(file, file->path);
+	return (0);
 }
 
 static t_file	*get_error_file(t_file *redirects)
@@ -94,7 +95,8 @@ void	try_access(t_minishell *minishell)
 		redirects = cmds->redirects;
 		while (redirects)
 		{
-			access_file(redirects, minishell);
+			if (access_file(redirects, minishell))
+				return ;
 			redirects = redirects->next;
 		}
 		cmds->error = get_error_file(cmds->redirects);

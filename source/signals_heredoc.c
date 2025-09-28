@@ -3,41 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   signals_heredoc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yalaatik <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 20:18:35 by yalaatik          #+#    #+#             */
-/*   Updated: 2025/09/27 20:18:39 by yalaatik         ###   ########.fr       */
+/*   Updated: 2025/09/28 13:47:44 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "signals.h"
+#include <libft.h>
+#include <readline/readline.h>
 #include <signal.h>
 #include <stdio.h>
-#include <unistd.h>
-#include <readline/readline.h>
 #include <stdlib.h>
+#include <sys/ioctl.h>
 #include <termios.h>
+#include <unistd.h>
+
+void	heredoc_sigint_handler(int sig)
+{
+	write(STDOUT_FILENO, "\n", 1);
+	close(STDIN_FILENO);
+	g_sig = sig;
+}
 
 void	set_signals_heredoc(void)
 {
 	signal(SIGINT, heredoc_sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
-}
-
-int	is_heredoc_interrupted(void)
-{
-	return (g_heredoc_interrupted == 1);
-}
-
-void	reset_heredoc_state(void)
-{
-	g_heredoc_interrupted = 0;
-}
-
-void	heredoc_sigint_handler(int sig)
-{
-	(void)sig;
-	g_heredoc_interrupted = 1;
-	close(STDIN_FILENO);
-	rl_done = 1;
 }

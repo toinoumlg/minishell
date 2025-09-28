@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 07:48:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/23 17:15:09 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 14:57:30 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,6 @@
 #include "free.h"
 #include "minishell.h"
 #include "parser/token.h"
-
-int	expand_pid_here_doc(char *str, char **read_line, t_minishell *minishell)
-{
-	char	*pid;
-	char	*tmp;
-	int		size;
-
-	pid = ft_itoa(getpid());
-	if (!pid)
-	{
-		free(str);
-		exit_perror(minishell, "malloc");
-	}
-	size = ft_strlen(pid);
-	tmp = *read_line;
-	*read_line = ft_strjoin(tmp, pid);
-	free(pid);
-	free(tmp);
-	str++;
-	tmp = *read_line;
-	*read_line = ft_strjoin(tmp, str);
-	free(tmp);
-	return (size);
-}
 
 int	expand_last_status_here_doc(char *str, char **read_line,
 		t_minishell *minishell)
@@ -87,7 +63,8 @@ void	append_env_here_doc(char *str, char **read_line, t_minishell *minishell,
 	free(tmp);
 }
 
-int	expand_env_here_doc(char *str, char **read_line, t_minishell *minishell)
+static int	expand_env_here_doc(char *str, char **read_line,
+		t_minishell *minishell)
 {
 	t_envp	*expand;
 	int		i;
@@ -110,4 +87,37 @@ int	expand_env_here_doc(char *str, char **read_line, t_minishell *minishell)
 	}
 	append_env_here_doc(str + i, read_line, minishell, expand);
 	return (ft_strlen(expand->value) - 1);
+}
+
+static void	handle_here_doc_expansion(int *i, char **read_line,
+		t_minishell *minishell)
+{
+	char	*str;
+
+	str = ft_strdup(*read_line + *i + 1);
+	if (!str)
+		exit_perror(minishell, "malloc");
+	else if (!*str || *str == ' ' || *str == '/')
+		(*read_line)[(*i)++] = '$';
+	else if (*str == '?')
+		*i += expand_last_status_here_doc(str, read_line, minishell);
+	else
+		*i += expand_env_here_doc(str, read_line, minishell);
+	free(str);
+}
+
+void	expand_here_doc(char **read_line, t_minishell *minishell)
+{
+	int	i;
+
+	i = 0;
+	while ((*read_line)[i])
+	{
+		if ((*read_line)[i] == '$')
+		{
+			(*read_line)[i] = 0;
+			handle_here_doc_expansion(&i, read_line, minishell);
+		}
+		i++;
+	}
 }

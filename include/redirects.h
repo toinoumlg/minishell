@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 19:46:32 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 20:28:39 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 13:25:39 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,9 @@ void	dup2_pipes(int (*pipe_fds)[2], int size, int i, t_minishell *minishell);
 
 void	create_files(t_minishell *minishell);
 
-void	set_here_doc(t_file *here_doc_file, t_minishell *minishell);
-int		expand_env_here_doc(char *str, char **read_line,
-			t_minishell *minishell);
-int		expand_last_status_here_doc(char *str, char **read_line,
-			t_minishell *minishell);
-int		expand_pid_here_doc(char *str, char **read_line,
-			t_minishell *minishell);
+int		set_here_doc(t_file *here_doc_file, t_minishell *minishell);
+void	expand_here_doc(char *read_line, t_minishell *minishell);
+void	close_here_doc(t_file *redirects);
 
 void	do_pipe(t_minishell *minishell);
 void	exit_on_eof(char *lim);

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 09:36:35 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/26 16:06:52 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 10:18:25 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ static void	update_underscore(char *value, t_minishell *minishell)
 		set_new_envp(ft_strjoin("_=", value), minishell);
 	else
 	{
+		free(under_score->value);
 		under_score->value = ft_strdup(value);
 		if (!under_score->value)
 			exit_perror(minishell, "malloc");

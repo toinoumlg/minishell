@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 17:04:13 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/23 17:50:34 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 10:25:16 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+
+void	close_here_doc(t_file *redirects)
+{
+	while (redirects)
+	{
+		if (redirects->type == here_doc_quote
+			|| redirects->type == here_doc_word)
+			close(redirects->fd);
+		redirects = redirects->next;
+	}
+}
 
 /*	Same logic as dup2_pipes but we only close pipes for the parent	*/
 void	close_pipes(int (*pipe_fds)[2], int size, int i)

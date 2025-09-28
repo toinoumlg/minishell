@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 20:23:14 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 19:58:49 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 14:02:20 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	handle_error(t_file *error, t_minishell *minishell)
 void	create_append_files(t_file *append_file, t_minishell *minishell)
 {
 	append_file->fd = open(append_file->path, O_CREAT | O_WRONLY | O_APPEND,
-			0600);
+			00664);
 	if (append_file->fd > 0)
 		close(append_file->fd);
 	else
@@ -39,7 +39,7 @@ void	create_append_files(t_file *append_file, t_minishell *minishell)
 
 void	create_output(t_file *output, t_minishell *minishell)
 {
-	output->fd = open(output->path, O_CREAT | O_WRONLY | O_TRUNC, 0600);
+	output->fd = open(output->path, O_CREAT | O_WRONLY | O_TRUNC, 00664);
 	if (output->fd > 0)
 		close(output->fd);
 	else
@@ -60,4 +60,5 @@ void	create_files(t_minishell *minishell)
 		redirects = redirects->next;
 	}
 	handle_error(redirects, minishell);
+	exit(free_minishell(minishell));
 }

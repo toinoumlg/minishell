@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 16:14:42 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/26 14:46:12 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 14:09:20 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,8 @@ static int	expand_string(t_token *token, t_minishell *minishell)
 			handle_expansion(&i, token, minishell);
 			expanded++;
 		}
+		if (!token->string[i])
+			return (expanded);
 		i++;
 	}
 	return (expanded);

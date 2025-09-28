@@ -6,37 +6,13 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 14:56:56 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/24 17:38:34 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 14:52:48 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "envp.h"
 #include "free.h"
 #include "parser/token.h"
-
-static int	expand_pid(char *str, t_token *token, t_minishell *minishell)
-{
-	char	*pid;
-	char	*tmp;
-	int		size;
-
-	pid = ft_itoa(getpid());
-	if (!pid)
-	{
-		free(str);
-		exit_perror(minishell, "malloc");
-	}
-	size = ft_strlen(pid);
-	tmp = token->string;
-	token->string = ft_strjoin(tmp, pid);
-	free(pid);
-	free(tmp);
-	str++;
-	tmp = token->string;
-	token->string = ft_strjoin(tmp, str);
-	free(tmp);
-	return (size);
-}
 
 static int	expand_last_status(char *str, t_token *token,
 		t_minishell *minishell)
@@ -126,10 +102,8 @@ void	handle_expansion(int *i, t_token *token, t_minishell *minishell)
 		&& (token->next->type == simple_quote
 			|| token->next->type == double_quote))
 		return (free(str));
-	else if (!*str || *str == ' ' || *str == '/')
+	else if (!*str || *str == '$' || *str == ' ' || *str == '/')
 		token->string[(*i)++] = '$';
-	else if (*str == '$')
-		*i += expand_pid(str, token, minishell);
 	else if (*str == '?')
 		*i += expand_last_status(str, token, minishell);
 	else

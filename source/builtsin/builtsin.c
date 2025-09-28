@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:41:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/26 14:44:32 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 10:24:23 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	exec_builtsin_in_child(t_minishell *minishell)
 	if (!ft_strncmp(cmd, CD, 3))
 		minishell->last_status = cd(minishell);
 	if (!ft_strncmp(cmd, EXIT, 5))
-		minishell->last_status = ft_exit(minishell);
+		minishell->last_status = ft_exit(minishell, NULL);
 	if (!ft_strncmp(cmd, EXPORT, 7))
 		minishell->last_status = ft_export(minishell);
 	if (!ft_strncmp(cmd, UNSET, 6))
@@ -72,12 +72,13 @@ void	exec_builtsin_in_parent(t_minishell *minishell)
 	if (!ft_strncmp(cmd, CD, 3))
 		minishell->last_status = cd(minishell);
 	if (!ft_strncmp(cmd, EXIT, 5))
-		minishell->last_status = ft_exit(minishell);
+		minishell->last_status = ft_exit(minishell, std_copy);
 	if (!ft_strncmp(cmd, EXPORT, 7))
 		minishell->last_status = ft_export(minishell);
 	if (!ft_strncmp(cmd, UNSET, 6))
 		minishell->last_status = unset(minishell);
 	reset_dup(std_copy, minishell);
+	close_here_doc(minishell->cmds->redirects);
 	free_and_set_to_next_commands(&minishell->cmds);
 	if (minishell->pids)
 		free(minishell->pids);

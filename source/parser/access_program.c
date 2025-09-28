@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 12:47:29 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/24 19:21:55 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 10:31:31 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-static void	set_access(t_file *file, char *path)
+static void	set_access(t_file *file)
 {
 	int	fd;
 
-	if (!ft_strncmp(path, ".", 2) || !ft_strncmp(path, "..", 3))
+	if (!ft_strncmp(file->path, ".", 2) || !ft_strncmp(file->path, "..", 3))
 	{
 		file->exist = 1;
 		return ;
@@ -31,10 +31,10 @@ static void	set_access(t_file *file, char *path)
 		close(fd);
 		file->is_dir = 1;
 	}
-	file->exist = access(path, F_OK);
-	file->read = access(path, R_OK);
-	file->write = access(path, W_OK);
-	file->exec = access(path, X_OK);
+	file->exist = access(file->path, F_OK);
+	file->read = access(file->path, R_OK);
+	file->write = access(file->path, W_OK);
+	file->exec = access(file->path, X_OK);
 }
 
 static void	parse_env(t_minishell *minishell, t_file *program)
@@ -45,7 +45,7 @@ static void	parse_env(t_minishell *minishell, t_file *program)
 	i = 0;
 	if (!*program->path || !ft_strncmp(program->path, ".", 2)
 		|| !ft_strncmp(program->path, "..", 3) || !minishell->paths)
-		return (set_access(program, program->path));
+		return (set_access(program));
 	while (minishell->paths[i])
 	{
 		tmp = ft_strjoin(minishell->paths[i], program->path);
@@ -54,8 +54,8 @@ static void	parse_env(t_minishell *minishell, t_file *program)
 		if (!access(tmp, F_OK))
 		{
 			free(program->path);
-			set_access(program, tmp);
 			program->path = tmp;
+			set_access(program);
 			return ;
 		}
 		free(tmp);
@@ -69,5 +69,5 @@ void	access_program(t_minishell *minishell, t_file *program)
 {
 	if (!ft_strchr(program->path, '/'))
 		return (parse_env(minishell, program));
-	set_access(program, program->path);
+	set_access(program);
 }
