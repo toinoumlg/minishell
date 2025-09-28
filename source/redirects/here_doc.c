@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 15:11:27 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 15:34:16 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,11 @@ int	set_here_doc(t_file *here_doc_file, t_minishell *minishell)
 	save_stds(std_copy, minishell);
 	set_signals_heredoc();
 	fd[1] = open("/tmp/here_doc", O_CREAT | O_WRONLY | O_TRUNC, 00644);
+	fd[0] = open("/tmp/here_doc", O_RDONLY);
+	unlink("/tmp/here_doc");
 	write_here_doc(fd[1], here_doc_file->path, here_doc_file->type, minishell);
 	close(fd[1]);
-	fd[0] = open("/tmp/here_doc", O_RDONLY);
 	here_doc_file->fd = fd[0];
-	unlink("/tmp/here_doc");
 	set_signals();
 	reset_stds(std_copy, minishell);
 	if (g_sig)

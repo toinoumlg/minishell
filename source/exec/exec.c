@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 14:16:13 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 16:06:36 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "libft.h"
 #include "redirects.h"
 #include "signals.h"
-#include <readline/history.h>
+#include <readline/readline.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -30,7 +30,7 @@ void	child_process(t_minishell *minishell)
 	t_cmd	*cmd;
 
 	cmd = minishell->cmds;
-	clear_history();
+	rl_clear_history();
 	set_signals_child();
 	set_dup2(minishell);
 	if (!cmd->args && cmd->redirects)

@@ -6,14 +6,14 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 14:13:18 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 15:19:01 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "envp.h"
 #include "free.h"
 #include "redirects.h"
-#include <readline/history.h>
+#include <readline/readline.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -67,7 +67,7 @@ int	exit_alpha(t_minishell *minishell, int *std_copy)
 	close_pipes(minishell->pipe_fds, minishell->size, minishell->i);
 	free_minishell(minishell);
 	reset_dup(std_copy, minishell);
-	clear_history();
+	rl_clear_history();
 	return (2);
 }
 
@@ -94,6 +94,6 @@ int	ft_exit(t_minishell *minishell, int *std_copy)
 	close_pipes(minishell->pipe_fds, minishell->size, minishell->i);
 	reset_dup(std_copy, minishell);
 	free_minishell(minishell);
-	clear_history();
+	rl_clear_history();
 	exit(result % 256);
 }

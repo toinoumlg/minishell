@@ -6,12 +6,13 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 15:10:03 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 14:12:46 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 15:20:39 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser/parse_read_line.h"
 #include "signals.h"
+#include <readline/readline.h>
 
 void	pre_parsing(t_minishell *minishell)
 {
@@ -46,7 +47,7 @@ void	parse_read_line(t_minishell *minishell)
 	if (!minishell->read_line)
 	{
 		write(1, "exit\n", 5);
-		clear_history();
+		rl_clear_history();
 		exit(free_minishell(minishell));
 	}
 	add_history(minishell->read_line);
