@@ -47,10 +47,26 @@ void	wait_for_childrens(t_minishell *minishell)
 	while (i < minishell->size)
 		waitpid(minishell->pids[i++], &status, 0);
 	set_signals();
-	handle_child_exit_status(minishell, status);
+	if (g_heredoc_interrupted == 0)
+		handle_child_exit_status(minishell, status);
 	if (minishell->pids)
 		free(minishell->pids);
 	minishell->pids = NULL;
+}
+
+static void	handle_signal_status(t_minishell *minishell)
+{
+	if (g_heredoc_interrupted == 2)
+	{
+		minishell->last_status = 130;
+		g_heredoc_interrupted = 0;
+	}
+	if (g_heredoc_interrupted == 1)
+	{
+		minishell->last_status = 130;
+		g_heredoc_interrupted = 0;
+	}
+	return ;
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -58,7 +74,6 @@ int	main(int argc, char **argv, char **envp)
 	t_minishell	minishell;
 
 	rl_catch_signals = 0;
-	rl_catch_sigwinch = 0;
 	if (!isatty(0) || !isatty(1) || !isatty(2))
 		return (1);
 	set_envp(&minishell, envp);
@@ -66,8 +81,8 @@ int	main(int argc, char **argv, char **envp)
 	set_signals();
 	while (argv && argc)
 	{
-		g_heredoc_interrupted = 0;
 		minishell.read_line = readline("minishell> ");
+		handle_signal_status(&minishell);
 		if (!minishell.read_line)
 		{
 			write(1, "exit\n", 5);
@@ -76,6 +91,7 @@ int	main(int argc, char **argv, char **envp)
 		parse_read_line(&minishell);
 		exec(&minishell);
 		wait_for_childrens(&minishell);
+		handle_signal_status(&minishell);
 	}
 	enable_ctrl_backslash();
 	return (0);

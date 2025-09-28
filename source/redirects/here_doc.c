@@ -24,15 +24,16 @@ int	read_heredoc_line(char **read_line, char *lim,
 
 void	exit_on_eof(char *lim)
 {
-	write(2,
-		"minishell: warning: here-document delimited by end-of-file (wanted `",
-		68);
-	write(2, lim, ft_strlen(lim));
-	write(2, "')\n", 3);
+	if (g_heredoc_interrupted == 0)
+	{
+		write(2, "minishell: ", 11);
+		write(2,
+			"warning: here-document delimited by end-of-file (wanted `",
+			57);
+		write(2, lim, ft_strlen(lim));
+		write(2, "')\n", 3);
+	}
 }
-
-/*	Expands variable on read_line string.
-	Works like token expansion but modifies the read_line string directly	*/
 
 static void	w_hdoc(int fd, char *lim, t_token_type type, t_minishell *minishell)
 {
@@ -48,18 +49,10 @@ static void	w_hdoc(int fd, char *lim, t_token_type type, t_minishell *minishell)
 		free(read_line);
 	}
 	signal(SIGINT, sigint_handler_main);
-	if (g_heredoc_interrupted == 1)
-	{
-		minishell->last_status = 130;
-		g_heredoc_interrupted = 0;
-		return ;
-	}
-	if (!read_line)
+	if (!read_line && g_heredoc_interrupted == 0)
 		exit_on_eof(lim);
 }
 
-// fd[1] is for writing file
-// fd[0] is for reading file
 void	set_here_doc(t_file *here_doc_file, t_minishell *minishell)
 {
 	int	fd[2];

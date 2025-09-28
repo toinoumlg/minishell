@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -fno-builtin-puts
 #CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g
 INCLUDE = -I./include -I./libft/include
 #INCLUDE = -I./include -I./libft/include -lft -fsanitize=address
