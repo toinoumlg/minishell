@@ -36,11 +36,8 @@ ctrl + d dans Heredoc
 leak fd
 
 solu : safe_close qui met a -1 et check avant de close si >= 0;
+
 -----------------------------------------------------
-
-pas fork builtins sans pipe
-
-extern?
 
 -----------------------------------------------------
 
@@ -49,9 +46,3 @@ extern?
 -----------------------------------------------------
 
 protect fork() pipe() dup() dup2() malloc()
-
------------------------------------------------------
-
-quand close set a -1 le fd 
-
------------------------------------------------------

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 14:56:56 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 14:52:48 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 17:22:41 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ static int	expand_env(char *str, t_token *token, t_minishell *minishell)
 	if (!expand || !expand->value)
 	{
 		tmp = token->string;
+		if (!*(str + i))
+			return (0);
 		token->string = ft_strjoin(tmp, str + i);
 		free(tmp);
 		return (-1);
@@ -89,7 +91,7 @@ static int	expand_env(char *str, t_token *token, t_minishell *minishell)
 
 /*	Handle variable expansion for different '$' cases:
 	Empty after '$': skip if followed by quotes, ortherwise restore '$'
-	'$$': expands process ID, '$?': expands to last exit status
+	'$?': expands to last exit status
 	Other cases: attempts enviroment variable expansion	*/
 void	handle_expansion(int *i, t_token *token, t_minishell *minishell)
 {

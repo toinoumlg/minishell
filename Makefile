@@ -40,7 +40,7 @@ PARSER_FILES = parser/parse_read_line parser/alloc \
 
 ENV_FILES = env/envp env/utils
 
-MAIN_FILES = main free free_utils signals signals_heredoc
+MAIN_FILES = main free free_utils signals signals_heredoc ft_close
 
 ALL_SRC_FILES = $(MAIN_FILES) $(EXEC_FILES) $(PARSER_FILES) $(ENV_FILES) $(BUILTSIN) $(REDIRECT)
 

@@ -1,27 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.h                                             :+:      :+:    :+:   */
+/*   ft_close.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/08 19:00:38 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 17:05:23 by amalangu         ###   ########.fr       */
+/*   Created: 2025/09/28 16:14:05 by amalangu          #+#    #+#             */
+/*   Updated: 2025/09/28 16:48:51 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FREE_H
-# define FREE_H
+#include <unistd.h>
 
-# include "minishell.h"
-
-void	free_array(char **args);
-void	free_tokens(t_token *tokens);
-void	free_file(t_file *file);
-void	free_cmds(t_cmd *cmds);
-void	free_and_set_to_next_commands(t_cmd **cmds);
-int		free_envp(t_envp *envp);
-int		free_minishell(t_minishell *minishell);
-void	exit_perror(t_minishell *minishell, char *str);
-void	ft_close(int *fd);
-#endif
+void	ft_close(int *fd)
+{
+	if (*fd >= 0)
+		close(*fd);
+	*fd = -1;
+}

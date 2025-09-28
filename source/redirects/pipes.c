@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 17:04:13 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 10:25:16 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 17:01:41 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	close_here_doc(t_file *redirects)
 	{
 		if (redirects->type == here_doc_quote
 			|| redirects->type == here_doc_word)
-			close(redirects->fd);
+			ft_close(&redirects->fd);
 		redirects = redirects->next;
 	}
 }
@@ -33,13 +33,13 @@ void	close_pipes(int (*pipe_fds)[2], int size, int i)
 	if (!pipe_fds)
 		return ;
 	if (i == 0)
-		close(pipe_fds[i][1]);
+		ft_close(&pipe_fds[i][1]);
 	else if (i == size - 1)
-		close(pipe_fds[i - 1][0]);
+		ft_close(&pipe_fds[i - 1][0]);
 	else
 	{
-		close(pipe_fds[i][1]);
-		close(pipe_fds[i - 1][0]);
+		ft_close(&pipe_fds[i][1]);
+		ft_close(&pipe_fds[i - 1][0]);
 	}
 }
 
@@ -51,26 +51,26 @@ void	dup2_pipes(int (*pipe_fds)[2], int size, int i, t_minishell *minishell)
 {
 	if (i == 0)
 	{
-		close(pipe_fds[i][0]);
+		ft_close(&pipe_fds[i][0]);
 		if (dup2(pipe_fds[i][1], STDOUT_FILENO) == -1)
 			exit_perror(minishell, "dup2");
-		close(pipe_fds[i][1]);
+		ft_close(&pipe_fds[i][1]);
 	}
 	else if (i == size - 1)
 	{
 		if (dup2(pipe_fds[i - 1][0], STDIN_FILENO) == -1)
 			exit_perror(minishell, "dup2");
-		close(pipe_fds[i - 1][0]);
+		ft_close(&pipe_fds[i - 1][0]);
 	}
 	else
 	{
-		close(pipe_fds[i][0]);
+		ft_close(&pipe_fds[i][0]);
 		if (dup2(pipe_fds[i - 1][0], STDIN_FILENO) == -1)
 			exit_perror(minishell, "dup2");
 		if (dup2(pipe_fds[i][1], STDOUT_FILENO) == -1)
 			exit_perror(minishell, "dup2");
-		close(pipe_fds[i][1]);
-		close(pipe_fds[i - 1][0]);
+		ft_close(&pipe_fds[i][1]);
+		ft_close(&pipe_fds[i - 1][0]);
 	}
 }
 

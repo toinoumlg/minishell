@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 18:45:43 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/24 16:59:03 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 17:25:40 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,18 @@ void	swap_string(char **array, int i, int j)
 void	print_export_with_quote(char *str)
 {
 	int	i;
+	int	quoted;
 
 	i = 0;
+	quoted = 0;
 	ft_putstr_fd("export ", 1);
 	while (str[i])
 	{
-		if (str[i] == '=')
+		if (str[i] == '=' && !quoted)
 		{
 			ft_putchar_fd(str[i++], 1);
 			ft_putchar_fd('\"', 1);
+			quoted++;
 		}
 		ft_putchar_fd(str[i++], 1);
 	}

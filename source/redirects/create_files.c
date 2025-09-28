@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 20:23:14 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 14:02:20 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 17:01:41 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	create_append_files(t_file *append_file, t_minishell *minishell)
 	append_file->fd = open(append_file->path, O_CREAT | O_WRONLY | O_APPEND,
 			00664);
 	if (append_file->fd > 0)
-		close(append_file->fd);
+		ft_close(&append_file->fd);
 	else
 		exit_perror(minishell, "open");
 }
@@ -41,7 +41,7 @@ void	create_output(t_file *output, t_minishell *minishell)
 {
 	output->fd = open(output->path, O_CREAT | O_WRONLY | O_TRUNC, 00664);
 	if (output->fd > 0)
-		close(output->fd);
+		ft_close(&output->fd);
 	else
 		exit_perror(minishell, "open");
 }

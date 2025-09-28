@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 15:34:16 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 17:36:31 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static void	write_here_doc(int fd, char *lim, t_token_type type,
 		if (!ft_strncmp(read_line, lim, ft_strlen(lim) + 1))
 			return (free(read_line));
 		if (type == here_doc_word && ft_strchr(read_line, '$'))
-			expand_here_doc(read_line, minishell);
+			expand_here_doc(&read_line, minishell);
 		write(fd, read_line, ft_strlen(read_line));
 		write(fd, "\n", 1);
 		free(read_line);
@@ -93,6 +93,7 @@ int	set_here_doc(t_file *here_doc_file, t_minishell *minishell)
 	{
 		minishell->last_status = 130;
 		free_cmds(minishell->cmds);
+		close(fd[0]);
 		minishell->cmds = NULL;
 		return (1);
 	}

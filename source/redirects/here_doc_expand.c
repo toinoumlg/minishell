@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 07:48:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 15:25:16 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 17:36:23 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,8 @@ static int	expand_env_here_doc(char *str, char **read_line,
 	if (!expand)
 	{
 		tmp = *read_line;
+		if (!*(str + i))
+			return (0);
 		*read_line = ft_strjoin(tmp, str + i);
 		free(tmp);
 		return (-1);
@@ -118,6 +120,8 @@ void	expand_here_doc(char **read_line, t_minishell *minishell)
 			(*read_line)[i] = 0;
 			handle_here_doc_expansion(&i, read_line, minishell);
 		}
+		if (!(*read_line)[i])
+			return ;
 		i++;
 	}
 }

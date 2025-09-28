@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:58:46 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 20:08:24 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 17:11:45 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,38 @@ int	free_minishell(t_minishell *minishell)
 	return (minishell->last_status);
 }
 
+void	check_for_open_fds(t_minishell *minishell)
+{
+	int		i;
+	t_cmd	*cmds;
+	t_file	*files;
+
+	if (minishell->pipe_fds)
+	{
+		i = 0;
+		while (i < minishell->size - 1)
+		{
+			ft_close(&minishell->pipe_fds[i][0]);
+			ft_close(&minishell->pipe_fds[i][1]);
+			i++;
+		}
+	}
+	cmds = minishell->cmds;
+	while (cmds)
+	{
+		files = cmds->redirects;
+		while (files)
+		{
+			ft_close(&files->fd);
+			files = files->next;
+		}
+		cmds = cmds->next;
+	}
+}
+
 void	exit_perror(t_minishell *minishell, char *str)
 {
 	perror(str);
+	check_for_open_fds(minishell);
 	exit(free_minishell(minishell));
 }
