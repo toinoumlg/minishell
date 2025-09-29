@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 19:46:32 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 17:36:18 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/29 18:44:45 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,6 @@ void	close_here_doc(t_file *redirects);
 void	do_pipe(t_minishell *minishell);
 void	exit_on_eof(char *lim);
 void	close_pipes(int (*pipe_fds)[2], int size, int i);
+void	close_open_fds(t_minishell *minishell);
 
 #endif

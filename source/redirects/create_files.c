@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 20:23:14 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 17:01:41 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/29 18:44:56 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,35 @@
 #include "libft.h"
 #include "minishell.h"
 #include <fcntl.h>
+
+void	close_open_fds(t_minishell *minishell)
+{
+	int		i;
+	t_cmd	*cmds;
+	t_file	*files;
+
+	if (minishell->pipe_fds)
+	{
+		i = 0;
+		while (i < minishell->size - 1)
+		{
+			ft_close(&minishell->pipe_fds[i][0]);
+			ft_close(&minishell->pipe_fds[i][1]);
+			i++;
+		}
+	}
+	cmds = minishell->cmds;
+	while (cmds)
+	{
+		files = cmds->redirects;
+		while (files)
+		{
+			ft_close(&files->fd);
+			files = files->next;
+		}
+		cmds = cmds->next;
+	}
+}
 
 void	handle_error(t_file *error, t_minishell *minishell)
 {
@@ -31,7 +60,7 @@ void	create_append_files(t_file *append_file, t_minishell *minishell)
 {
 	append_file->fd = open(append_file->path, O_CREAT | O_WRONLY | O_APPEND,
 			00664);
-	if (append_file->fd > 0)
+	if (append_file->fd >= 0)
 		ft_close(&append_file->fd);
 	else
 		exit_perror(minishell, "open");
@@ -40,7 +69,7 @@ void	create_append_files(t_file *append_file, t_minishell *minishell)
 void	create_output(t_file *output, t_minishell *minishell)
 {
 	output->fd = open(output->path, O_CREAT | O_WRONLY | O_TRUNC, 00664);
-	if (output->fd > 0)
+	if (output->fd >= 0)
 		ft_close(&output->fd);
 	else
 		exit_perror(minishell, "open");

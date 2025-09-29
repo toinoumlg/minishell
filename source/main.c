@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 15:13:01 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/29 18:43:00 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,36 +20,42 @@
 
 sig_atomic_t	g_sig;
 
-static void	handle_child_exit_status(t_minishell *minishell, int status)
+static void	handle_exit_status(t_minishell *minishell, int status, int *exited)
 {
 	int	sig;
 
-	minishell->last_status = WEXITSTATUS(status);
 	if (WIFSIGNALED(status))
 	{
 		sig = WTERMSIG(status);
-		if (sig == SIGQUIT)
+		if (sig == SIGQUIT && !*exited)
 			write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
-		else
+		else if (sig == SIGINT && !*exited)
 			ft_putstr_fd("\n", 1);
-		minishell->last_status = 130;
+		minishell->last_status = 128 + sig;
+		(*exited)++;
 	}
+	else
+		minishell->last_status = WEXITSTATUS(status);
 }
 
 void	wait_for_childrens(t_minishell *minishell)
 {
 	int	i;
 	int	status;
+	int	exited;
 
+	exited = 0;
 	i = 0;
 	if (!minishell->i || !minishell->pids)
 		return ;
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 	while (i < minishell->size)
+	{
 		waitpid(minishell->pids[i++], &status, 0);
+		handle_exit_status(minishell, status, &exited);
+	}
 	set_signals();
-	handle_child_exit_status(minishell, status);
 	if (minishell->pids)
 		free(minishell->pids);
 	minishell->pids = NULL;
@@ -59,7 +65,8 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	minishell;
 
-	if (!isatty(0) || !isatty(1) || !isatty(2))
+	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO)
+		|| !isatty(STDOUT_FILENO))
 		return (1);
 	set_envp(&minishell, envp);
 	set_signals();

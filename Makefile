@@ -28,7 +28,6 @@ REDIRECT = redirects/here_doc redirects/here_doc_expand \
 	redirects/pipes redirects/create_files \
 
 PARSER_FILES = parser/parse_read_line parser/alloc \
-	parser/access_program parser/access \
 	parser/pre_parsing \
 	parser/tokens/token parser/tokens/merge \
 	parser/tokens/list parser/tokens/operator \
@@ -36,6 +35,7 @@ PARSER_FILES = parser/parse_read_line parser/alloc \
 	parser/tokens/expand parser/tokens/remove \
 	parser/tokens/expand_string \
 	parser/commands/commands parser/commands/args \
+	parser/commands/access_program parser/commands/access_redirects \
 	parser/commands/redirect \
 
 ENV_FILES = env/envp env/utils

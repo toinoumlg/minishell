@@ -1,18 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   access.c                                           :+:      :+:    :+:   */
+/*   access_redirects.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:06 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 15:04:58 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/29 15:50:04 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtsin.h"
 #include "libft.h"
-#include "parser/access_program.h"
 #include "redirects.h"
 #include <fcntl.h>
 #include <stdio.h>
@@ -82,24 +81,18 @@ static t_file	*get_error_file(t_file *redirects)
 	return (NULL);
 }
 
-void	try_access(t_minishell *minishell)
+void	access_redirects(t_minishell *minishell, t_cmd *new_cmd)
 {
 	t_file	*redirects;
-	t_cmd	*cmds;
 
-	cmds = minishell->cmds;
-	while (cmds)
+	redirects = new_cmd->redirects;
+	if (!redirects)
+		return ;
+	while (redirects)
 	{
-		if (cmds->program && !is_a_builtin(cmds->program->path))
-			access_program(minishell, cmds->program);
-		redirects = cmds->redirects;
-		while (redirects)
-		{
-			if (access_file(redirects, minishell))
-				return ;
-			redirects = redirects->next;
-		}
-		cmds->error = get_error_file(cmds->redirects);
-		cmds = cmds->next;
+		if (access_file(redirects, minishell))
+			return ;
+		redirects = redirects->next;
 	}
+	new_cmd->error = get_error_file(new_cmd->redirects);
 }
