@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/30 14:09:44 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/30 14:13:32 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,18 @@
 #include "signals.h"
 #include <fcntl.h>
 #include <readline/readline.h>
-#include <sys/wait.h>
-#include <termios.h>
 #include <signal.h>
-#include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/wait.h>
+#include <termios.h>
+#include <unistd.h>
 
 void	exit_on_eof(char *lim)
 {
-	write(2, "minishell: warning: here-document delimited by end-of-file (wanted `", 68);
+	write(2,
+		"minishell: warning: here-document delimited by end-of-file (wanted `",
+		68);
 	write(2, lim, ft_strlen(lim));
 	write(2, "')\n", 3);
 }
@@ -35,21 +37,7 @@ void	exit_on_eof(char *lim)
 	Works like token expansion but modifies the read_line string directly	*/
 static void	write_here_doc(int fd, char *lim)
 {
-	struct sigaction	sa_int;
-	struct sigaction	sa_quit;
-	char				*line;
-
-	/* SIGINT: défaut */
-	sigemptyset(&sa_int.sa_mask);
-	sa_int.sa_flags = 0;
-	sa_int.sa_handler = SIG_DFL;
-	sigaction(SIGINT, &sa_int, NULL);
-
-	/* SIGQUIT: ignoré */
-	sigemptyset(&sa_quit.sa_mask);
-	sa_quit.sa_flags = 0;
-	sa_quit.sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &sa_quit, NULL);
+	char	*read_line;
 
 	while (1)
 	{
@@ -64,7 +52,6 @@ static void	write_here_doc(int fd, char *lim)
 		write(fd, "\n", 1);
 		free(read_line);
 	}
-	_exit(0);
 }
 
 int	here_doc_received_signal(int fd, t_minishell *minishell)
@@ -83,13 +70,7 @@ int	here_doc_received_signal(int fd, t_minishell *minishell)
 // fd[0] is for reading file
 int	set_here_doc(t_file *here_doc_file, t_minishell *minishell)
 {
-	int					fd_wr;
-	int					fd_rd;
-	pid_t				pid;
-	int					status;
-	struct sigaction	sa_ign;
-	struct sigaction	old_int;
-	struct sigaction	old_quit;
+	int	fd[2];
 
 	g_sig = 0;
 	dup_std_copy(minishell);
