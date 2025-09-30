@@ -6,18 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 20:18:35 by yalaatik          #+#    #+#             */
-/*   Updated: 2025/09/30 14:16:51 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/30 14:20:02 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "signals.h"
-#include <libft.h>
-#include <readline/readline.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/ioctl.h>
-#include <termios.h>
 #include <unistd.h>
 
 void	heredoc_sigint_handler(int sig)

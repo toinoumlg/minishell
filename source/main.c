@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/30 14:16:08 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/30 14:45:47 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,15 +61,6 @@ void	wait_for_childrens(t_minishell *minishell)
 	minishell->pids = NULL;
 }
 
-static void	handle_signal_status(t_minishell *minishell)
-{
-	if (g_sig)
-	{
-		minishell->last_status = 130;
-		g_sig = 0;
-	}
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	minishell;
@@ -86,6 +77,5 @@ int	main(int argc, char **argv, char **envp)
 		parse_read_line(&minishell);
 		exec(&minishell);
 		wait_for_childrens(&minishell);
-		handle_signal_status(&minishell);
 	}
 }

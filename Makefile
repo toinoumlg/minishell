@@ -1,20 +1,30 @@
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -fno-builtin-puts
-#CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror
 INCLUDE = -I./include -I./libft/include
-#INCLUDE = -I./include -I./libft/include -lft -fsanitize=address
 LIBS = -lreadline -L./libft -lft
 
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
+SRC_FILES = strlen strlcpy strlcat memcmp atoi \
+		strncmp toupper tolower isprint isdigit \
+		isascii isalpha isalnum substr strchr \
+		strrchr strnstr strjoin strtrim split \
+		strdup itoa strmapi memset memchr memcpy \
+		bzero memmove calloc putchar_fd putstr_fd \
+		putendl_fd putnbr_fd striteri \
+		lstnew lstadd_front lstsize \
+		lstlast lstadd_back lstdelone \
+		lstclear lstiter lstmap get_next_line tmp
+
+LIBFT_SRC := $(addprefix $(LIBFT_DIR)/source/ft_, $(addsuffix .c, $(SRC_FILES)))
+LIBFT_HDR := libft/include/libft.h
 
 SRC_DIR = source
 OBJ_DIR = build
 
 EXEC_FILES = exec/exec exec/exec_utils \
-	exec/print_error exec/underscore
-	
+	exec/print_error exec/underscore \
 
 BUILTSIN = builtsin/builtsin  \
 	builtsin/parent/cd builtsin/parent/exit \
@@ -51,15 +61,15 @@ DEP = $(OBJ:.o=.d)
 
 all: $(LIBFT) $(OBJ_DIR) $(NAME)
 
-$(NAME): $(OBJ)
+$(NAME): $(OBJ) $(LIBFT)
 	@echo "Linking $@ executable"
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME)
 
-$(LIBFT):
+$(LIBFT): $(LIBFT_SRC) $(LIBFT_HDR) $(LIBFT_DIR)/Makefile
 	@echo "Building libft"
 	@$(MAKE) -C $(LIBFT_DIR)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(LIBFT)
 	@echo "Compiling $< into $@"
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) $(INCLUDE) -MMD -MP -g -c $< -o $@
