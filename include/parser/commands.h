@@ -1,27 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.h                                             :+:      :+:    :+:   */
+/*   commands.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/08 19:00:38 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 17:05:23 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/10 17:04:56 by amalangu          #+#    #+#             */
+/*   Updated: 2025/09/30 12:40:45 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FREE_H
-# define FREE_H
+#ifndef COMMANDS_H
+# define COMMANDS_H
 
 # include "minishell.h"
 
-void	free_array(char **args);
-void	free_tokens(t_token *tokens);
-void	free_file(t_file *file);
-void	free_cmds(t_cmd *cmds);
-void	free_and_set_to_next_commands(t_cmd **cmds);
-int		free_envp(t_envp *envp);
-int		free_minishell(t_minishell *minishell);
-void	exit_perror(t_minishell *minishell, char *str);
-void	ft_close(int *fd);
+void	pick_redirects(t_cmd *new_cmd, t_minishell *minishell);
+void	set_args(t_cmd *new_cmd, t_minishell *minishell);
+void	set_commands(t_minishell *minishell);
+int		access_redirects(t_minishell *minishell, t_cmd *new_cmd);
+void	access_program(t_minishell *minishell, t_file *program);
+
 #endif

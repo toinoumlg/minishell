@@ -6,15 +6,16 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:18 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 11:43:34 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/24 18:04:30 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "envp.h"
 #include "free.h"
 #include "libft.h"
 #include <stdio.h>
 
-static void	pwd_error(t_minishell *minishell)
+static int	pwd_error(t_minishell *minishell)
 {
 	char	**args;
 
@@ -25,40 +26,28 @@ static void	pwd_error(t_minishell *minishell)
 	ft_putchar_fd(args[1][0], 2);
 	ft_putchar_fd(args[1][1], 2);
 	ft_putstr_fd("\n", 2);
-	free_minishell(minishell);
-	exit(1);
+	return (1);
 }
 
-static char	*get_env_value(char *name, t_envp *envp)
-{
-	while (envp)
-	{
-		if (!ft_strncmp(name, envp->name, ft_strlen(name) + 1))
-			return (envp->value);
-		envp = envp->next;
-	}
-	return (NULL);
-}
-
-void	pwd(t_minishell *minishell)
+int	pwd(t_minishell *minishell)
 {
 	char	*path;
-	int		to_free;
+	t_envp	*pwd;
 
-	to_free = 0;
 	if (minishell->cmds->args[1] && minishell->cmds->args[1][0] == '-')
 		pwd_error(minishell);
-	path = get_env_value("PWD", minishell->envp);
+	pwd = find_existing_envp("PWD", minishell->envp);
+	if (pwd && pwd->value)
+		path = pwd->value;
+	else
+		path = getcwd(NULL, 0);
 	if (!path)
 	{
-		path = getcwd(NULL, 0);
-		if (!path)
-			exit_perror(minishell, "minishell: getcwd");
-		to_free = 1;
+		perror("minishell: pwd");
+		return (1);
 	}
 	printf("%s\n", path);
-	if (to_free)
+	if (!pwd || !pwd->value)
 		free(path);
-	free_minishell(minishell);
-	exit(0);
+	return (0);
 }

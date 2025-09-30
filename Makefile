@@ -1,12 +1,8 @@
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -fno-builtin-puts
 #CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g
-INCLUDE = -I./include -I./include/exec -I./include/parser \
-	-I./include/exec/redirects -I./include/exec/builtsin \
-	-I./include/exec/builtsin/parent -I./include/exec/builtsin/child \
-	-I./include/parser/commands -I./include/parser/tokens \
-	-I./include/env -I./libft/include
+INCLUDE = -I./include -I./libft/include
 #INCLUDE = -I./include -I./libft/include -lft -fsanitize=address
 LIBS = -lreadline -L./libft -lft
 
@@ -16,34 +12,36 @@ LIBFT = $(LIBFT_DIR)/libft.a
 SRC_DIR = source
 OBJ_DIR = build
 
-EXEC_FILES = exec/exec exec/exec_utils exec/print_error \
+EXEC_FILES = exec/exec exec/exec_utils \
+	exec/print_error exec/underscore
 	
 
 BUILTSIN = builtsin/builtsin  \
 	builtsin/parent/cd builtsin/parent/exit \
-	builtsin/parent/export builtsin/parent/unset \
+	builtsin/parent/export builtsin/parent/export_sorted \
+	builtsin/parent/unset \
 	builtsin/child/echo builtsin/child/env \
-	builtsin/child/pwd
+	builtsin/child/pwd builtsin/parent/update_pwd
 
-REDIRECT = redirects/here_doc redirects/here_doc_utils \
+REDIRECT = redirects/here_doc redirects/here_doc_expand \
 	redirects/set_dup2 redirects/set_dup2_utils \
-	redirects/pipes redirects/create_files
+	redirects/pipes redirects/create_files \
+	redirects/fd_utils
 
 PARSER_FILES = parser/parse_read_line parser/alloc \
-	parser/access_program parser/access \
-	parser/parse_error parser/pre_parsing \
-	parser/parsing_utils \
-	parser/tokens/token parser/tokens/token_expand_utils \
-	parser/tokens/token_list parser/tokens/token_operator \
-	parser/tokens/token_string parser/tokens/token_utils \
-	parser/tokens/token_expand parser/tokens/token_free \
-	parser/commands/commands parser/commands/commands_args \
-	parser/commands/commands_list parser/commands/commands_redirect \
-	parser/commands/commands_redirect_utils \
+	parser/pre_parsing \
+	parser/tokens/token parser/tokens/merge \
+	parser/tokens/list parser/tokens/operator \
+	parser/tokens/string parser/tokens/utils \
+	parser/tokens/expand parser/tokens/remove \
+	parser/tokens/expand_string \
+	parser/commands/commands parser/commands/args \
+	parser/commands/access_program parser/commands/access_redirects \
+	parser/commands/redirect \
 
-ENV_FILES = env/init_envp env/envp_utils
+ENV_FILES = env/envp env/utils
 
-MAIN_FILES = main utils free free_utils signals
+MAIN_FILES = main free free_utils signals signals_heredoc ft_close
 
 ALL_SRC_FILES = $(MAIN_FILES) $(EXEC_FILES) $(PARSER_FILES) $(ENV_FILES) $(BUILTSIN) $(REDIRECT)
 

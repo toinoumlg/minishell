@@ -6,39 +6,36 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:44 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 11:51:32 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/30 14:08:22 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-#include <termios.h>
-#include <signal.h>
+# include "libft.h"
 
-typedef struct s_sigctx
-{
-	struct termios			tty_saved;
-	int						tty_saved_ok;
-	volatile sig_atomic_t	hd_interrupted;
-}	t_sigctx;
-
-typedef enum s_enum_token
+typedef enum s_token_type
 {
 	word = 1,
 	is_pipe,
 	input,
 	output,
 	here_doc,
+	here_doc_word,
+	here_doc_quote,
 	append_file,
 	double_quote,
-	simple_quote
-}					t_enum_token;
+	simple_quote,
+	space,
+	word_expanded,
+	space_expanded
+}					t_token_type;
 
 typedef struct s_file
 {
 	char			*path;
-	t_enum_token	type;
+	t_token_type	type;
 	int				fd;
 	int				is_dir;
 	int				exist;
@@ -60,8 +57,7 @@ typedef struct s_cmd
 typedef struct s_token
 {
 	char			*string;
-	t_enum_token	type;
-	int				separated_by_space;
+	t_token_type	type;
 	struct s_token	*next;
 }					t_token;
 
@@ -80,14 +76,14 @@ typedef struct s_minishell
 	int				i;
 	int				size;
 	int				(*pipe_fds)[2];
+	int				std_copy[2];
 	int				*pids;
-	char			**env;
+	char			**paths;
 	char			**envp_array;
 	t_envp			*envp;
 	t_token			*tokens;
 	int				last_status;
 	char			*read_line;
-	t_sigctx		sigctx;
 }					t_minishell;
 
 #endif

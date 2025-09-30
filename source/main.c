@@ -6,148 +6,84 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/19 19:25:00 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/30 14:07:35 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "envp.h"
 #include "exec.h"
-#include "env/init_envp.h"
-#include "free.h"
+#include "minishell.h"
 #include "parser/parse_read_line.h"
 #include "signals.h"
-
 #include <readline/readline.h>
-#include <readline/history.h>
-#include <signal.h>
 #include <sys/wait.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <termios.h>
 
-/* -------------------------------------------------------------------------- */
-/* Parent: ignorer pendant exec, puis restaurer les handlers de prompt        */
-/* (locales à ce fichier)                                                     */
-/* -------------------------------------------------------------------------- */
-static void	parent_ignore_signals_during_exec(void)
+sig_atomic_t	g_sig;
+
+static void	handle_exit_status(t_minishell *minishell, int status, int *exited)
 {
-	struct sigaction	sa;
+	int	sig;
 
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0;
-	sa.sa_handler = SIG_IGN;
-	sigaction(SIGINT, &sa, NULL);
-	sigaction(SIGQUIT, &sa, NULL);
-}
-
-static void	parent_restore_prompt_signals(void)
-{
-	set_signals();
-}
-
-/* -------------------------------------------------------------------------- */
-/* Attente enfants + statut                                                   */
-/* -------------------------------------------------------------------------- */
-static void	update_status_and_display(t_minishell *ms, int status)
-{
-	if (WIFSIGNALED(status) != 0)
+	if (WIFSIGNALED(status))
 	{
-		int	sig;
-
 		sig = WTERMSIG(status);
-		ms->last_status = 128 + sig;
-		if (sig == SIGINT)
-			write(STDOUT_FILENO, "\n", 1);
-		else if (sig == SIGQUIT)
+		if (sig == SIGQUIT && !*exited)
 			write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
+		else if (sig == SIGINT && !*exited)
+			ft_putstr_fd("\n", 1);
+		minishell->last_status = 128 + sig;
+		(*exited)++;
 	}
-	else if (WIFEXITED(status) != 0)
-		ms->last_status = WEXITSTATUS(status);
+	else
+		minishell->last_status = WEXITSTATUS(status);
 }
 
-static void	wait_for_childrens(t_minishell *ms)
+void	wait_for_childrens(t_minishell *minishell)
 {
-	int		i;
-	int		status;
-	pid_t	w;
+	int	i;
+	int	status;
+	int	exited;
 
+	exited = 0;
 	i = 0;
-	if (ms->pids == NULL)
-		return ;
-	while (i < ms->size)
+	if (!minishell->i || !minishell->pids)
+		
+		signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+	while (i < minishell->size)
 	{
-		if (ms->pids[i] > 0)
-		{
-			w = waitpid((pid_t)ms->pids[i], &status, 0);
-			if (w > 0)
-				update_status_and_display(ms, status);
-		}
-		i = i + 1;
+		waitpid(minishell->pids[i++], &status, 0);
+		handle_exit_status(minishell, status, &exited);
 	}
-	free(ms->pids);
-	ms->pids = NULL;
+	if (minishell->pids)
+		free(minishell->pids);
+	minishell->pids = NULL;
 }
 
-/* -------------------------------------------------------------------------- */
-/* Readline wrapper : force TTY sain avant/après readline                     */
-/* -------------------------------------------------------------------------- */
-static void	force_tty_sane_inline(void)
+static void	handle_signal_status(t_minishell *minishell)
 {
-	struct termios	t;
-
-	if (tcgetattr(STDIN_FILENO, &t) == 0)
+	if (g_sig)
 	{
-		t.c_lflag |= ECHO;
-		t.c_lflag |= ICANON;
-		t.c_lflag |= ISIG;
-		tcsetattr(STDIN_FILENO, TCSANOW, &t);
+		minishell->last_status = 130;
+		g_sig = 0;
 	}
 }
 
-char	*ms_readline(const char *prompt)
-{
-	char	*line;
-
-	/* au cas où le heredoc précédent a laissé le TTY en vrac */
-	tty_restore_initial_state();
-	force_tty_sane_inline();
-	set_signals();
-
-	line = readline(prompt);
-
-	/* après readline, on re-sanitise pour éviter l’echo coupé */
-	tty_restore_initial_state();
-	force_tty_sane_inline();
-	return (line);
-}
-
-/* -------------------------------------------------------------------------- */
-/* main                                                                       */
-/* -------------------------------------------------------------------------- */
 int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	minishell;
 
-	(void)argc;
-	(void)argv;
-	memset(&minishell, 0, sizeof(minishell));
-
-	init_envp(&minishell, envp);
-	signals_bind_minishell(&minishell);
-
-	tty_save_initial_state();
+	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO)
+		|| !isatty(STDOUT_FILENO))
+		return (1);
+	set_envp(&minishell, envp);
 	set_signals();
-
-	while (1)
+	while (argv && argc)
 	{
-		minishell.read_line = ms_readline("minishell> ");
+		minishell.read_line = readline("minishell> ");
 		parse_read_line(&minishell);
-
-		parent_ignore_signals_during_exec();
 		exec(&minishell);
 		wait_for_childrens(&minishell);
-		parent_restore_prompt_signals();
+		handle_signal_status(&minishell);
 	}
-	return (0);
 }

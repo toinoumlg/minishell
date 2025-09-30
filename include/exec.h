@@ -1,27 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.h                                             :+:      :+:    :+:   */
+/*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/08 19:00:38 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 17:05:23 by amalangu         ###   ########.fr       */
+/*   Created: 2025/06/13 19:33:35 by amalangu          #+#    #+#             */
+/*   Updated: 2025/09/26 15:36:36 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FREE_H
-# define FREE_H
+#ifndef EXEC_H
+# define EXEC_H
 
 # include "minishell.h"
 
-void	free_array(char **args);
-void	free_tokens(t_token *tokens);
-void	free_file(t_file *file);
-void	free_cmds(t_cmd *cmds);
-void	free_and_set_to_next_commands(t_cmd **cmds);
-int		free_envp(t_envp *envp);
-int		free_minishell(t_minishell *minishell);
-void	exit_perror(t_minishell *minishell, char *str);
-void	ft_close(int *fd);
+void	exec(t_minishell *minishell);
+int		is_builtin_to_exec_in_parent(t_minishell *minishell);
+void	underscore(t_minishell *minishell);
+
+void	exit_child(t_minishell *minishell);
+int		print_command_error(t_file *program, t_file *error);
+void	print_error_file(t_file *error);
+
 #endif

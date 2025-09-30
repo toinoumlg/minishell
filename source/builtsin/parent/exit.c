@@ -6,22 +6,26 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 13:50:28 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/30 12:34:47 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "envp_utils.h"
+#include "envp.h"
 #include "free.h"
-#include "libft.h"
-#include "pipes.h"
+#include "redirects.h"
+#include <readline/readline.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 static int	is_nbr(char *str)
 {
+	if (!*str)
+		return (0);
+	if (*str == '+' || *str == '-')
+		str++;
 	while (str && *str != 0)
 	{
-		if (ft_isdigit(*str) || *str == '+' || *str == '-')
+		if (ft_isdigit(*str))
 			str++;
 		else
 			return (0);
@@ -44,16 +48,18 @@ static int	ft_strlen_array(char **array)
 
 int	exit_alpha(t_minishell *minishell)
 {
-	printf("exit\n");
+	ft_putstr_fd("exit\n", 1);
 	ft_putstr_fd("minishell: exit: ", 2);
 	ft_putstr_fd(minishell->cmds->args[1], 2);
 	ft_putstr_fd(": numeric argument required\n", 2);
 	close_pipes(minishell->pipe_fds, minishell->size, minishell->i);
 	free_minishell(minishell);
+	dup2_std_copy(minishell);
+	rl_clear_history();
 	return (2);
 }
 
-void	my_exit(t_minishell *minishell)
+int	ft_exit(t_minishell *minishell)
 {
 	int	result;
 	int	args_size;
@@ -64,22 +70,18 @@ void	my_exit(t_minishell *minishell)
 		exit(exit_alpha(minishell));
 	else if (args_size > 2)
 	{
-		ft_putstr_fd("exit\n", 2);
+		ft_putstr_fd("exit\n", 1);
 		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-		if (minishell->size > 1)
-		{
-			free_minishell(minishell);
-			exit(1);
-		}
-		minishell->last_status = 1;
-		return ;
+		return (1);
 	}
 	else if (args_size == 2)
 		result = ft_atoi(minishell->cmds->args[1]);
 	else
 		result = minishell->last_status;
-	printf("exit\n");
+	ft_putstr_fd("exit\n", 1);
 	close_pipes(minishell->pipe_fds, minishell->size, minishell->i);
+	dup2_std_copy(minishell);
 	free_minishell(minishell);
+	rl_clear_history();
 	exit(result % 256);
 }

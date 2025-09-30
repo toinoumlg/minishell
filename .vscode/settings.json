@@ -70,6 +70,22 @@
 		"pre_parsing.h": "c",
 		"alloc.h": "c",
 		"commands.h": "c",
-		"regex": "c"
+		"regex": "c",
+		"token_quote.h": "c",
+		"bitset": "c",
+		"algorithm": "c",
+		"sstream": "c",
+		"span": "c",
+		"token_expand_string.h": "c",
+		"token_expand_utils.h": "c",
+		"unset.h": "c",
+		"pwd.h": "c",
+		"redirects.h": "c",
+		"parsing_utils.h": "c",
+		"access_program.h": "c",
+		"unordered_set": "c",
+		"termios.h": "c",
+		"signal.h": "c",
+		"ioctl.h": "c"
 	}
 }

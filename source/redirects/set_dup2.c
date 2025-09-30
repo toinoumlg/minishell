@@ -6,13 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:50:43 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 13:45:17 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/21 07:20:27 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "here_doc.h"
-#include "pipes.h"
-#include "set_dup2_utils.h"
+#include "redirects.h"
 
 static void	set_files(t_minishell *minishell)
 {
@@ -23,7 +21,8 @@ static void	set_files(t_minishell *minishell)
 	{
 		if (redirects->type == input)
 			dup2_infile(redirects, minishell);
-		if (redirects->type == here_doc)
+		if (redirects->type == here_doc_quote
+			|| redirects->type == here_doc_word)
 			dup2_here_doc(redirects, minishell);
 		if (redirects->type == output)
 			dup2_outfile(redirects, minishell);

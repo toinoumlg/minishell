@@ -6,27 +6,14 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:58:46 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/11 12:49:51 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/30 12:22:33 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "free_utils.h"
-#include "minishell.h"
-#include <readline/history.h>
+#include "free.h"
+#include "redirects.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-void	free_cmds(t_cmd *cmds)
-{
-	t_cmd	*next;
-
-	while (cmds)
-	{
-		next = cmds->next;
-		free_cmd(cmds);
-		cmds = next;
-	}
-}
 
 void	free_and_set_to_next_commands(t_cmd **cmds)
 {
@@ -35,7 +22,8 @@ void	free_and_set_to_next_commands(t_cmd **cmds)
 
 	tmp = *cmds;
 	next = tmp->next;
-	free_cmd(tmp);
+	tmp->next = NULL;
+	free_cmds(tmp);
 	*cmds = next;
 }
 
@@ -61,7 +49,7 @@ int	free_envp(t_envp *envp)
 void	set_minishell_to_null(t_minishell *minishell)
 {
 	minishell->cmds = NULL;
-	minishell->env = NULL;
+	minishell->paths = NULL;
 	minishell->envp = NULL;
 	minishell->envp_array = NULL;
 	minishell->read_line = NULL;
@@ -74,8 +62,8 @@ int	free_minishell(t_minishell *minishell)
 {
 	if (minishell->cmds)
 		free_cmds(minishell->cmds);
-	if (minishell->env)
-		free_array(minishell->env);
+	if (minishell->paths)
+		free_array(minishell->paths);
 	if (minishell->envp)
 		free_envp(minishell->envp);
 	if (minishell->envp_array)
@@ -89,12 +77,12 @@ int	free_minishell(t_minishell *minishell)
 	if (minishell->tokens)
 		free_tokens(minishell->tokens);
 	set_minishell_to_null(minishell);
-	clear_history();
-	return (1);
+	return (minishell->last_status);
 }
 
-int	exit_perror(t_minishell *minishell, char *str)
+void	exit_perror(t_minishell *minishell, char *str)
 {
 	perror(str);
+	close_open_fds(minishell);
 	exit(free_minishell(minishell));
 }

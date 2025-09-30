@@ -6,82 +6,60 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:27 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 13:48:51 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/24 20:08:49 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "envp.h"
 #include "free.h"
 #include "libft.h"
 #include <stdio.h>
 
-static void	delete_0_envp(t_envp *next, t_envp *head, t_envp **envp)
+void	remove_first_envp(t_envp **envp, t_envp *to_unset)
 {
-	next = head->next;
-	head->next = NULL;
-	free_envp(head);
-	*envp = next;
+	if (to_unset->next)
+		*envp = to_unset->next;
+	else
+		*envp = NULL;
+	if (to_unset->value)
+		free(to_unset->value);
+	free(to_unset->line);
+	free(to_unset->name);
+	free(to_unset);
 }
 
-static void	delete_i_envp(int index, t_envp **envp)
+void	remove_envp(t_envp **envp, t_envp *to_unset)
 {
-	t_envp	*next;
 	t_envp	*tmp;
-	t_envp	*head;
-	t_envp	*prev;
 
-	next = NULL;
-	head = *envp;
-	tmp = head;
-	if (!index)
-		return (delete_0_envp(next, head, envp));
-	while (index--)
-	{
-		prev = tmp;
+	tmp = *envp;
+	if (tmp == to_unset)
+		return (remove_first_envp(envp, to_unset));
+	while (tmp->next && tmp->next != to_unset)
 		tmp = tmp->next;
-	}
-	next = tmp->next;
-	prev->next = next;
-	tmp->next = NULL;
-	free_envp(tmp);
-	*envp = head;
+	if (to_unset->next)
+		tmp->next = to_unset->next;
+	else
+		tmp->next = NULL;
+	if (to_unset->value)
+		free(to_unset->value);
+	free(to_unset->line);
+	free(to_unset->name);
+	free(to_unset);
 }
 
-static int	index_in_envp(char *name, t_envp *envp)
+int	unset(t_minishell *minishell)
 {
-	int	i;
-
-	i = 0;
-	while (envp)
-	{
-		if (!ft_strncmp(name, envp->name, ft_strlen(name) + 1))
-			return (i);
-		i++;
-		envp = envp->next;
-	}
-	return (-1);
-}
-
-void	unset(t_minishell *minishell)
-{
-	int	i;
-	int	status;
-	int	envp_index;
+	int		i;
+	t_envp	*to_unset;
 
 	i = 1;
-	if (!minishell->envp || !minishell->cmds->args[1])
-		status = 0;
-	else
-		status = 0;
 	while (minishell->cmds->args[i])
 	{
-		envp_index = index_in_envp(minishell->cmds->args[i++], minishell->envp);
-		if (envp_index >= 0)
-			delete_i_envp(envp_index, &minishell->envp);
+		to_unset = find_existing_envp(minishell->cmds->args[i++],
+				minishell->envp);
+		if (to_unset)
+			remove_envp(&minishell->envp, to_unset);
 	}
-	if (minishell->i > 1)
-	{
-		free_minishell(minishell);
-		exit(status);
-	}
-	minishell->last_status = status;
+	return (0);
 }

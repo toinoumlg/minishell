@@ -6,99 +6,123 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 22:25:17 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 10:09:22 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/26 14:46:12 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "free.h"
 #include "libft.h"
-#include "parse_error.h"
-#include "token_expand.h"
-#include "token_operator.h"
-#include "token_string.h"
-#include "token_utils.h"
+#include "parser/token.h"
 #include <stdlib.h>
 #include <string.h>
 
-static void	free_empty_prompt(t_minishell *minishell)
+int	check_redirects(t_token *tokens)
 {
-	free(minishell->read_line);
-	minishell->read_line = NULL;
-	minishell->tokens = NULL;
-	return ;
-}
-
-static int	need_merge(t_token *cur, t_token *next)
-{
-	return (!next->separated_by_space && (cur->type == word
-			|| cur->type == simple_quote || cur->type == double_quote)
-		&& (next->type == word || next->type == simple_quote
-			|| next->type == double_quote));
-}
-
-static void	merge_adjacent_words(t_minishell *minishell)
-{
-	t_token	*cur;
-	t_token	*next;
-	char	*merged;
-
-	cur = minishell->tokens;
-	while (cur && cur->next)
+	while (tokens)
 	{
-		next = cur->next;
-		if (need_merge(cur, next))
+		if (tokens && tokens->type == space)
+			tokens = tokens->next;
+		if (tokens && is_a_redirect(tokens->type))
 		{
-			merged = ft_strjoin(cur->string, next->string);
-			if (!merged)
-				exit_perror(minishell, "malloc ");
-			free(cur->string);
-			cur->string = merged;
-			cur->next = next->next;
-			free(next->string);
-			free(next);
+			tokens = tokens->next;
+			if (!tokens)
+				return (1);
+			if (tokens->type == space)
+				tokens = tokens->next;
+			if (!tokens || (tokens->type != double_quote
+					&& tokens->type != simple_quote && tokens->type != word))
+				return (1);
 		}
-		else
-			cur = cur->next;
-	}
-}
-
-static int	get_tokens_list(char **parse_error, t_minishell *minishell)
-{
-	int	was_space;
-
-	memset(&minishell->tokens, 0, sizeof(t_token *));
-	was_space = 1;
-	while (**parse_error)
-	{
-		if (**parse_error == ';' || **parse_error == '\\')
-			return (1);
-		else if (is_quote(**parse_error) && extract_quoted_string(parse_error,
-				**parse_error, minishell, &was_space))
-			return (1);
-		else if (is_operator(**parse_error) && add_operator_token(parse_error,
-				minishell, &was_space))
-			return (1);
-		if (**parse_error == ' ')
-		{
-			while (**parse_error == ' ')
-				(*parse_error)++;
-			was_space = 1;
-		}
-		else if (pick_word(parse_error, minishell, &was_space))
-			return (1);
+		if (tokens)
+			tokens = tokens->next;
 	}
 	return (0);
 }
 
+static int	check_pipes(t_token *tokens)
+{
+	int	is_empty;
+	int	pipe_count;
+
+	is_empty = 1;
+	pipe_count = 0;
+	while (tokens)
+	{
+		while (!is_end_of_command(tokens))
+		{
+			if (tokens->type != space)
+				is_empty = 0;
+			tokens = tokens->next;
+		}
+		if (is_empty && pipe_count)
+			return (1);
+		else if (tokens)
+		{
+			pipe_count++;
+			is_empty = 1;
+			tokens = tokens->next;
+		}
+	}
+	return (0);
+}
+
+static int	get_tokens(char **parse_error, t_minishell *minishell)
+{
+	ft_memset(&minishell->tokens, 0, sizeof(t_token *));
+	while (**parse_error)
+	{
+		if (**parse_error == ';' || **parse_error == '\\')
+			return (1);
+		else if (is_quote(**parse_error) && add_quoted_string(parse_error,
+				**parse_error, minishell))
+			return (1);
+		else if (is_operator(**parse_error) && add_operator(parse_error,
+				minishell))
+			return (1);
+		else if (is_space(**parse_error))
+			add_space(parse_error, minishell);
+		else if (add_word(parse_error, minishell))
+			return (1);
+	}
+	return (check_redirects(minishell->tokens)
+		|| check_pipes(minishell->tokens));
+}
+
+void	syntax_error(char *parse_error, t_minishell *minishell)
+{
+	minishell->last_status = 2;
+	ft_putstr_fd("minishell: syntax error near unexpected token '", 2);
+	if (!*parse_error)
+		ft_putstr_fd("newline", 2);
+	else
+		ft_putchar_fd(*parse_error, 2);
+	ft_putstr_fd("'\n", 2);
+	if (minishell->tokens)
+		free_tokens(minishell->tokens);
+	free(minishell->read_line);
+	if (minishell->envp_array)
+		free_array(minishell->envp_array);
+	if (minishell->paths)
+		free_array(minishell->paths);
+	minishell->read_line = NULL;
+	minishell->tokens = NULL;
+	minishell->envp_array = NULL;
+	minishell->paths = NULL;
+}
+
+/*	Creates a list of tokens from readline()
+	parse_error tracks position in input for syntax error	*/
 void	generate_tokens(t_minishell *minishell)
 {
 	char	*parse_error;
 
 	parse_error = minishell->read_line;
-	if (get_tokens_list(&parse_error, minishell))
-		return (parsing_error(parse_error, minishell));
+	if (get_tokens(&parse_error, minishell))
+		return (syntax_error(parse_error, minishell));
+	free(minishell->read_line);
+	minishell->read_line = NULL;
 	if (!minishell->tokens)
-		return (free_empty_prompt(minishell));
-	merge_adjacent_words(minishell);
-	expand_tokens(minishell);
+		return ;
+	expand(minishell);
+	merge_adjacent(minishell);
 }

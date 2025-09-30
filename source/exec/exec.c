@@ -6,41 +6,35 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/14 13:26:52 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/28 17:12:16 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtsin.h"
-#include "create_files.h"
-#include "envp_utils.h"
-#include "exec_utils.h"
+#include "envp.h"
+#include "exec.h"
 #include "free.h"
-#include "free_utils.h"
 #include "libft.h"
-#include "pipes.h"
-#include "set_dup2.h"
+#include "redirects.h"
 #include "signals.h"
+#include <readline/readline.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-static void	close_here_doc(t_file *redirects)
-{
-	while (redirects)
-	{
-		if (redirects->type == here_doc)
-			close(redirects->fd);
-		redirects = redirects->next;
-	}
-}
-
+/*	Child process execution: sets up signals and redirects,
+	Attempts builtin execution then tries execve
+	If not exited after execve will print associated error	*/
 void	child_process(t_minishell *minishell)
 {
 	t_cmd	*cmd;
 
 	cmd = minishell->cmds;
+	rl_clear_history();
 	set_signals_child();
 	set_dup2(minishell);
+	if (!cmd->args && cmd->redirects)
+		create_files(minishell);
 	if (!cmd->error)
 	{
 		exec_builtsin_in_child(minishell);
@@ -49,6 +43,7 @@ void	child_process(t_minishell *minishell)
 	exit_child(minishell);
 }
 
+/*	Forks and check for any error	*/
 void	exec_in_child(t_minishell *minishell)
 {
 	int	i;
@@ -61,16 +56,6 @@ void	exec_in_child(t_minishell *minishell)
 		child_process(minishell);
 }
 
-// if the command have no args but redirect
-void	try_exec(t_minishell *minishell)
-{
-	if (!minishell->cmds->args && minishell->cmds->redirects)
-		return (create_files(minishell));
-	if (!minishell->cmds->args)
-		return ;
-	exec_in_child(minishell);
-}
-
 void	exec(t_minishell *minishell)
 {
 	if (!minishell->cmds)
@@ -80,8 +65,8 @@ void	exec(t_minishell *minishell)
 	while (minishell->cmds)
 	{
 		do_pipe(minishell);
-		// handle_underscore(minishell);
-		try_exec(minishell);
+		underscore(minishell);
+		exec_in_child(minishell);
 		close_pipes(minishell->pipe_fds, minishell->size, minishell->i);
 		close_here_doc(minishell->cmds->redirects);
 		free_and_set_to_next_commands(&minishell->cmds);

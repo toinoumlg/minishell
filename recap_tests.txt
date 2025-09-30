@@ -1,0 +1,48 @@
+minishell> << EOF
+> $USER
+
+->  segfault / leaks (fd / mem)...
+
+----------------------------------------------------
+minishell> echo $U
+
+==452262== Invalid read of size 1
+==452262==    at 0x4045AF: expand_string (expand.c:124)
+==452262==    by 0x40440C: expand (expand.c:143)
+==452262==    by 0x403195: generate_tokens (token.c:126)
+==452262==    by 0x402480: parse_read_line (parse_read_line.c:55)
+==452262==    by 0x4014D3: main (main.c:69)
+==452262==  Address 0x4b6d8cf is 1 bytes before a block of size 1 alloc'd
+==452262==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==452262==    by 0x408F4C: ft_strjoin (ft_strjoin.c:25)
+==452262==    by 0x404EFE: expand_env (expand_string.c:82)
+==452262==    by 0x404CDE: handle_expansion (expand_string.c:110)
+==452262==    by 0x40459A: expand_string (expand.c:121)
+==452262==    by 0x40440C: expand (expand.c:143)
+==452262==    by 0x403195: generate_tokens (token.c:126)
+==452262==    by 0x402480: parse_read_line (parse_read_line.c:55)
+==452262==    by 0x4014D3: main (main.c:69)
+==452262== 
+
+----------------------------------------------------
+
+export key //plusieurs '='//  value
+===> t="=="9"
+
+----------------------------------------------------
+
+
+ctrl + d dans Heredoc
+leak fd
+
+solu : safe_close qui met a -1 et check avant de close si >= 0;
+
+-----------------------------------------------------
+
+-----------------------------------------------------
+
+1er fork pt => leak fd
+
+-----------------------------------------------------
+
+protect fork() pipe() dup() dup2() malloc()

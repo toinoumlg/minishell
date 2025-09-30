@@ -1,27 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.h                                             :+:      :+:    :+:   */
+/*   signals_heredoc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/08 19:00:38 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 17:05:23 by amalangu         ###   ########.fr       */
+/*   Created: 2025/09/27 20:18:35 by yalaatik          #+#    #+#             */
+/*   Updated: 2025/09/30 14:03:51 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FREE_H
-# define FREE_H
+#include "signals.h"
+#include <libft.h>
+#include <readline/readline.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/ioctl.h>
+#include <termios.h>
+#include <unistd.h>
 
-# include "minishell.h"
+void	heredoc_sigint_handler(int sig)
+{
+	close(STDIN_FILENO);
+	g_sig = sig;
+}
 
-void	free_array(char **args);
-void	free_tokens(t_token *tokens);
-void	free_file(t_file *file);
-void	free_cmds(t_cmd *cmds);
-void	free_and_set_to_next_commands(t_cmd **cmds);
-int		free_envp(t_envp *envp);
-int		free_minishell(t_minishell *minishell);
-void	exit_perror(t_minishell *minishell, char *str);
-void	ft_close(int *fd);
-#endif
+void	set_signals_heredoc(void)
+{
+	signal(SIGINT, heredoc_sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
+}
