@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 07:48:07 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 17:36:23 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/30 12:45:43 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,20 +47,20 @@ void	append_env_here_doc(char *str, char **read_line, t_minishell *minishell,
 
 	tmp = *read_line;
 	*read_line = ft_strjoin(tmp, expand->value);
+	free(tmp);
 	if (!*read_line)
 	{
 		free(str);
 		exit_perror(minishell, "malloc");
 	}
-	free(tmp);
 	tmp = *read_line;
 	*read_line = ft_strjoin(tmp, str);
+	free(tmp);
 	if (!*read_line)
 	{
 		free(str);
 		exit_perror(minishell, "malloc");
 	}
-	free(tmp);
 }
 
 static int	expand_env_here_doc(char *str, char **read_line,

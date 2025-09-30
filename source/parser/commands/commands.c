@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 17:03:22 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/29 18:35:30 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/30 12:41:01 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ static void	add_new_command(t_minishell *minishell)
 	new_cmd = set_new_command(minishell);
 	append_new_command(&minishell->cmds, new_cmd);
 	pick_redirects(new_cmd, minishell);
-	access_redirects(minishell, new_cmd);
+	if (access_redirects(minishell, new_cmd))
+		return ;
 	set_args(new_cmd, minishell);
 	set_program(new_cmd, minishell);
 	access_program(minishell, new_cmd->program);

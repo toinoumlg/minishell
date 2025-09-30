@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 20:18:35 by yalaatik          #+#    #+#             */
-/*   Updated: 2025/09/28 13:47:44 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/30 14:03:51 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 
 void	heredoc_sigint_handler(int sig)
 {
-	write(STDOUT_FILENO, "\n", 1);
 	close(STDIN_FILENO);
 	g_sig = sig;
 }

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:51:06 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/29 15:50:04 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/30 12:41:24 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,18 +81,19 @@ static t_file	*get_error_file(t_file *redirects)
 	return (NULL);
 }
 
-void	access_redirects(t_minishell *minishell, t_cmd *new_cmd)
+int	access_redirects(t_minishell *minishell, t_cmd *new_cmd)
 {
 	t_file	*redirects;
 
 	redirects = new_cmd->redirects;
 	if (!redirects)
-		return ;
+		return (0);
 	while (redirects)
 	{
 		if (access_file(redirects, minishell))
-			return ;
+			return (1);
 		redirects = redirects->next;
 	}
 	new_cmd->error = get_error_file(new_cmd->redirects);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 19:46:32 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/29 18:44:45 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/30 12:32:54 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	dup2_outfile(t_file *outfile, t_minishell *minishell);
 void	dup2_append_file(t_file *append_file, t_minishell *minishell);
 void	dup2_here_doc(t_file *here_doc_file, t_minishell *minishell);
 void	dup2_pipes(int (*pipe_fds)[2], int size, int i, t_minishell *minishell);
+void	dup2_std_copy(t_minishell *minishell);
+void	dup_std_copy(t_minishell *minishell);
 
 void	create_files(t_minishell *minishell);
 

@@ -26,6 +26,7 @@ BUILTSIN = builtsin/builtsin  \
 REDIRECT = redirects/here_doc redirects/here_doc_expand \
 	redirects/set_dup2 redirects/set_dup2_utils \
 	redirects/pipes redirects/create_files \
+	redirects/fd_utils
 
 PARSER_FILES = parser/parse_read_line parser/alloc \
 	parser/pre_parsing \

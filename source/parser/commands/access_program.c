@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 12:47:29 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 10:31:31 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/30 13:15:21 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ static void	parse_env(t_minishell *minishell, t_file *program)
 
 void	access_program(t_minishell *minishell, t_file *program)
 {
+	if (!minishell->cmds->args)
+		return ;
 	if (!ft_strchr(program->path, '/'))
 		return (parse_env(minishell, program));
 	set_access(program);

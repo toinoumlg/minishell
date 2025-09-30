@@ -6,12 +6,12 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 18:58:46 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/29 18:44:45 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/30 12:22:33 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "free.h"
-#include <readline/history.h>
+#include "redirects.h"
 #include <stdio.h>
 #include <stdlib.h>
 

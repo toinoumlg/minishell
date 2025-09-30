@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 20:23:14 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/29 18:44:56 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/30 12:50:37 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,35 +15,6 @@
 #include "libft.h"
 #include "minishell.h"
 #include <fcntl.h>
-
-void	close_open_fds(t_minishell *minishell)
-{
-	int		i;
-	t_cmd	*cmds;
-	t_file	*files;
-
-	if (minishell->pipe_fds)
-	{
-		i = 0;
-		while (i < minishell->size - 1)
-		{
-			ft_close(&minishell->pipe_fds[i][0]);
-			ft_close(&minishell->pipe_fds[i][1]);
-			i++;
-		}
-	}
-	cmds = minishell->cmds;
-	while (cmds)
-	{
-		files = cmds->redirects;
-		while (files)
-		{
-			ft_close(&files->fd);
-			files = files->next;
-		}
-		cmds = cmds->next;
-	}
-}
 
 void	handle_error(t_file *error, t_minishell *minishell)
 {

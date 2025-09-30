@@ -12,7 +12,7 @@
       "program": "${workspaceFolder}/minishell",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
-      "preLaunchTask": "build"
+      "preLaunchTask": "build",
     },
     {
       "name": "Debug childs",

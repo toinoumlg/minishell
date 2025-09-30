@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:44:58 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 10:21:30 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/30 12:34:41 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int		pwd(t_minishell *minishell);
 
 void	update_pwd(t_minishell *minishell);
 int		cd(t_minishell *minishell);
-int		ft_exit(t_minishell *minishell, int *std_copy);
+int		ft_exit(t_minishell *minishell);
 int		ft_export(t_minishell *minishell);
 void	export_sorted(char **envp);
 int		unset(t_minishell *minishell);
