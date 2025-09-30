@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/30 14:07:35 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/09/30 14:16:08 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,15 @@ void	wait_for_childrens(t_minishell *minishell)
 	exited = 0;
 	i = 0;
 	if (!minishell->i || !minishell->pids)
-		
-		signal(SIGINT, SIG_IGN);
+		return ;
+	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 	while (i < minishell->size)
 	{
 		waitpid(minishell->pids[i++], &status, 0);
 		handle_exit_status(minishell, status, &exited);
 	}
+	signal(SIGINT, sigint_handler_main);
 	if (minishell->pids)
 		free(minishell->pids);
 	minishell->pids = NULL;
@@ -73,6 +74,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	minishell;
 
+	rl_catch_signals = 0;
 	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO)
 		|| !isatty(STDOUT_FILENO))
 		return (1);
