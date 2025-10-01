@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:41:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/30 12:37:03 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/10/01 20:07:35 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	is_a_builtin(char *str)
 		|| !ft_strncmp(str, "unset", 6));
 }
 
-void	exec_builtsin_in_child(t_minishell *minishell)
+int	exec_builtsin_in_child(t_minishell *minishell)
 {
 	char	*cmd;
 
@@ -49,6 +49,7 @@ void	exec_builtsin_in_child(t_minishell *minishell)
 		rl_clear_history();
 		exit(free_minishell(minishell));
 	}
+	return (0);
 }
 
 void	exec_builtsin_in_parent(t_minishell *minishell)

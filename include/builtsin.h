@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:44:58 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/30 12:34:41 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/10/01 20:07:16 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 # include "minishell.h"
 
 int		is_a_builtin(char *str);
-void	exec_builtsin_in_child(t_minishell *minishell);
+int		exec_builtsin_in_child(t_minishell *minishell);
 void	exec_builtsin_in_parent(t_minishell *minishell);
 
 int		echo(t_minishell *minishell);

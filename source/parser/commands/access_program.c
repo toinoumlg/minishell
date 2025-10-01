@@ -6,10 +6,11 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 12:47:29 by amalangu          #+#    #+#             */
-/*   Updated: 2025/10/01 09:58:23 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/10/01 20:08:59 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "builtsin.h"
 #include "free.h"
 #include "libft.h"
 #include "minishell.h"
@@ -61,8 +62,7 @@ static void	parse_env(t_minishell *minishell, t_file *program)
 		free(tmp);
 		i++;
 	}
-	program->exec = -1;
-	program->exist = -1;
+	program->exist = 1;
 }
 
 void	access_program(t_minishell *minishell, t_file *program)

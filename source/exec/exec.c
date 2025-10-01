@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:35:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/10/01 10:15:17 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/10/01 20:08:38 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	child_process(t_minishell *minishell)
 	set_dup2(minishell);
 	if (!cmd->args && cmd->redirects)
 		create_files(minishell);
-	if (!cmd->error)
+	if (!cmd->error && !cmd->program->exist)
 	{
 		exec_builtsin_in_child(minishell);
 		execve(cmd->program->path, cmd->args, minishell->envp_array);
