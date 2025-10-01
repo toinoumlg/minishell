@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 12:15:26 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/26 14:46:12 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/10/01 18:23:02 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ static void	set_redirect(t_cmd *new_cmd, t_minishell *minishell,
 	new_redirect = new_file(minishell);
 	append_redirects(&new_cmd->redirects, new_redirect);
 	new_redirect->path = ft_strdup(redirect->next->string);
+	new_redirect->fd = -1;
 	if (!new_redirect->path)
 		exit_perror(minishell, "malloc ");
 	if (redirect->type == here_doc)

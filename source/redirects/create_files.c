@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 20:23:14 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/30 12:50:37 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/10/01 18:23:54 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "free.h"
 #include "libft.h"
 #include "minishell.h"
+#include "redirects.h"
 #include <fcntl.h>
 
 void	handle_error(t_file *error, t_minishell *minishell)
@@ -32,7 +33,7 @@ void	create_append_files(t_file *append_file, t_minishell *minishell)
 	append_file->fd = open(append_file->path, O_CREAT | O_WRONLY | O_APPEND,
 			00664);
 	if (append_file->fd >= 0)
-		ft_close(&append_file->fd);
+		fd_close(&append_file->fd);
 	else
 		exit_perror(minishell, "open");
 }
@@ -41,7 +42,7 @@ void	create_output(t_file *output, t_minishell *minishell)
 {
 	output->fd = open(output->path, O_CREAT | O_WRONLY | O_TRUNC, 00664);
 	if (output->fd >= 0)
-		ft_close(&output->fd);
+		fd_close(&output->fd);
 	else
 		exit_perror(minishell, "open");
 }

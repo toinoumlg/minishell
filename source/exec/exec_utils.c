@@ -6,13 +6,13 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 21:15:21 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/22 19:58:05 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/10/01 18:20:58 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "exec.h"
 #include "free.h"
 #include "libft.h"
-#include "exec.h"
 
 int	is_builtin_to_exec_in_parent(t_minishell *minishell)
 {

@@ -6,11 +6,29 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 19:50:43 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/21 07:20:27 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/10/01 18:22:47 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "redirects.h"
+
+void	close_unused_fds(t_minishell *minishell)
+{
+	t_cmd	*cmds;
+	t_file	*files;
+
+	cmds = minishell->cmds;
+	while (cmds)
+	{
+		files = cmds->redirects;
+		while (files)
+		{
+			fd_close(&files->fd);
+			files = files->next;
+		}
+		cmds = cmds->next;
+	}
+}
 
 static void	set_files(t_minishell *minishell)
 {
@@ -39,4 +57,5 @@ void	set_dup2(t_minishell *minishell)
 			minishell);
 	if (minishell->cmds->redirects)
 		set_files(minishell);
+	close_unused_fds(minishell);
 }

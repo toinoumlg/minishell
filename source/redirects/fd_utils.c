@@ -6,12 +6,19 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 12:26:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/30 12:32:24 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/10/01 18:22:47 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "free.h"
 #include "minishell.h"
+
+void	fd_close(int *fd)
+{
+	if (*fd >= 0)
+		close(*fd);
+	*fd = -1;
+}
 
 void	dup_std_copy(t_minishell *minishell)
 {
@@ -48,8 +55,8 @@ void	close_all_pipes(t_minishell *minishell)
 		i = 0;
 		while (i < minishell->size - 1)
 		{
-			ft_close(&minishell->pipe_fds[i][0]);
-			ft_close(&minishell->pipe_fds[i][1]);
+			fd_close(&minishell->pipe_fds[i][0]);
+			fd_close(&minishell->pipe_fds[i][1]);
 			i++;
 		}
 	}
@@ -60,8 +67,8 @@ void	close_open_fds(t_minishell *minishell)
 	t_cmd	*cmds;
 	t_file	*files;
 
-	ft_close(&minishell->std_copy[0]);
-	ft_close(&minishell->std_copy[1]);
+	fd_close(&minishell->std_copy[0]);
+	fd_close(&minishell->std_copy[1]);
 	close_all_pipes(minishell);
 	cmds = minishell->cmds;
 	while (cmds)
@@ -69,7 +76,7 @@ void	close_open_fds(t_minishell *minishell)
 		files = cmds->redirects;
 		while (files)
 		{
-			ft_close(&files->fd);
+			fd_close(&files->fd);
 			files = files->next;
 		}
 		cmds = cmds->next;

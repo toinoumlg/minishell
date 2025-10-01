@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:11:19 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/30 14:13:32 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/10/01 18:22:47 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,12 @@ static void	write_here_doc(int fd, char *lim)
 	}
 }
 
-int	here_doc_received_signal(int fd, t_minishell *minishell)
+int	here_doc_received_sigint(int fd, t_minishell *minishell)
 {
 	minishell->last_status = 130;
 	free_cmds(minishell->cmds);
 	free_tokens(minishell->tokens);
-	ft_close(&fd);
+	fd_close(&fd);
 	minishell->cmds = NULL;
 	minishell->tokens = NULL;
 	g_sig = 0;
@@ -83,11 +83,11 @@ int	set_here_doc(t_file *here_doc_file, t_minishell *minishell)
 		exit_perror(minishell, "open");
 	unlink("/tmp/here_doc");
 	write_here_doc(fd[1], here_doc_file->path);
-	ft_close(&fd[1]);
+	fd_close(&fd[1]);
 	here_doc_file->fd = fd[0];
 	set_signals();
 	dup2_std_copy(minishell);
 	if (g_sig)
-		return (here_doc_received_signal(fd[0], minishell));
+		return (here_doc_received_sigint(fd[0], minishell));
 	return (0);
 }
