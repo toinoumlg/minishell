@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:25 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/26 14:46:12 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/10/04 14:29:27 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 
 static void	update_values(t_envp *existing, char *line, t_minishell *minishell)
 {
+	if (!ft_strchr(line, '='))
+		return ;
 	free(existing->line);
 	existing->line = ft_strdup(line);
 	if (!existing->line)

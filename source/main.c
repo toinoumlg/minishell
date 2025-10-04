@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/10/04 13:58:02 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/10/04 14:25:50 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	main(int argc, char **argv, char **envp)
 
 	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO)
 		|| !isatty(STDOUT_FILENO))
-		return (1);
+		return (ft_putstr_fd("minishell: only interactive mode\n", 2), 1);
 	set_envp(&minishell, envp);
 	set_signals();
 	while (argv && argc)
