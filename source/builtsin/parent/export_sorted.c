@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 18:45:43 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 17:25:40 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/10/04 14:49:59 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	print_export_sorted(char **envp_sorted)
 	i = 0;
 	while (envp_sorted[i])
 	{
-		if (ft_isalpha(envp_sorted[i][0]))
+		if (ft_isalpha(envp_sorted[i][0]) || envp_sorted[i][0] == '_')
 		{
 			tmp = NULL;
 			tmp = ft_strchr(envp_sorted[i], '=');
