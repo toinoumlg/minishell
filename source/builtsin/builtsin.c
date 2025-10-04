@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:41:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/10/01 20:07:35 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/10/04 13:29:29 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,7 @@ int	exec_builtsin_in_child(t_minishell *minishell)
 	if (!ft_strncmp(cmd, UNSET, 6))
 		minishell->last_status = unset(minishell);
 	if (minishell->last_status != -1)
-	{
-		rl_clear_history();
 		exit(free_minishell(minishell));
-	}
 	return (0);
 }
 

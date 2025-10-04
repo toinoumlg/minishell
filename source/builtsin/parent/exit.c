@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:06:23 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/30 12:34:47 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/10/04 13:31:31 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ int	exit_alpha(t_minishell *minishell)
 	close_pipes(minishell->pipe_fds, minishell->size, minishell->i);
 	free_minishell(minishell);
 	dup2_std_copy(minishell);
-	rl_clear_history();
 	return (2);
 }
 
@@ -64,6 +63,7 @@ int	ft_exit(t_minishell *minishell)
 	int	result;
 	int	args_size;
 
+	rl_clear_history();
 	result = 0;
 	args_size = ft_strlen_array(minishell->cmds->args);
 	if (args_size > 1 && !is_nbr(minishell->cmds->args[1]))
@@ -82,6 +82,5 @@ int	ft_exit(t_minishell *minishell)
 	close_pipes(minishell->pipe_fds, minishell->size, minishell->i);
 	dup2_std_copy(minishell);
 	free_minishell(minishell);
-	rl_clear_history();
 	exit(result % 256);
 }

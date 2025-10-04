@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 18:54:40 by yalaatik          #+#    #+#             */
-/*   Updated: 2025/09/30 14:09:58 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/10/04 13:45:08 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void	sigint_handler_main(int sig)
 
 void	set_signals(void)
 {
+	rl_catch_signals = 0;
+	rl_catch_sigwinch = 0;
 	signal(SIGINT, sigint_handler_main);
 	signal(SIGQUIT, SIG_IGN);
 }

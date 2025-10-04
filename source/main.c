@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 12:16:39 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/30 14:45:47 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/10/04 13:58:02 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	minishell;
 
-	rl_catch_signals = 0;
 	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO)
 		|| !isatty(STDOUT_FILENO))
 		return (1);
@@ -73,6 +72,7 @@ int	main(int argc, char **argv, char **envp)
 	set_signals();
 	while (argv && argc)
 	{
+		rl_on_new_line();
 		minishell.read_line = readline("minishell> ");
 		parse_read_line(&minishell);
 		exec(&minishell);

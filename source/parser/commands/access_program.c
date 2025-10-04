@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 12:47:29 by amalangu          #+#    #+#             */
-/*   Updated: 2025/10/01 20:08:59 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/10/04 13:25:34 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ static void	parse_env(t_minishell *minishell, t_file *program)
 	int		i;
 
 	i = 0;
+	if (is_a_builtin(program->path))
+		return ;
 	if (!*program->path || !ft_strncmp(program->path, ".", 2)
 		|| !ft_strncmp(program->path, "..", 3) || !minishell->paths)
 		return (set_access(program));
