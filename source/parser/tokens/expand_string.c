@@ -6,7 +6,7 @@
 /*   By: amalangu <amalangu@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 14:56:56 by amalangu          #+#    #+#             */
-/*   Updated: 2025/09/28 17:22:41 by amalangu         ###   ########.fr       */
+/*   Updated: 2025/10/07 15:55:18 by amalangu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,14 +79,12 @@ static int	expand_env(char *str, t_token *token, t_minishell *minishell)
 	if (!expand || !expand->value)
 	{
 		tmp = token->string;
-		if (!*(str + i))
-			return (0);
 		token->string = ft_strjoin(tmp, str + i);
 		free(tmp);
-		return (-1);
+		return (0);
 	}
 	append_env_to_string(str + i, token, minishell, expand);
-	return (ft_strlen(expand->value) - 1);
+	return (ft_strlen(expand->value));
 }
 
 /*	Handle variable expansion for different '$' cases:
