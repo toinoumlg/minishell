@@ -16,10 +16,8 @@
 
 # include <signal.h>
 
-// Déclaration de la variable globale (avec extern)
 extern sig_atomic_t	g_sig;
 
-// Vos fonctions
 void				sigint_handler_main(int sig);
 void				heredoc_sigint_handler(int sig);
 void				set_signals(void);

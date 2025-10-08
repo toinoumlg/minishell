@@ -50,15 +50,21 @@ int	exit_alpha(t_minishell *minishell)
 {
 	if (!minishell->cmds->next && minishell->i == 0)
 	{
-			ft_putstr_fd("exit\n", 1);
-			ft_putstr_fd("minishell: exit: ", 2);
-			ft_putstr_fd(minishell->cmds->args[1], 2);
-			ft_putstr_fd(": numeric argument required\n", 2);
+		ft_putstr_fd("exit\n", 1);
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(minishell->cmds->args[1], 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
 	}
 	close_pipes(minishell->pipe_fds, minishell->size, minishell->i);
 	free_minishell(minishell);
 	dup2_std_copy(minishell);
 	return (2);
+}
+
+void	ft_exit_error_message(void)
+{
+	ft_putstr_fd("exit\n", 1);
+	ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 }
 
 int	ft_exit(t_minishell *minishell)
@@ -74,10 +80,7 @@ int	ft_exit(t_minishell *minishell)
 	else if (args_size > 2)
 	{
 		if (!minishell->cmds->next && minishell->i == 0)
-		{
-			ft_putstr_fd("exit\n", 1);
-			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-		}
+			ft_exit_error_message();
 		return (1);
 	}
 	else if (args_size == 2)
