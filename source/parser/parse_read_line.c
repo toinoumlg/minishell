@@ -49,7 +49,8 @@ void	parse_read_line(t_minishell *minishell)
 		rl_clear_history();
 		exit(free_minishell(minishell));
 	}
-	add_history(minishell->read_line);
+	if (minishell->read_line[0] != '\0')
+		add_history(minishell->read_line);
 	pre_parsing(minishell);
 	generate_tokens(minishell);
 	set_commands(minishell);
