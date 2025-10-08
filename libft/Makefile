@@ -26,7 +26,7 @@ $(NAME): $(OBJ)
 	@ar rcs $(NAME) $(OBJ)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@$(CC) $(CFLAGS) $(INCLUDE) -MMD -MP -g -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDE) -MMD -MP -g -c $< -o $@
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)

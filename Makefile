@@ -6,19 +6,6 @@ LIBS = -lreadline -L./libft -lft
 
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
-SRC_FILES = strlen strlcpy strlcat memcmp atoi \
-		strncmp toupper tolower isprint isdigit \
-		isascii isalpha isalnum substr strchr \
-		strrchr strnstr strjoin strtrim split \
-		strdup itoa strmapi memset memchr memcpy \
-		bzero memmove calloc putchar_fd putstr_fd \
-		putendl_fd putnbr_fd striteri \
-		lstnew lstadd_front lstsize \
-		lstlast lstadd_back lstdelone \
-		lstclear lstiter lstmap get_next_line tmp
-
-LIBFT_SRC := $(addprefix $(LIBFT_DIR)/source/ft_, $(addsuffix .c, $(SRC_FILES)))
-LIBFT_HDR := libft/include/libft.h
 
 SRC_DIR = source
 OBJ_DIR = build
@@ -59,17 +46,16 @@ SRC = $(addprefix $(SRC_DIR)/, $(addsuffix .c, $(ALL_SRC_FILES)))
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 DEP = $(OBJ:.o=.d)
 
-all: $(LIBFT) $(OBJ_DIR) $(NAME)
+all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT)
 	@echo "Linking $@ executable"
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME)
 
-$(LIBFT): $(LIBFT_SRC) $(LIBFT_HDR) $(LIBFT_DIR)/Makefile
-	@echo "Building libft"
-	@$(MAKE) -C $(LIBFT_DIR)
+$(LIBFT): force
+	@$(MAKE) -C $(LIBFT_DIR) --no-print-directory
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(LIBFT)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@echo "Compiling $< into $@"
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) $(INCLUDE) -MMD -MP -g -c $< -o $@
@@ -93,8 +79,10 @@ fclean: clean
 	@rm -f $(NAME)
 	@$(MAKE) -C $(LIBFT_DIR) fclean
 
+force:
+
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re norme valgrind force
 
 -include $(DEP)
