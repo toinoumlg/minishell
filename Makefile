@@ -67,7 +67,7 @@ norme:
 	@norminette source include
 
 valgrind: all
-	valgrind --leak-check=full --trace-children=yes --track-fds=yes ./minishell
+	valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --track-fds=yes ./minishell 
 
 clean:
 	@echo "Deleting $(OBJ_DIR) directory"

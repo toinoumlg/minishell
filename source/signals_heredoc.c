@@ -15,7 +15,7 @@
 
 void	heredoc_sigint_handler(int sig)
 {
-	write(1, "\n", 1);
+	write(1, "^C", 2);
 	close(STDIN_FILENO);
 	g_sig = sig;
 }

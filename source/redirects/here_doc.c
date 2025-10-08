@@ -41,7 +41,7 @@ static void	write_here_doc(int fd, char *lim)
 
 	while (1)
 	{
-		read_line = get_next_line(0);
+		read_line = readline("> ");
 		if (g_sig)
 			return ;
 		if (!read_line)
